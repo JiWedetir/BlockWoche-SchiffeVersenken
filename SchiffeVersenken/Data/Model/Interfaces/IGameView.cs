@@ -4,6 +4,6 @@ namespace SchiffeVersenken.Data.Model.Interfaces
 {
     public interface IGameView
     {
-
+        void Update(GameLogic game);
     }
 }
