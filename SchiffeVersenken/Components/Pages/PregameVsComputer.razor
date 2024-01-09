@@ -1,0 +1,28 @@
+﻿@page "/PregameVsComputer"
+
+<div class="center" style="margin: 20vh 0;">
+	<h1>Pregame Vs Computer</h1>
+
+	<div style="margin: 1rem 0;">
+		<label style="margin-left: 1rem;" >Feldgrösse:  @_FieldSize x @_FieldSize</label>
+		<div class="slider-container">
+			<label>@_minFieldSizeString</label>
+			<input type="range" min="@_minFieldSize" max="@_maxFieldSize" step="1" @bind-value="@_FieldSize" class="range-style" />
+			<label>@_maxFieldSizeString</label>
+		</div>
+	</div>
+
+	<div style="margin-bottom: 1rem;">
+		<label>Difficulty:</label>
+		<select @bind="@_Difficulty" style="font-size: 1rem"> @_Difficulty
+			<option value="0">Dumm</option>
+			<option value="1">Klug</option>
+			<option value="2">Genie</option>
+		</select>
+	</div>
+</div>
+
+<a class="center" href="ShipPlacement">Start Placing Ships</a>
+
+
+
