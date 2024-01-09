@@ -1,29 +1,26 @@
-﻿html, body {
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+﻿.btn-primary {
+
 }
 
-a, .btn-link {
-    color: #006bb7;
+.btn-shoot {
+
 }
 
-.btn-primary {
-    color: #fff;
-    background-color: #1b6ec2;
-    border-color: #1861ac;
+.center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+label {
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin: 0 0.5rem;
 }
 
-.content {
-    padding-top: 1.1rem;
-}
 
-h1:focus {
-    outline: none;
-}
-
+/*Error Handling CSS*/
 .valid.modified:not([type=checkbox]) {
     outline: 1px solid #26b050;
 }
