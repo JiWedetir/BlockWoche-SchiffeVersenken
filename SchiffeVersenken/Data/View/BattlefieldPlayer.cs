@@ -9,6 +9,16 @@ namespace SchiffeVersenken.Data.View
         private Square[,] _board;
         public BattlefieldPlayer(int size) : base(size)
         {
+            _size = size;
+            _board = new Square[_size, _size];
+            for(int i = 0; i < _size; i++)
+            {
+                for(int j = 0; j < _size; j++)
+                {
+                    _board[i, j] = new Square();
+                    _board[i, j].SetToEmptySquare();
+                }
+            }
         }
         public bool SetShip(int x, int y, bool horizontal, int length)
         {

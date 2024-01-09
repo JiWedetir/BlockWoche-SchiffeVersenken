@@ -11,7 +11,7 @@ namespace SchiffeVersenken.Data.Ship
         private LinkedList<Square> _shipSquares;
         public Kreuzer()
         {
-
+            _shipSquares = new LinkedList<Square>();
         }
         public void SetShip(Square square)
         {

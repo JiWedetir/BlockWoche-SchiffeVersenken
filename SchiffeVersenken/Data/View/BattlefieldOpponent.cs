@@ -8,6 +8,16 @@ namespace SchiffeVersenken.Data.View
         private Square[,] _board;
         public BattlefieldOpponent(int size) : base(size)
         {
+            _size = size;
+            _board = new Square[_size, _size];
+            for (int i = 0; i < _size; i++)
+            {
+                for (int j = 0; j < _size; j++)
+                {
+                    _board[i, j] = new Square();
+                    _board[i, j].SetToEmptySquare();
+                }
+            }
         }
         public void SetShipRandom()
         {
@@ -61,26 +71,27 @@ namespace SchiffeVersenken.Data.View
                     }
 
                     placedShips.Add((x, y, horizontal, length, _board[x, y]));
-                    foreach (var ship in placedShips)
-                    {
-                        Kreuzer kreuzer = new Kreuzer();
-                        if (ship.horizontal)
-                        {
-                            for (int i = 0; i < ship.length; i++)
-                            {
-                                kreuzer.SetShip(_board[ship.x + i, ship.y]);
-                            }
-                        }
-                        else
-                        {
-                            for (int i = 0; i < ship.length; i++)
-                            {
-                                kreuzer.SetShip(_board[ship.x, ship.y + i]);
-                            }
-                        }
-                    }
+
 
                     shipSet = true;
+                }
+            }
+            foreach (var ship in placedShips)
+            {
+                Kreuzer kreuzer = new Kreuzer();
+                if (ship.horizontal)
+                {
+                    for (int i = 0; i < ship.length; i++)
+                    {
+                        kreuzer.SetShip(_board[ship.x + i, ship.y]);
+                    }
+                }
+                else
+                {
+                    for (int i = 0; i < ship.length; i++)
+                    {
+                        kreuzer.SetShip(_board[ship.x, ship.y + i]);
+                    }
                 }
             }
         }

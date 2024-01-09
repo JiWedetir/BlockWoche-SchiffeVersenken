@@ -25,7 +25,12 @@
                 _State = SquareState.Hit;
                 _Ship?.ShipUpdate();
             }
+        }
 
+        public void SetToEmptySquare()
+        {
+            _State = SquareState.Empty;
+            _Ship = null;
         }
 
         public void SetToShipSquare(Kreuzer kreuzer)

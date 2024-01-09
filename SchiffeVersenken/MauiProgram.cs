@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using SchiffeVersenken.Data.Model;
 
 namespace SchiffeVersenken
 {
@@ -15,6 +16,7 @@ namespace SchiffeVersenken
                 });
 
             builder.Services.AddMauiBlazorWebView();
+            GameLogic game = new GameLogic();
 
 #if DEBUG
     		builder.Services.AddBlazorWebViewDeveloperTools();
