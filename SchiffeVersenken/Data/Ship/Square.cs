@@ -12,7 +12,7 @@
     public class Square
     {
         public SquareState _State { get; set; } = SquareState.Empty;
-        public Ship ?_Ship { get; set; }
+        public Kreuzer ?_Ship { get; set; }
 
         public void UpdateSquare()
         {
@@ -28,11 +28,10 @@
 
         }
 
-        public void SetToShipSquare(Ship ship)
+        public void SetToShipSquare(Kreuzer kreuzer)
         {
             _State = SquareState.Ship;
-            _Ship = ship;
-            _Ship.AddShipSquare(this);
+            _Ship = kreuzer;
         }
 
         public void UpdateView()
