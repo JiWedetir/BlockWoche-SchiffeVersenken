@@ -12,7 +12,7 @@ namespace SchiffeVersenken.Data.Model
         public IBattleShipsGameState CurrentState => this._currentState;
         private List<IGameView> _gameObservers = new List<IGameView>();
         public BattlefieldPlayer _BattelfieldPlayer { get; set; }
-        public BattlefieldOpponent _BattelfieldOpponent { get; set; }
+        public BattlefieldOpponent _Player2Board { get; set; }
 
         public GameLogic()
         {
