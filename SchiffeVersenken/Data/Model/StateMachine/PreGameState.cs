@@ -4,33 +4,30 @@ namespace SchiffeVersenken.Data.Model.StateMachine
 {
     public class PreGameState : IBattleShipsGameState
     {
-        private int _size;
         public void AfterEnterState(GameLogic game)
         {
-            Debug.WriteLine("Spiellogik: GameBoard wird generiert");
-            game._BattelfieldPlayer = new BattlefieldPlayer(_size);
-            game._Player2Board = new BattlefieldOpponent(_size);
-
         }
 
         public void EnterState(GameLogic game)
         {
-            //den spieler fragen wie groß das Spielfeld sein soll
-            throw new NotImplementedException();
+            Debug.WriteLine("Spiellogik: GameBoard wird generiert");
+            game._BattelfieldPlayer = new BattlefieldPlayer(game._Size);
+            game._Player2Board = new BattlefieldOpponent(game._Size);
+            game._ComputerOpponent.SetShipRandom();
         }
 
         public void ExitState(GameLogic game)
         {
-            throw new NotImplementedException();
         }
 
         public void HandleInput(GameLogic game, int x, int y)
         {
             throw new NotImplementedException();
         }
-        public void SetSize(int size)
+
+        public void CreateBattlefield(GameLogic game)
         {
-            _size = size;
+            throw new NotImplementedException();
         }
     }
 }

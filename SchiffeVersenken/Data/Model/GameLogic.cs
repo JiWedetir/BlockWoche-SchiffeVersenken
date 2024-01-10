@@ -2,6 +2,7 @@
 using SchiffeVersenken.Data.Model.StateMachine;
 using SchiffeVersenken.Data.Model.Interfaces;
 using SchiffeVersenken.Data.View;
+using SchiffeVersenken.Data.Controller;
 
 namespace SchiffeVersenken.Data.Model
 {
@@ -11,12 +12,17 @@ namespace SchiffeVersenken.Data.Model
         private IBattleShipsGameState _currentState;
         public IBattleShipsGameState CurrentState => this._currentState;
         private List<IGameView> _gameObservers = new List<IGameView>();
+        public Player _Player { get; set; }
+        public ComputerOpponent _ComputerOpponent { get; set; }
         public BattlefieldPlayer _BattelfieldPlayer { get; set; }
         public BattlefieldOpponent _Player2Board { get; set; }
+        public int _Size { get; private set; }
 
         public GameLogic()
         {
-            TransistionToState(new PreGameState());
+            _Player = new Player(this);
+            _ComputerOpponent = new ComputerOpponent(this);
+            //SetSize(9);
         }
 
         public void Initialize()
@@ -58,6 +64,17 @@ namespace SchiffeVersenken.Data.Model
         public void HandlePlayerInput(int x, int y)
         {
             this._currentState.HandleInput(this, x, y);
+        }
+
+        public void SetSize(int size)
+        {
+            this._Size = size;
+            TransistionToState(new PreGameState());
+        }
+
+        public void AllShipAreSet()
+        {
+            TransistionToState(new GameReadyState());
         }
     }
 }
