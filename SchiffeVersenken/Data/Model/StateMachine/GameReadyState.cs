@@ -6,18 +6,17 @@ namespace SchiffeVersenken.Data.Model.StateMachine
     {
         public void AfterEnterState(GameLogic game)
         {
-            throw new NotImplementedException();
         }
 
         public void EnterState(GameLogic game)
         {
             Debug.WriteLine("Spiellogik: Spiel ist bereit");
-            
+            game._Player1TurnState = new Player1TurnState();
+            game._Player2TurnState = new Player2TurnState();
         }
 
         public void ExitState(GameLogic game)
         {
-            throw new NotImplementedException();
         }
 
         public void HandleInput(GameLogic game, int x, int y)

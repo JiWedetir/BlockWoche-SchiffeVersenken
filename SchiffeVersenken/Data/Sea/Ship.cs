@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SchiffeVersenken.Data.Ship
+﻿namespace SchiffeVersenken.Data.Sea
 {
-    public class Kreuzer
+    public class Ship
     {
         private LinkedList<Square> _shipSquares;
-        public Kreuzer()
+        public int _Length { get { return _shipSquares.Count; } }
+        public Ship()
         {
             _shipSquares = new LinkedList<Square>();
         }
