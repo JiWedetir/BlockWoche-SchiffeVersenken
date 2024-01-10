@@ -4,6 +4,12 @@ using SchiffeVersenken.Data.Ship;
 
 namespace SchiffeVersenken.Data.Controller
 {
+    public enum ComputerDifficulty
+    {
+        Dumm,
+        Klug,
+        Genie
+    }
     public class ComputerOpponent: IOpponent
     {
         private int _size;
@@ -83,6 +89,11 @@ namespace SchiffeVersenken.Data.Controller
                     }
                 }
             }
+        }
+
+        public void SetDificulty(ComputerDifficulty difficulty)
+        {
+            throw new NotImplementedException();
         }
     }
 }
