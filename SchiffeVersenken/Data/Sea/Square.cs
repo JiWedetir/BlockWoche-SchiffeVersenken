@@ -1,4 +1,4 @@
-﻿namespace SchiffeVersenken.Data.Ship
+﻿namespace SchiffeVersenken.Data.Sea
 {
     public enum SquareState
     {
@@ -6,7 +6,8 @@
         Miss,
         Ship,
         Hit,
-        Sunk
+        Sunk,
+        Blocked
     }
 
     public class Square
@@ -14,9 +15,9 @@
         public SquareState _State { get; set; } = SquareState.Empty;
         public Ship ?_Ship { get; set; }
 
-        public void UpdateSquare()
+        public void ShootOnSquare()
         {
-            if(_State == SquareState.Empty)
+            if(_State == SquareState.Empty || _State == SquareState.Blocked)
             {
                 _State = SquareState.Miss;
             }

@@ -1,5 +1,5 @@
 ﻿using SchiffeVersenken.Data.Model;
-using SchiffeVersenken.Data.Ship;
+using SchiffeVersenken.Data.Sea;
 using SchiffeVersenken.Data.Model.Interfaces;
 
 namespace SchiffeVersenken.Data.View
@@ -9,6 +9,7 @@ namespace SchiffeVersenken.Data.View
         protected int _size;
         protected Square[,] _board;
         public Square[,] _Board { get { return _board; } }
+        public int _Size { get { return _size; } }
         public Battlefield(int size)
         {
             _size = size;
@@ -30,6 +31,11 @@ namespace SchiffeVersenken.Data.View
                     _board[i, j].SetToEmptySquare();
                 }
             }
+        }
+
+        public void Shoot(int x, int y)
+        {
+            _Board[x, y].ShootOnSquare();
         }
     }
 }

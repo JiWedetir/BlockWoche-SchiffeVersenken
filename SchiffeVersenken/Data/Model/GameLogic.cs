@@ -3,6 +3,7 @@ using SchiffeVersenken.Data.Model.StateMachine;
 using SchiffeVersenken.Data.Model.Interfaces;
 using SchiffeVersenken.Data.View;
 using SchiffeVersenken.Data.Controller;
+using SchiffeVersenken.Data.ComputerPlayer;
 
 namespace SchiffeVersenken.Data.Model
 {
@@ -14,10 +15,13 @@ namespace SchiffeVersenken.Data.Model
         private List<IGameView> _gameObservers = new List<IGameView>();
         public Player _Player { get; set; }
         public ComputerOpponent _ComputerOpponent { get; set; }
-        public BattlefieldPlayer _BattelfieldPlayer { get; set; }
-        public BattlefieldOpponent _Player2Board { get; set; }
+        public BattlefieldPlayer _BattlefieldPlayer { get; set; }
+        public BattlefieldOpponent _BattlefieldOpponent { get; set; }
         public Player1TurnState _Player1TurnState { get; set; }
         public Player2TurnState _Player2TurnState { get; set; }
+        public StupidOpponent _StupidOpponent { get; set; }
+        public CleverOpponent _CleverOpponent { get; set; }
+        public IngeniousOpponent _IngeniousOpponent { get; set; }
         public int _Size { get; private set; }
 
         public GameLogic()

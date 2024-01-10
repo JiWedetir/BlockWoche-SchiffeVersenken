@@ -3,6 +3,7 @@
     public class Ship
     {
         private LinkedList<Square> _shipSquares;
+        public int _Length { get { return _shipSquares.Count; } }
         public Ship()
         {
             _shipSquares = new LinkedList<Square>();

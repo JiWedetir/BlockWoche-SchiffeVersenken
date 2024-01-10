@@ -1,4 +1,4 @@
-﻿using SchiffeVersenken.Data.Ship;
+﻿using SchiffeVersenken.Data.Sea;
 
 namespace SchiffeVersenken.Data.View
 

@@ -1,6 +1,6 @@
 ﻿using SchiffeVersenken.Data.Model.Interfaces;
 using SchiffeVersenken.Data.View;
-using SchiffeVersenken.Data.Ship;
+using SchiffeVersenken.Data.Sea;
 using SchiffeVersenken.Data.Model;
 using System;
 
@@ -18,6 +18,7 @@ namespace SchiffeVersenken.Data.Controller
         private Square[,] _board;
         private GameLogic _game;
         private int[,] _tryBoard;
+        public ComputerDifficulty ComputerDifficulty { get; set; } = ComputerDifficulty.Dumm;
         public ComputerOpponent(GameLogic game)
         {
             _game = game;
@@ -25,7 +26,7 @@ namespace SchiffeVersenken.Data.Controller
 
         public void SetShipRandom()
         {
-            _board = _game._Player2Board._Board;
+            _board = _game._BattlefieldOpponent._Board;
             _size = _game._Size;
             _tryBoard = new int[_size, _size];
             int[] shipLengths = { 5, 4, 4, 3, 3, 3, 2, 2, 2, 2 };
@@ -92,7 +93,7 @@ namespace SchiffeVersenken.Data.Controller
             {
                 foreach (var ship in placedShips)
                 {
-                    Ship.Ship kreuzer = new Ship.Ship();
+                    Ship kreuzer = new Ship();
                     if (ship.horizontal)
                     {
                         for (int i = 0; i < ship.length; i++)
@@ -188,6 +189,24 @@ namespace SchiffeVersenken.Data.Controller
                 T temp = list[i];
                 list[i] = list[j];
                 list[j] = temp;
+            }
+        }
+
+        public void Shoot()
+        {
+            if(ComputerDifficulty == ComputerDifficulty.Dumm)
+            {
+                _game._StupidOpponent.SelectSquare();
+                _game.HandlePlayerInput(_game._StupidOpponent._X, _game._StupidOpponent._Y);
+            }
+            else if(ComputerDifficulty == ComputerDifficulty.Klug)
+            {
+                _game._CleverOpponent.ShootClever();
+                _game.HandlePlayerInput(_game._CleverOpponent._X, _game._CleverOpponent._Y);
+            }
+            else if(ComputerDifficulty == ComputerDifficulty.Genie)
+            {
+                
             }
         }
 

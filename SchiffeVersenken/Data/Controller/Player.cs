@@ -1,6 +1,6 @@
 ﻿using SchiffeVersenken.Data.Model.Interfaces;
 using SchiffeVersenken.Data.View;
-using SchiffeVersenken.Data.Ship;
+using SchiffeVersenken.Data.Sea;
 using SchiffeVersenken.Data.Model;
 
 namespace SchiffeVersenken.Data.Controller
@@ -9,7 +9,7 @@ namespace SchiffeVersenken.Data.Controller
     {
         private int _size;
         private Square[,] _board;
-        private List<Ship.Ship> placedShips = new List<Ship.Ship>();
+        private List<Ship> placedShips = new List<Ship>();
         private GameLogic _game;
 
         public Player(GameLogic game)
@@ -48,7 +48,7 @@ namespace SchiffeVersenken.Data.Controller
                 return false;
             }
 
-            Ship.Ship kreuzer = new Ship.Ship();
+            Ship kreuzer = new Ship();
             placedShips.Add(kreuzer);
             for (int i = 0; i < length; i++)
             {
@@ -71,7 +71,7 @@ namespace SchiffeVersenken.Data.Controller
 
         public void DeleteShip(int x, int y)
         {
-            Ship.Ship kreuzer = _board[x, y]._Ship;
+            Ship kreuzer = _board[x, y]._Ship;
             kreuzer.Delete();
             placedShips.Remove(kreuzer);
         }
