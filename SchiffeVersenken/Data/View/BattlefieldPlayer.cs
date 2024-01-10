@@ -7,7 +7,7 @@ namespace SchiffeVersenken.Data.View
     {
         private int _size;
         private Square[,] _board;
-        private List<Kreuzer> placedShips = new List<Kreuzer>();
+
         public BattlefieldPlayer(int size) : base(size)
         {
             _size = size;
