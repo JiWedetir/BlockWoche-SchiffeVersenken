@@ -6,6 +6,9 @@ namespace SchiffeVersenken.Data.Controller
 {
     public class Player: IPlayerBehaviour
     {
+        private int _size;
+        private Square[,] _board;
+        private List<Kreuzer> placedShips = new List<Kreuzer>();
         public bool SetShip(int x, int y, bool horizontal, int length)
         {
             if ((horizontal && x + length > _size) || (!horizontal && y + length > _size))
@@ -74,6 +77,11 @@ namespace SchiffeVersenken.Data.Controller
         public bool CheckIfAllShipsSet()
         {
             return placedShips.Count == 10;
+        }
+
+        public void SetBoardSize(int size)
+        {
+            
         }
     }
 }

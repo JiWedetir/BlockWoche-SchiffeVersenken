@@ -6,6 +6,8 @@ namespace SchiffeVersenken.Data.Controller
 {
     public class ComputerOpponent: IOpponent
     {
+        private int _size;
+        private Square[,] _board;
         public void SetShipRandom()
         {
             int[] shipLengths = { 5, 4, 4, 3, 3, 3, 2, 2, 2, 2 };
