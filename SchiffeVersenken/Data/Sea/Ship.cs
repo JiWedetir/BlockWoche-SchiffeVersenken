@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace SchiffeVersenken.Data.Ship
 {
-    public class Kreuzer
+    public class Ship
     {
         private LinkedList<Square> _shipSquares;
-        public Kreuzer()
+        public Ship()
         {
             _shipSquares = new LinkedList<Square>();
         }

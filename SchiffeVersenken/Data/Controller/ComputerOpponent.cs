@@ -29,7 +29,7 @@ namespace SchiffeVersenken.Data.Controller
             _size = _game._Size;
             _tryBoard = new int[_size, _size];
             int[] shipLengths = { 5, 4, 4, 3, 3, 3, 2, 2, 2, 2 };
-            int maxTries = 1000;
+            int maxTries = 10;
             List<(int x, int y, bool horizontal, int length)> placedShips = new List<(int x, int y, bool horizontal, int length)>();
 
             bool success = PlaceShips(shipLengths, 0, maxTries, placedShips);
@@ -92,7 +92,7 @@ namespace SchiffeVersenken.Data.Controller
             {
                 foreach (var ship in placedShips)
                 {
-                    Kreuzer kreuzer = new Kreuzer();
+                    Ship.Ship kreuzer = new Ship.Ship();
                     if (ship.horizontal)
                     {
                         for (int i = 0; i < ship.length; i++)
@@ -180,11 +180,11 @@ namespace SchiffeVersenken.Data.Controller
 
         private static void Shuffle<T>(List<T> list)
         {
-            Random randomShip = new Random();
+            Random random = new Random();
             int n = list.Count;
             for (int i = n - 1; i > 0; i--)
             {
-                int j = randomShip.Next(i + 1);
+                int j = random.Next(i + 1);
                 T temp = list[i];
                 list[i] = list[j];
                 list[j] = temp;

@@ -6,7 +6,9 @@ namespace SchiffeVersenken.Data.View
 {
     public abstract class Battlefield: IGameView
     {
-        private int _size;
+        protected int _size;
+        protected Square[,] _board;
+        public Square[,] _Board { get { return _board; } }
         public Battlefield(int size)
         {
             _size = size;
@@ -17,9 +19,9 @@ namespace SchiffeVersenken.Data.View
             throw new NotImplementedException();
         }
 
-        public Square[,] CreateField()
+        public void CreateField()
         {
-            Square[,] _board = new Square[_size, _size];
+            _board = new Square[_size, _size];
             for (int i = 0; i < _size; i++)
             {
                 for (int j = 0; j < _size; j++)
@@ -28,7 +30,6 @@ namespace SchiffeVersenken.Data.View
                     _board[i, j].SetToEmptySquare();
                 }
             }
-            return _board;
         }
     }
 }

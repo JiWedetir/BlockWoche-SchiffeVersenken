@@ -16,13 +16,15 @@ namespace SchiffeVersenken.Data.Model
         public ComputerOpponent _ComputerOpponent { get; set; }
         public BattlefieldPlayer _BattelfieldPlayer { get; set; }
         public BattlefieldOpponent _Player2Board { get; set; }
+        public Player1TurnState _Player1TurnState { get; set; }
+        public Player2TurnState _Player2TurnState { get; set; }
         public int _Size { get; private set; }
 
         public GameLogic()
         {
             _Player = new Player(this);
             _ComputerOpponent = new ComputerOpponent(this);
-            //SetSize(9);
+            SetSize(9);
         }
 
         public void Initialize()
@@ -76,5 +78,51 @@ namespace SchiffeVersenken.Data.Model
         {
             TransistionToState(new GameReadyState());
         }
+
+        public void StartGame()
+        {
+            TransistionToState(new GameReadyState());
+        }
+
+        public void PlayerOneTurn()
+        {
+            TransistionToState(_Player1TurnState);
+        }
+
+        public void PlayerTwoTurn()
+        {
+            TransistionToState(_Player2TurnState);
+        }
+
+        public void GameOverState()
+        {
+            TransistionToState(new GameOverState());
+        }
+
+        public void SelectPlayer()
+        {
+            if(_currentState is GameReadyState)
+            {
+                Random rnd = new Random();
+                bool first = rnd.Next(2) == 0;
+                if(first)
+                {
+                    PlayerOneTurn();
+                }
+                else
+                {
+                    PlayerTwoTurn();
+                }
+            }
+            else if(_currentState is Player1TurnState)
+            {
+                PlayerTwoTurn();
+            }
+            else
+            {
+                PlayerOneTurn();
+            }
+        }
+
     }
 }

@@ -24,10 +24,5 @@ namespace SchiffeVersenken.Data.Model.StateMachine
         {
             throw new NotImplementedException();
         }
-
-        public void CreateBattlefield(GameLogic game)
-        {
-            throw new NotImplementedException();
-        }
     }
 }
