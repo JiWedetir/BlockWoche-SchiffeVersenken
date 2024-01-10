@@ -81,7 +81,7 @@ namespace SchiffeVersenken.Data.Controller
 
         public void SetBoardSize(int size)
         {
-            
+            _size = size;
         }
     }
 }
