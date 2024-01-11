@@ -17,9 +17,9 @@
             throw new NotImplementedException();
         }
 
-        public void HandleInput(GameLogic game, int x, int y)
+        public virtual void HandleInput(GameLogic game, int x, int y)
         {
-            throw new NotImplementedException();
+            
         }
     }
 }
