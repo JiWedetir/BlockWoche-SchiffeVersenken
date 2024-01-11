@@ -18,6 +18,7 @@ namespace SchiffeVersenken.Data.Controller
         private Square[,] _board;
         private GameLogic _game;
         private int[,] _tryBoard;
+        private int[] shipLengths = { 5, 4, 4, 3, 3, 3, 2, 2, 2, 2 };
         public ComputerDifficulty ComputerDifficulty { get; set; } = ComputerDifficulty.Dumm;
         public ComputerOpponent(GameLogic game)
         {
@@ -29,7 +30,6 @@ namespace SchiffeVersenken.Data.Controller
             _board = _game._BattlefieldOpponent._Board;
             _size = _game._Size;
             _tryBoard = new int[_size, _size];
-            int[] shipLengths = { 5, 4, 4, 3, 3, 3, 2, 2, 2, 2 };
             int maxTries = 10;
             List<ShipDetails> placedShips = new List<ShipDetails>();
 
@@ -40,11 +40,55 @@ namespace SchiffeVersenken.Data.Controller
             }
         }
 
+        private bool PlaceShips(int[] shipLengths, int index, int maxTries, List<ShipDetails> placedShips)
+        {
+            if (index == shipLengths.Length)
+            {
+                foreach (var ship in placedShips)
+                {
+                    Ship kreuzer = new Ship();
+                    if (ship.Orientation == Orientation.Horizontal)
+                    {
+                        for (int i = 0; i < ship.Size; i++)
+                        {
+                            kreuzer.SetShip(_board[ship.PositionX + i, ship.PositionY]);
+                        }
+                    }
+                    else
+                    {
+                        for (int i = 0; i < ship.Size; i++)
+                        {
+                            kreuzer.SetShip(_board[ship.PositionX, ship.PositionY + i]);
+                        }
+                    }
+                }
+                return true;
+            }
+
+            int shipLength = shipLengths[index];
+            int tries = 0;
+
+            while (tries < maxTries)
+            {
+                if (TryPlaceShip(shipLength, placedShips))
+                {
+                    if (PlaceShips(shipLengths, index + 1, maxTries, placedShips))
+                    {
+
+                        return true;
+                    }
+                    RemoveLastShip(placedShips);
+                }
+                tries++;
+            }
+            return false;
+        }
+
         private bool TryPlaceShip(int length, List<ShipDetails> placedShips)
         {
             List<ShipDetails> validStartPoints = new List<ShipDetails>();
 
-            // Finden Sie alle gültigen Startpunkte, die genug Platz für das Schiff bieten
+            // finde all possible start points
             for (int x = 0; x < _size; x++)
             {
                 for (int y = 0; y < _size; y++)
@@ -74,10 +118,10 @@ namespace SchiffeVersenken.Data.Controller
                 }
             }
 
-            // Mischen Sie die Liste der gültigen Startpunkte, um Zufälligkeit zu gewährleisten
+            // Shuffle the start points
             Shuffle(validStartPoints);
 
-            // Versuchen Sie, das Schiff an einem der gültigen Startpunkte zu platzieren
+            // try to place the ship
             foreach (var startPoint in validStartPoints)
             {
                 if (CanPlaceShip(startPoint))
@@ -103,54 +147,9 @@ namespace SchiffeVersenken.Data.Controller
                     return true;
                 }
             }
-
             return false;
         }
 
-        private bool PlaceShips(int[] shipLengths, int index, int maxTries, List<ShipDetails> placedShips)
-        {
-            if (index == shipLengths.Length) // Alle Schiffe wurden platziert
-            {
-                foreach (var ship in placedShips)
-                {
-                    Ship kreuzer = new Ship();
-                    if (ship.Orientation == Orientation.Horizontal)
-                    {
-                        for (int i = 0; i < ship.Size; i++)
-                        {
-                            kreuzer.SetShip(_board[ship.PositionX + i, ship.PositionY]);
-                        }
-                    }
-                    else
-                    {
-                        for (int i = 0; i < ship.Size; i++)
-                        {
-                            kreuzer.SetShip(_board[ship.PositionX, ship.PositionY + i]);
-                        }
-                    }
-                }
-                return true;
-            }
-
-            int shipLength = shipLengths[index];
-            int tries = 0;
-
-            while (tries < maxTries)
-            {
-                if (TryPlaceShip(shipLength, placedShips)) // Versuchen Sie, das Schiff zu platzieren
-                {
-                    if (PlaceShips(shipLengths, index + 1, maxTries, placedShips)) // Versuchen Sie, die restlichen Schiffe zu platzieren
-                    {
-
-                        return true;
-                    }
-                    RemoveLastShip(placedShips);
-                }
-                tries++;
-            }
-            return false;
-
-        }
 
         private bool CanPlaceShip(ShipDetails ship)
         {
