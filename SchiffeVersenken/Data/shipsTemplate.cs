@@ -9,7 +9,7 @@
 	{
 		public string Name { get; set; }
 		public int PositionX { get; set; }
-		public int Positiony { get; set; }
+		public int PositionY { get; set; }
 		public int Size { get; set; }
 		public bool IsClicked { get; set; }
 		public Orientation Orientation { get; set; } = Orientation.Horizontal;

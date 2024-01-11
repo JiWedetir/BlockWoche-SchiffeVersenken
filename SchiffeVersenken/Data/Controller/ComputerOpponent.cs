@@ -31,7 +31,7 @@ namespace SchiffeVersenken.Data.Controller
             _tryBoard = new int[_size, _size];
             int[] shipLengths = { 5, 4, 4, 3, 3, 3, 2, 2, 2, 2 };
             int maxTries = 10;
-            List<(int x, int y, bool horizontal, int length)> placedShips = new List<(int x, int y, bool horizontal, int length)>();
+            List<ShipDetails> placedShips = new List<ShipDetails>();
 
             bool success = PlaceShips(shipLengths, 0, maxTries, placedShips);
             if (!success)
@@ -40,22 +40,36 @@ namespace SchiffeVersenken.Data.Controller
             }
         }
 
-        private bool TryPlaceShip(int length, List<(int x, int y, bool horizontal, int length)> placedShips)
+        private bool TryPlaceShip(int length, List<ShipDetails> placedShips)
         {
-            List<(int x, int y, bool horizontal)> validStartPoints = new List<(int x, int y, bool horizontal)>();
+            List<ShipDetails> validStartPoints = new List<ShipDetails>();
 
             // Finden Sie alle gültigen Startpunkte, die genug Platz für das Schiff bieten
             for (int x = 0; x < _size; x++)
             {
                 for (int y = 0; y < _size; y++)
                 {
-                    if (CanPlaceShip(x, y, true, length))
+                    ShipDetails horizontal = new ShipDetails
                     {
-                        validStartPoints.Add((x, y, true));
+                        PositionX = x,
+                        PositionY = y,
+                        Orientation = Orientation.Horizontal,
+                        Size = length
+                    };
+                    ShipDetails vertical = new ShipDetails
+                    {
+                        PositionX = x,
+                        PositionY = y,
+                        Orientation = Orientation.Vertical,
+                        Size = length
+                    };
+                    if (CanPlaceShip(horizontal))
+                    {
+                        validStartPoints.Add(horizontal);
                     }
-                    if (CanPlaceShip(x, y, false, length))
+                    if (CanPlaceShip(vertical))
                     {
-                        validStartPoints.Add((x, y, false));
+                        validStartPoints.Add(vertical);
                     }
                 }
             }
@@ -66,18 +80,24 @@ namespace SchiffeVersenken.Data.Controller
             // Versuchen Sie, das Schiff an einem der gültigen Startpunkte zu platzieren
             foreach (var startPoint in validStartPoints)
             {
-                if (CanPlaceShip(startPoint.x, startPoint.y, startPoint.horizontal, length))
+                if (CanPlaceShip(startPoint))
                 {
-                    placedShips.Add((startPoint.x, startPoint.y, startPoint.horizontal, length));
+                    placedShips.Add(new ShipDetails 
+                    {
+                        PositionX = startPoint.PositionX, 
+                        PositionY = startPoint.PositionY,
+                        Orientation = startPoint.Orientation,
+                        Size = length
+                    });
                     for (int i = 0; i < length; i++)
                     {
-                        if (startPoint.horizontal)
+                        if (startPoint.Orientation == Orientation.Horizontal)
                         {
-                            _tryBoard[startPoint.x + i, startPoint.y] = 1;
+                            _tryBoard[startPoint.PositionX + i, startPoint.PositionY] = 1;
                         }
                         else
                         {
-                            _tryBoard[startPoint.x, startPoint.y + i] = 1;
+                            _tryBoard[startPoint.PositionX, startPoint.PositionY + i] = 1;
                         }
                     }
                     return true;
@@ -87,25 +107,25 @@ namespace SchiffeVersenken.Data.Controller
             return false;
         }
 
-        private bool PlaceShips(int[] shipLengths, int index, int maxTries, List<(int x, int y, bool horizontal, int length)> placedShips)
+        private bool PlaceShips(int[] shipLengths, int index, int maxTries, List<ShipDetails> placedShips)
         {
             if (index == shipLengths.Length) // Alle Schiffe wurden platziert
             {
                 foreach (var ship in placedShips)
                 {
                     Ship kreuzer = new Ship();
-                    if (ship.horizontal)
+                    if (ship.Orientation == Orientation.Horizontal)
                     {
-                        for (int i = 0; i < ship.length; i++)
+                        for (int i = 0; i < ship.Size; i++)
                         {
-                            kreuzer.SetShip(_board[ship.x + i, ship.y]);
+                            kreuzer.SetShip(_board[ship.PositionX + i, ship.PositionY]);
                         }
                     }
                     else
                     {
-                        for (int i = 0; i < ship.length; i++)
+                        for (int i = 0; i < ship.Size; i++)
                         {
-                            kreuzer.SetShip(_board[ship.x, ship.y + i]);
+                            kreuzer.SetShip(_board[ship.PositionX, ship.PositionY + i]);
                         }
                     }
                 }
@@ -132,17 +152,18 @@ namespace SchiffeVersenken.Data.Controller
 
         }
 
-        private bool CanPlaceShip(int x, int y, bool horizontal, int length)
+        private bool CanPlaceShip(ShipDetails ship)
         {
-            if ((horizontal && x + length > _size) || (!horizontal && y + length > _size))
+            if ((ship.Orientation == Orientation.Horizontal && ship.PositionX + ship.Size > _size) || (ship.Orientation == Orientation.Vertical && ship.PositionY + ship.Size > _size))
             {
                 return false;
             }
+            bool horizontal = ship.Orientation == Orientation.Horizontal;
 
-            int startX = Math.Max(0, x - 1);
-            int startY = Math.Max(0, y - 1);
-            int endX = Math.Min(_size - 1, horizontal ? x + length : x + 1);
-            int endY = Math.Min(_size - 1, horizontal ? y + 1 : y + length);
+            int startX = Math.Max(0, ship.PositionX - 1);
+            int startY = Math.Max(0, ship.PositionY - 1);
+            int endX = Math.Min(_size - 1, horizontal ? ship.PositionX + ship.Size : ship.PositionX + 1);
+            int endY = Math.Min(_size - 1, horizontal ? ship.PositionY + 1 : ship.PositionY + ship.Size);
 
             for (int posX = startX; posX <= endX; posX++)
             {
@@ -158,7 +179,7 @@ namespace SchiffeVersenken.Data.Controller
             return true;
         }
 
-        private void RemoveLastShip(List<(int x, int y, bool horizontal, int length)> placedShips)
+        private void RemoveLastShip(List<ShipDetails> placedShips)
         {
             if (placedShips.Count == 0)
                 return;
@@ -166,15 +187,15 @@ namespace SchiffeVersenken.Data.Controller
             var lastShip = placedShips[placedShips.Count - 1];
             placedShips.RemoveAt(placedShips.Count - 1);
 
-            for (int i = 0; i < lastShip.length; i++)
+            for (int i = 0; i < lastShip.Size; i++)
             {
-                if (lastShip.horizontal)
+                if (lastShip.Orientation == Orientation.Horizontal)
                 {
-                    _tryBoard[lastShip.x + i, lastShip.y] = 0;
+                    _tryBoard[lastShip.PositionX + i, lastShip.PositionY] = 0;
                 }
                 else
                 {
-                    _tryBoard[lastShip.x, lastShip.y + i] = 0;
+                    _tryBoard[lastShip.PositionX, lastShip.PositionY + i] = 0;
                 }
             }
         }
