@@ -1,6 +1,9 @@
-﻿namespace SchiffeVersenken.Components.Pages
+﻿using Microsoft.AspNetCore.Components;
+
+
+namespace SchiffeVersenken.Components.Pages
 {
-    public partial class PregameVsComputer
+	public partial class PregameVsComputer
     {
         private const int _minFieldSize = 8;
         private const int _maxFieldSize = 15;
@@ -10,9 +13,16 @@
         private int _FieldSize { get; set; } = _minFieldSize;
         private string _Difficulty { get; set; } = "Dumm";
 
-        private void OnSliderValueChanged(int value)
+        private void SendSettings()
         {
-			_FieldSize = value;
-		}
+            //Game._Player  fieldsize
+            //Game._Opponent  difficulty
+            ChangePage();
+        }
+
+        private void ChangePage()
+        {
+			NavigationManager.NavigateTo("/ShipPlacement", true);
+        }
     }
 }

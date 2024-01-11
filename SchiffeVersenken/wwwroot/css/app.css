@@ -1,16 +1,73 @@
-﻿.btn-primary {
-
+﻿@font-face {
+    font-family: "Karmatic";
+    src: url("../../Resources/Fonts/ka1.ttf") format("truetype");
 }
 
-.btn-shoot {
+@font-face {
+    font-family: "6809chargen";
+    src: url("./../../Resources/Fonts/6809-chargen.ttf") format("truetype");
+}
 
+body {
+    font-family: Karmatic, Arial;
+    background-color: black;
+}
+
+.page {
+    margin-block: 2vh;
+    margin-inline: 1vw;
+    width: 98vw;
+    height: 96vh;
+    display: flex;
+    align-self: center;
+    justify-self: center;
+    background-color: white;
+}
+
+p {
+    color: blue;
+}
+
+h1, h2, h3 {
+    line-height: 1.5;
+}
+
+h1 {
+    font-size: 2em;
+    font-weight: bold;
+}
+
+h2 {
+    font-size: 1.5em;
+}
+
+h3 {
+    font-size: 1.2em;
+}
+
+
+.container {
+    border: 1px solid rgb(0,0,0, 0.25);
+    display: flex;
 }
 
 .center {
-    display: flex;
+    align-self: center;
+}
+
+.container.fitspace {
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+}
+
+.container.horizontal {
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.container.vertical {
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    justify-content: space-between;
 }
 
 label {
