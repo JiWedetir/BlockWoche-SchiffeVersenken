@@ -8,7 +8,6 @@ namespace SchiffeVersenken.Data.ComputerPlayer
     public class IngeniousOpponent: CleverOpponent
     {
         private List<ShipDetails> _possiblePositions = new List<ShipDetails>();
-        private int _size;
         private List<int[,]> _possibleFields;
         public IngeniousOpponent(Battlefield battlefield, ComputerOpponent computer) : base(battlefield, computer)
         {
