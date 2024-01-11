@@ -43,9 +43,10 @@ namespace SchiffeVersenken.Data.ComputerPlayer
             _possibleFields = new List<int[, ]>();
             for (int i = 0; i < 10; i++)
             {
-                CreatePossibleFields(_tryField);
+                int[,] tryField = _tryField;
+                CreatePossibleFields(tryField);
             }
-            int[,] averageShipPlacement = GetAverageShipPlacement(_possibleFields);
+            int[,] averageShipPlacement = GetAverageShipPlacement();
             GetHighestAverage(averageShipPlacement);
         }
 
@@ -61,7 +62,7 @@ namespace SchiffeVersenken.Data.ComputerPlayer
             }
         }
 
-        private int[,] GetAverageShipPlacement(List<int[, ]> possibleFields)
+        private int[,] GetAverageShipPlacement()
         {
             int[,] averageShipPlacement = new int[_size, _size];
 

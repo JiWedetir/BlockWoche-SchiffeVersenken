@@ -127,6 +127,5 @@ namespace SchiffeVersenken.Data.Model
                 PlayerOneTurn();
             }
         }
-
     }
 }
