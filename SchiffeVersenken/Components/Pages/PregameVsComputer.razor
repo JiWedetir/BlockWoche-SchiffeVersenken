@@ -1,28 +1,37 @@
 ﻿@page "/PregameVsComputer"
+@inject Microsoft.AspNetCore.Components.NavigationManager NavigationManager;
+@inject GameLogic Game;
 
-<div class="center" style="margin: 20vh 0;">
-	<h1>Pregame Vs Computer</h1>
+<div class="container vertical" style="height:100%; width: 100%;">
+	<h1 class="container center">Pregame Vs Computer</h1>
 
-	<div style="margin: 1rem 0;">
-		<label style="margin-left: 1rem;" >Feldgrösse:  @_FieldSize x @_FieldSize</label>
+	<div class="container vertical center">
+
+		<label style="text-align:center">Feldgrösse:  @_FieldSize x @_FieldSize</label>
 		<div class="slider-container">
 			<label>@_minFieldSizeString</label>
 			<input type="range" min="@_minFieldSize" max="@_maxFieldSize" step="1" @bind-value="@_FieldSize" class="range-style" />
 			<label>@_maxFieldSizeString</label>
 		</div>
+
+		<div class="container center" style="padding-block:2vh 13vh;">
+			<label>Difficulty:</label>
+			<select @bind="@_Difficulty" style="font-size: 1rem">
+				@_Difficulty
+				<option value="0">Dumm</option>
+				<option value="1">Klug</option>
+				<option value="2">Genie</option>
+			</select>
+		</div>
 	</div>
 
-	<div style="margin-bottom: 1rem;">
-		<label>Difficulty:</label>
-		<select @bind="@_Difficulty" style="font-size: 1rem"> @_Difficulty
-			<option value="0">Dumm</option>
-			<option value="1">Klug</option>
-			<option value="2">Genie</option>
-		</select>
+	<div class="container center">
+		<button class="Btn-2D" role="button" @onclick="SendSettings">Start Placing Ships</button>
 	</div>
-</div>
+</div> 
 
-<a class="center" href="ShipPlacement">Start Placing Ships</a>
+
+
 
 
 

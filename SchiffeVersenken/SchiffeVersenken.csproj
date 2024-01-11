@@ -55,10 +55,23 @@
     </ItemGroup>
 
     <ItemGroup>
+      <None Include="wwwroot\font-awesome-4.7.0\css\font-awesome.css" />
+      <None Include="wwwroot\font-awesome-4.7.0\css\font-awesome.min.css" />
+      <None Include="wwwroot\font-awesome-4.7.0\fonts\fontawesome-webfont.eot" />
+      <None Include="wwwroot\font-awesome-4.7.0\fonts\fontawesome-webfont.svg" />
+      <None Include="wwwroot\font-awesome-4.7.0\fonts\fontawesome-webfont.ttf" />
+      <None Include="wwwroot\font-awesome-4.7.0\fonts\fontawesome-webfont.woff" />
+      <None Include="wwwroot\font-awesome-4.7.0\fonts\fontawesome-webfont.woff2" />
+      <None Include="wwwroot\font-awesome-4.7.0\fonts\FontAwesome.otf" />
+      <None Include="wwwroot\font-awesome-4.7.0\HELP-US-OUT.txt" />
+    </ItemGroup>
+
+    <ItemGroup>
         <PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
         <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="$(MauiVersion)" />
         <PackageReference Include="Microsoft.AspNetCore.Components.WebView.Maui" Version="$(MauiVersion)" />
         <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
+        <PackageReference Include="Microsoft.Maui.Essentials" Version="8.0.3" />
     </ItemGroup>
 
 </Project>

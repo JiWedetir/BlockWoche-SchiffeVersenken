@@ -16,7 +16,7 @@ namespace SchiffeVersenken.Data.Model.StateMachine
         public void EnterState(GameLogic game)
         {
             //den spieler fragen wie groß das Spielfeld sein soll
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
 
         public void ExitState(GameLogic game)

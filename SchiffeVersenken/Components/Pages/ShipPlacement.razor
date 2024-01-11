@@ -1,7 +1,66 @@
 ﻿@page "/ShipPlacement"
+@inject Microsoft.AspNetCore.Components.NavigationManager NavigationManager;
 
-<h3>ShipPlacement</h3>
+<div class="container vertical" style="height:100%; width: 100%;">
+
+	<div class="container center" style="margin-top: 1vh;">
+		<h1>ShipPlacement</h1>
+	</div>
+
+	<div class="container horizontal center">
+		@* Schiffeauswahl *@
+		<div class="container vertical" style="width: 40vw; align-items: center">
+			<div class="container fitspace" style="width: 100%; height:100%">	
+				
+				@foreach (var ship in @_ships)
+				{
+					<div class="rechteck">
+						<!-- SVG-Element wird durch eine Methode in der C#-Sektion erstellt -->
+						@BuildSvg(ship)
+					</div>
+
+				@* 	var shipWidth = $"calc((30vw / {@_fieldcnt}) * {ship.Size})";
+    				var shipHeight = $"calc(30vw / {@_fieldcnt})";
+
+				<svg  width="@shipWidth" height="@shipHeight">
+					<rect @onclick="() => ShipClicked(ship)" class="@(ship.IsClicked ? "clicked" : "")" width="@shipWidth" height="@shipHeight"/>
+				</svg> *@
+				}	
+
+			</div>
+			
+			<div class="container horizontal" style="width:100%">
+				<button class="Btn-2D" role="button">Drehen&ensp;<i class="fa fa-repeat" /></button>
+				<button class="Btn-2D" role="button">Reset Ship&ensp;<i class="fa fa-backward" /></button>
+				<button class="Btn-2D" role="button">Reset All&ensp;<i class="fa fa-undo" /></button>
+			</div>
+		</div>
+
+		@* Feld *@
+		<div class="container vertical" style="width: fit-content; align-items: center">
+			<div class="container" style="padding: 1vw; background-color:beige; margin:2vw;">
+				<table class="battlefieldsize">
+					@for (int i = 1; i <= @_fieldcnt; i++)
+					{
+						<tr>
+							@for (int j = 1; j <= @_fieldcnt; j++)
+							{
+								<td class="square">
+								</td>
+							}
+						</tr>
+					}
+				</table>
+			</div>
+			
+		</div>
+	</div>
 
 
-<a href="PregameVsComputer">Back to Settings</a>
-<a href="Game">Game ON</a>
+
+	<div class="container horizontal" style="margin-inline:5vw; margin-bottom: 1vh;">
+		<button class="Btn-2D" role="button" @onclick="GoToPreviousPage">Go Back To Settings</button>
+		<button class="Btn-2D" role="button" @onclick="GoToNextPage">Start Placing Ships</button>
+	</div>
+
+</div>

@@ -1,0 +1,63 @@
+﻿:root {
+    --fieldsize: 30vw;
+}
+
+.square {
+    box-sizing: border-box;
+    border: 1px solid black;
+}
+
+.square:hover {
+    background: lightgray;
+}
+
+.battlefieldsize {
+    width: var(--fieldsize);
+    height: var(--fieldsize);
+}
+
+#draggableContainer {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+}
+
+#draggableSvg {
+    cursor: move;
+}
+
+
+.quadrat {
+    fill: rgb(137,207,240);
+}
+
+.rectangle {
+    fill: rgb(137,207,240);
+    stroke: darkblue;
+    stroke-width: 0.5vw;
+}
+
+/*rect.clicked {
+    fill: rgb(137,207,240);*/ /* Ändert die Füllfarbe zu Rot, wenn angeklickt */
+    /*stroke-width: 5;
+    stroke: rgb(0, 150, 255);
+}*/
+
+/*rect.notclicked {
+    fill: rgb(137,207,240);*/ /* Ändert die Füllfarbe zu Blau, wenn nicht angeklickt */
+    /*stroke-width: 5;
+    stroke: rgb(0, 0, 139);
+}*/
+
+rect.clicked {
+    stroke: black;
+    stroke-width: 2;
+    fill: red;
+    /*animation: pulse 1.5s infinite alternate;*/
+}
+
+/*@keyframes pulse {
+    to {
+        stroke: lightblue;
+    }
+}*/

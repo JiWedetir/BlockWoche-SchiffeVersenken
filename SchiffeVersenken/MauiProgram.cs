@@ -13,13 +13,15 @@ namespace SchiffeVersenken
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
+                    fonts.AddFont("ka1.ttf", "Karmatic");
+                    fonts.AddFont("6809-chargen.ttf", "6809chargen");
                 });
 
             builder.Services.AddMauiBlazorWebView();
-            GameLogic game = new GameLogic();
+			builder.Services.AddSingleton<GameLogic>();
 
 #if DEBUG
-    		builder.Services.AddBlazorWebViewDeveloperTools();
+			builder.Services.AddBlazorWebViewDeveloperTools();
     		builder.Logging.AddDebug();
 #endif
 
