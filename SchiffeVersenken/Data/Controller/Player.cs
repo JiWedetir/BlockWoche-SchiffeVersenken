@@ -1,7 +1,6 @@
-﻿using SchiffeVersenken.Data.Model.Interfaces;
-using SchiffeVersenken.Data.View;
+﻿using SchiffeVersenken.Data.Model;
+using SchiffeVersenken.Data.Model.Interfaces;
 using SchiffeVersenken.Data.Sea;
-using SchiffeVersenken.Data.Model;
 
 namespace SchiffeVersenken.Data.Controller
 {
@@ -16,73 +15,73 @@ namespace SchiffeVersenken.Data.Controller
         {
             _game = game;
         }
-        public bool SetShip(int x, int y, bool horizontal, int length)
+
+        public bool CheckShips(List<ShipDetails> shipsToCheck)
         {
-            if ((horizontal && x + length > _size) || (!horizontal && y + length > _size))
+            foreach (var ship in shipsToCheck)
             {
-                return false;
-            }
-
-            bool fieldOccupied = false;
-            for (int i = -1; i <= length; i++)
-            {
-                for (int j = -1; j <= 1; j++)
+                if ((ship.Orientation == Orientation.Horizontal && ship.PositionX + ship.Size > _size) || (ship.Orientation == Orientation.Vertical && ship.PositionY + ship.Size > _size))
                 {
-                    int posX = horizontal ? x + i : x + j;
-                    int posY = horizontal ? y + j : y + i;
-
-                    if (posX >= 0 && posX < _size && posY >= 0 && posY < _size && _board[posX, posY]._State != SquareState.Empty)
+                    return false;
+                }
+                bool fieldOccupied = false;
+                for (int i = -1; i <= ship.Size; i++)
+                {
+                    for (int j = -1; j <= 1; j++)
                     {
-                        fieldOccupied = true;
+                        int posX = ship.Orientation == Orientation.Horizontal ? ship.PositionX + i : ship.PositionX + j;
+                        int posY = ship.Orientation == Orientation.Vertical ? ship.PositionY + j : ship.PositionY + i;
+
+                        if (posX >= 0 && posX < _size && posY >= 0 && posY < _size && _board[posX, posY]._State != SquareState.Empty)
+                        {
+                            fieldOccupied = true;
+                            break;
+                        }
+                    }
+                    if (fieldOccupied)
+                    {
                         break;
                     }
                 }
                 if (fieldOccupied)
                 {
-                    break;
+                    return false;
                 }
             }
+            return true;
+        }   
 
-            if (fieldOccupied)
+        public bool SetShips(List<ShipDetails> shipsToSet)
+        {
+            if (!CheckShips(shipsToSet))
             {
                 return false;
             }
-
-            Ship kreuzer = new Ship();
-            placedShips.Add(kreuzer);
-            for (int i = 0; i < length; i++)
+            foreach (var ship in shipsToSet)
             {
-                if (horizontal)
+                Ship validShip = new Ship();
+                placedShips.Add(validShip);
+                for (int i = 0; i < ship.Size; i++)
                 {
-                    kreuzer.SetShip(_board[x + i, y]);
+                    if (ship.Orientation == Orientation.Horizontal)
+                    {
+                        validShip.SetShip(_board[ship.PositionX + i, ship.PositionY]);
+                    }
+                    else
+                    {
+                        validShip.SetShip(_board[ship.PositionX, ship.PositionY + i]);
+                    }
+                }
+                if (CheckIfAllShipsSet())
+                {
+                    _game.AllShipAreSet();
                 }
                 else
                 {
-                    kreuzer.SetShip(_board[x, y + i]);
+                    return false;
                 }
             }
-
             return true;
-            if(CheckIfAllShipsSet())
-            {
-                _game.AllShipAreSet();
-            }
-        }
-
-        public void DeleteShip(int x, int y)
-        {
-            Ship kreuzer = _board[x, y]._Ship;
-            kreuzer.Delete();
-            placedShips.Remove(kreuzer);
-        }
-
-        public void ClearBoard()
-        {
-            foreach (var kreuzer in placedShips)
-            {
-                kreuzer.Delete();
-            }
-            placedShips.Clear();
         }
 
         public bool CheckIfAllShipsSet()
@@ -94,6 +93,11 @@ namespace SchiffeVersenken.Data.Controller
         {
             _size = size;
             _game.SetSize(size);
+        }
+
+        public void Shoot(int x, int y)
+        {
+            _game.HandlePlayerInput(x, y);
         }
     }
 }

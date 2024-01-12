@@ -226,7 +226,8 @@ namespace SchiffeVersenken.Data.Controller
             }
             else if(ComputerDifficulty == ComputerDifficulty.Genie)
             {
-                
+                _game._IngeniousOpponent.ShootIngenious();
+                _game.HandlePlayerInput(_game._IngeniousOpponent._X, _game._IngeniousOpponent._Y);
             }
         }
 
