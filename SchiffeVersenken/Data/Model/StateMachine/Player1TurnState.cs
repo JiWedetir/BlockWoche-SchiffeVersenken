@@ -13,6 +13,10 @@
         public override void HandleInput(GameLogic game, int x, int y)
         {
             bool hit = game._BattlefieldOpponent.Shoot(x, y);
+            if (!hit)
+            {
+                game._PlayerScore++;
+            }
             bool gameOver = game._BattlefieldOpponent.CheckGameOver();
             game.SelectPlayer(hit, gameOver);
         }

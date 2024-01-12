@@ -11,6 +11,10 @@ namespace SchiffeVersenken.Data.Model.StateMachine
         public override void HandleInput(GameLogic game, int x, int y)
         {
             bool hit = game._BattlefieldPlayer.Shoot(x, y);
+            if (!hit)
+            {
+                game._OpponentScore++;
+            }
             bool gameOver = game._BattlefieldPlayer.CheckGameOver();
             game.SelectPlayer(hit, gameOver);
         }

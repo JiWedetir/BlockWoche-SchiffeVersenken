@@ -20,10 +20,13 @@ namespace SchiffeVersenken.Data.Model
         public Player1TurnState _Player1TurnState { get; set; }
         public Player2TurnState _Player2TurnState { get; set; }
         public IngeniousOpponent _Opponent { get; set; }
+        public IPlayerBehaviour _Winner { get; private set; }
         public ComputerDifficulty _ComputerDifficulty { get; private set; }
         public int _Size { get; private set; }
         public bool _OpponentShipsSet { get; set; }
         public bool _GameOver { get; set; }
+        public int _PlayerScore { get; set; } = 0;
+        public int _OpponentScore { get; set; } = 0;
 
         public GameLogic()
         {
@@ -122,6 +125,14 @@ namespace SchiffeVersenken.Data.Model
             }
             else if(gameOver)
             {
+                if (_currentState is Player1TurnState)
+                {
+                    _Winner = _Player;
+                }
+                else
+                {
+                    _Winner = _ComputerOpponent;
+                }
                 TransistionToState(new GameOverState());
             }
             else if(hit)

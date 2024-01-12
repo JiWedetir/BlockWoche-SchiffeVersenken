@@ -4,17 +4,14 @@
     {
         public void AfterEnterState(GameLogic game)
         {
-            throw new NotImplementedException();
         }
 
         public void EnterState(GameLogic game)
         {
-            throw new NotImplementedException();
         }
 
         public void ExitState(GameLogic game)
         {
-            throw new NotImplementedException();
         }
 
         public void HandleInput(GameLogic game, int x, int y)
