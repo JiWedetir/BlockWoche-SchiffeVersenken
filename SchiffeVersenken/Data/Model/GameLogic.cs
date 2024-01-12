@@ -22,13 +22,13 @@ namespace SchiffeVersenken.Data.Model
         public StupidOpponent _StupidOpponent { get; set; }
         public CleverOpponent _CleverOpponent { get; set; }
         public IngeniousOpponent _IngeniousOpponent { get; set; }
+        public ComputerDifficulty _ComputerDifficulty { get; private set; }
         public int _Size { get; private set; }
 
         public GameLogic()
         {
             _Player = new Player(this);
             _ComputerOpponent = new ComputerOpponent(this);
-            SetSize(9);
         }
 
         public void Initialize()
@@ -75,6 +75,23 @@ namespace SchiffeVersenken.Data.Model
         public void SetSize(int size)
         {
             this._Size = size;
+        }
+
+        public void SetDifficulty(ComputerDifficulty difficulty)
+        {
+            this._ComputerDifficulty = difficulty;
+        }
+
+        public void StartPlacingShips()
+        {
+            if(_Size == null)
+            {
+                _Size = 10;
+            }
+            if(_ComputerDifficulty == null)
+            {
+                _ComputerDifficulty = ComputerDifficulty.Klug;
+            }
             TransistionToState(new PreGameState());
         }
 
