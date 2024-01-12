@@ -1,13 +1,11 @@
-﻿using SchiffeVersenken.Data.View;
-using SchiffeVersenken.Data.Controller;
+﻿using SchiffeVersenken.Data.Controller;
 using SchiffeVersenken.Data.Sea;
-using Android.Health.Connect.DataTypes.Units;
+using SchiffeVersenken.Data.View;
 
 namespace SchiffeVersenken.Data.ComputerPlayer
 {
     public class IngeniousOpponent: CleverOpponent
     {
-        private List<ShipDetails> _possiblePositions = new List<ShipDetails>();
         private List<int[,]> _possibleFields;
         public IngeniousOpponent(Battlefield battlefield, ComputerOpponent computer) : base(battlefield, computer)
         {
