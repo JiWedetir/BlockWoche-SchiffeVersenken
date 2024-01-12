@@ -16,6 +16,7 @@
 	}
 	public class shipsTemplate
 	{
+		public List<int> _ShipSizes { get; } = new List<int> { 5, 4, 4, 3, 3, 3, 2, 2, 2, 2 };
 		public List<ShipDetails> _Ships { get; set; } = new List<ShipDetails>();
 		public shipsTemplate(List<int> shipSizes)
 		{
