@@ -1,5 +1,6 @@
 ﻿@page "/ShipPlacement"
 @inject Microsoft.AspNetCore.Components.NavigationManager NavigationManager;
+@using IImage = Microsoft.Maui.Graphics.IImage;
 
 <div class="container vertical" style="height:100%; width: 100%;">
 
@@ -15,20 +16,13 @@
 				@foreach (var ship in @_ships)
 				{
 					<div class="rechteck">
-						<!-- SVG-Element wird durch eine Methode in der C#-Sektion erstellt -->
 						@BuildSvg(ship)
 					</div>
-
-				@* 	var shipWidth = $"calc((30vw / {@_fieldcnt}) * {ship.Size})";
-    				var shipHeight = $"calc(30vw / {@_fieldcnt})";
-
-				<svg  width="@shipWidth" height="@shipHeight">
-					<rect @onclick="() => ShipClicked(ship)" class="@(ship.IsClicked ? "clicked" : "")" width="@shipWidth" height="@shipHeight"/>
-				</svg> *@
 				}	
 
 			</div>
 			
+			@* NavigationsButtons *@
 			<div class="container horizontal" style="width:100%">
 				<button class="Btn-2D" role="button">Drehen&ensp;<i class="fa fa-repeat" /></button>
 				<button class="Btn-2D" role="button">Reset Ship&ensp;<i class="fa fa-backward" /></button>
@@ -37,9 +31,9 @@
 		</div>
 
 		@* Feld *@
-		<div class="container vertical" style="width: fit-content; align-items: center">
-			<div class="container" style="padding: 1vw; background-color:beige; margin:2vw;">
-				<table class="battlefieldsize">
+		<div class="container vertical" style="width: fit-content; align-items: center; margin: 2vw; overflow: hidden;">
+			<div class="bg-img-ownfield">
+				<table class="battlefieldsize" style="margin-inline: auto;">
 					@for (int i = 1; i <= @_fieldcnt; i++)
 					{
 						<tr>

@@ -77,6 +77,18 @@ label {
 }
 
 
+.bg-img-shipplacement2 {
+    background-image: url('../../Resources/Images/backgroudbattlefieldtwo.png');
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+}
+
+
+
+
+
+
 /*Error Handling CSS*/
 .valid.modified:not([type=checkbox]) {
     outline: 1px solid #26b050;

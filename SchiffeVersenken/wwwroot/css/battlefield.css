@@ -4,7 +4,7 @@
 
 .square {
     box-sizing: border-box;
-    border: 1px solid black;
+    border: 2px solid black;
 }
 
 .square:hover {
@@ -14,6 +14,17 @@
 .battlefieldsize {
     width: var(--fieldsize);
     height: var(--fieldsize);
+}
+
+.bg-img-ownfield {
+    background-image: url('../images/backgroundbattlefieldown.png');
+    background-repeat: no-repeat;
+    opacity: 0.65;
+    background-size: cover;
+    background-position: center;
+    width: 100%;
+    height: 100%;
+    padding: 1vw;
 }
 
 #draggableContainer {
@@ -34,30 +45,20 @@
 .rectangle {
     fill: rgb(137,207,240);
     stroke: darkblue;
-    stroke-width: 0.5vw;
+    stroke-width: 1vw;
 }
 
-/*rect.clicked {
-    fill: rgb(137,207,240);*/ /* Ändert die Füllfarbe zu Rot, wenn angeklickt */
-    /*stroke-width: 5;
-    stroke: rgb(0, 150, 255);
-}*/
 
-/*rect.notclicked {
-    fill: rgb(137,207,240);*/ /* Ändert die Füllfarbe zu Blau, wenn nicht angeklickt */
-    /*stroke-width: 5;
-    stroke: rgb(0, 0, 139);
-}*/
 
 rect.clicked {
-    stroke: black;
-    stroke-width: 2;
-    fill: red;
-    /*animation: pulse 1.5s infinite alternate;*/
+    stroke: rgb(196, 30, 58);
+    /*stroke-width: 2;
+    fill: red;*/
+    animation: pulse 1.5s infinite alternate;
 }
 
-/*@keyframes pulse {
+@keyframes pulse {
     to {
-        stroke: lightblue;
+        stroke: rgb(255, 49, 49);
     }
-}*/
+}

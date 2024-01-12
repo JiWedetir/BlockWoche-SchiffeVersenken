@@ -64,7 +64,6 @@
       <None Include="wwwroot\font-awesome-4.7.0\fonts\fontawesome-webfont.woff2" />
       <None Include="wwwroot\font-awesome-4.7.0\fonts\FontAwesome.otf" />
       <None Include="wwwroot\font-awesome-4.7.0\HELP-US-OUT.txt" />
-      <None Include="wwwroot\images\backgroundbattlefield.png" />
     </ItemGroup>
 
     <ItemGroup>
@@ -73,10 +72,6 @@
         <PackageReference Include="Microsoft.AspNetCore.Components.WebView.Maui" Version="$(MauiVersion)" />
         <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
         <PackageReference Include="Microsoft.Maui.Essentials" Version="8.0.3" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <MauiImage Include="wwwroot\images\backgroundbattlefield.png" Resize="false" />
     </ItemGroup>
 
 </Project>
