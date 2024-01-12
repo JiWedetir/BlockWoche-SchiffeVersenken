@@ -7,14 +7,14 @@ namespace SchiffeVersenken.Components.Pages
     {
 		private int _fieldcnt;
 		private List<ShipDetails> _ships;
-		private List<int> _shipSizes = new List<int> { 5, 4, 4, 3, 3, 3, 2, 2, 2, 2};
+		private List<int> _shipSizes;
 		private ShipDetails _lastClickedShip = null;
 
 		protected override void OnInitialized()
 		{
 			_fieldcnt = 10;
-			shipsTemplate shipsTemplate = new shipsTemplate(_shipSizes);
 			_ships = shipsTemplate._Ships;
+			_shipSizes = shipsTemplate._ShipSizes;
 		}
 
 		private void ShipClicked(ShipDetails ship)

@@ -14,19 +14,12 @@
 		public bool IsClicked { get; set; }
 		public Orientation Orientation { get; set; } = Orientation.Horizontal;
 	}
-	public class shipsTemplate
+	public static class shipsTemplate
 	{
-		public List<int> _ShipSizes { get; } = new List<int> { 5, 4, 4, 3, 3, 3, 2, 2, 2, 2 };
-		public List<ShipDetails> _Ships { get; set; } = new List<ShipDetails>();
-		public shipsTemplate(List<int> shipSizes)
-		{
-			foreach (int size in shipSizes)
-			{
-				_Ships.Add(CreateShip(size));
-			}
-		}
+		public static List<int> _ShipSizes { get; } = new List<int> { 5, 4, 4, 3, 3, 3, 2, 2, 2, 2 };
+		public static List<ShipDetails> _Ships { get; set; } = _ShipSizes.Select(size => CreateShip(size)).ToList();
 
-		private ShipDetails CreateShip(int size)
+		private static ShipDetails CreateShip(int size)
 		{
 			switch (size)
 			{
