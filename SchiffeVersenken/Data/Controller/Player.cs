@@ -10,6 +10,7 @@ namespace SchiffeVersenken.Data.Controller
         private Square[,] _board;
         private List<Ship> placedShips = new List<Ship>();
         private GameLogic _game;
+        public bool _YourTurn = false;
 
         public Player(GameLogic game)
         {
@@ -97,7 +98,10 @@ namespace SchiffeVersenken.Data.Controller
 
         public void Shoot(int x, int y)
         {
-            _game.HandlePlayerInput(x, y);
+            if(_YourTurn)
+            {
+                _game.HandlePlayerInput(x, y);
+            }
         }
     }
 }

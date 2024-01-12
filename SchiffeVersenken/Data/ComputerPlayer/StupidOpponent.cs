@@ -1,6 +1,7 @@
 ﻿using SchiffeVersenken.Data.View;
 using SchiffeVersenken.Data.Controller;
 using SchiffeVersenken.Data.Sea;
+using SchiffeVersenken.Data.Model;
 
 namespace SchiffeVersenken.Data.ComputerPlayer
 {
@@ -14,10 +15,10 @@ namespace SchiffeVersenken.Data.ComputerPlayer
         protected int[] _shipsToFinde = { 5, 4, 4, 3, 3, 3, 2, 2, 2, 2 };
         public int _X { get { return _x; } }
         public int _Y { get { return _y; } }
-        public StupidOpponent(Battlefield battlefield, ComputerOpponent computer)
+        public StupidOpponent(GameLogic game)
         {
-            _battlefield = battlefield;
-            _computer = computer;
+            _battlefield = game._BattlefieldPlayer;
+            _computer = game._ComputerOpponent;
         }
 
         public bool SelectSquare()

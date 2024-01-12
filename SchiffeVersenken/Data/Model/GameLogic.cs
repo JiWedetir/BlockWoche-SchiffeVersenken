@@ -19,11 +19,11 @@ namespace SchiffeVersenken.Data.Model
         public BattlefieldOpponent _BattlefieldOpponent { get; set; }
         public Player1TurnState _Player1TurnState { get; set; }
         public Player2TurnState _Player2TurnState { get; set; }
-        public StupidOpponent _StupidOpponent { get; set; }
-        public CleverOpponent _CleverOpponent { get; set; }
-        public IngeniousOpponent _IngeniousOpponent { get; set; }
+        public IngeniousOpponent _Opponent { get; set; }
         public ComputerDifficulty _ComputerDifficulty { get; private set; }
         public int _Size { get; private set; }
+        public bool _OpponentShipsSet { get; set; }
+        public bool _GameOver { get; set; }
 
         public GameLogic()
         {
@@ -80,6 +80,7 @@ namespace SchiffeVersenken.Data.Model
         public void SetDifficulty(ComputerDifficulty difficulty)
         {
             this._ComputerDifficulty = difficulty;
+            _Opponent = new IngeniousOpponent(this);
         }
 
         public void StartPlacingShips()
@@ -97,30 +98,14 @@ namespace SchiffeVersenken.Data.Model
 
         public void AllShipAreSet()
         {
+            if (!_OpponentShipsSet)
+            {
+                throw new Exception("Gegner hat noch keine Schiffe gesetzt");
+            }
             TransistionToState(new GameReadyState());
         }
 
-        public void StartGame()
-        {
-            TransistionToState(new GameReadyState());
-        }
-
-        public void PlayerOneTurn()
-        {
-            TransistionToState(_Player1TurnState);
-        }
-
-        public void PlayerTwoTurn()
-        {
-            TransistionToState(_Player2TurnState);
-        }
-
-        public void GameOverState()
-        {
-            TransistionToState(new GameOverState());
-        }
-
-        public void SelectPlayer()
+        public void SelectPlayer(bool hit, bool gameOver)
         {
             if(_currentState is GameReadyState)
             {
@@ -128,20 +113,35 @@ namespace SchiffeVersenken.Data.Model
                 bool first = rnd.Next(2) == 0;
                 if(first)
                 {
-                    PlayerOneTurn();
+                    TransistionToState(_Player1TurnState);
                 }
                 else
                 {
-                    PlayerTwoTurn();
+                    TransistionToState(_Player2TurnState);
+                }
+            }
+            else if(gameOver)
+            {
+                TransistionToState(new GameOverState());
+            }
+            else if(hit)
+            {
+                if(_currentState is Player1TurnState)
+                {
+                    TransistionToState(_Player1TurnState);
+                }
+                else
+                {
+                    TransistionToState(_Player2TurnState);
                 }
             }
             else if(_currentState is Player1TurnState)
             {
-                PlayerTwoTurn();
+                TransistionToState(_Player2TurnState);
             }
             else
             {
-                PlayerOneTurn();
+                TransistionToState(_Player1TurnState);
             }
         }
     }

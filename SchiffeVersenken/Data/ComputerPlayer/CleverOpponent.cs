@@ -2,6 +2,7 @@
 using SchiffeVersenken.Data.Controller;
 using SchiffeVersenken.Data.Sea;
 using Microsoft.Maui.ApplicationModel.DataTransfer;
+using SchiffeVersenken.Data.Model;
 
 namespace SchiffeVersenken.Data.ComputerPlayer
 {
@@ -9,7 +10,7 @@ namespace SchiffeVersenken.Data.ComputerPlayer
     {
         protected bool _cleverFieldFound;
         protected int _size;
-        public CleverOpponent(Battlefield battlefield, ComputerOpponent computer) : base(battlefield, computer)
+        public CleverOpponent(GameLogic game) : base(game)
         {
         }
 

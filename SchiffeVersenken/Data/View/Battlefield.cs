@@ -33,9 +33,14 @@ namespace SchiffeVersenken.Data.View
             }
         }
 
-        public void Shoot(int x, int y)
+        public bool Shoot(int x, int y)
         {
             _Board[x, y].ShootOnSquare();
+            if (_Board[x, y]._State == SquareState.Ship || _Board[x, y]._State == SquareState.Sunk)
+            {
+                return true;
+            }
+            return false;
         }
 
         public bool CheckGameOver()

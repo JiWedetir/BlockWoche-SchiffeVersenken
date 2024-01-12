@@ -34,9 +34,9 @@ namespace SchiffeVersenken.Data.Controller
             List<ShipDetails> placedShips = new List<ShipDetails>();
 
             bool success = PlaceShips(shipLengths, 0, maxTries, placedShips);
-            if (!success)
+            if (success)
             {
-                throw new Exception("Could not place ships");
+                _game._OpponentShipsSet = true;
             }
         }
 
@@ -216,18 +216,18 @@ namespace SchiffeVersenken.Data.Controller
         {
             if(ComputerDifficulty == ComputerDifficulty.Dumm)
             {
-                _game._StupidOpponent.SelectSquare();
-                _game.HandlePlayerInput(_game._StupidOpponent._X, _game._StupidOpponent._Y);
+                _game._Opponent.SelectSquare();
+                _game.HandlePlayerInput(_game._Opponent._X, _game._Opponent._Y);
             }
             else if(ComputerDifficulty == ComputerDifficulty.Klug)
             {
-                _game._CleverOpponent.ShootClever();
-                _game.HandlePlayerInput(_game._CleverOpponent._X, _game._CleverOpponent._Y);
+                _game._Opponent.ShootClever();
+                _game.HandlePlayerInput(_game._Opponent._X, _game._Opponent._Y);
             }
             else if(ComputerDifficulty == ComputerDifficulty.Genie)
             {
-                _game._IngeniousOpponent.ShootIngenious();
-                _game.HandlePlayerInput(_game._IngeniousOpponent._X, _game._IngeniousOpponent._Y);
+                _game._Opponent.ShootIngenious();
+                _game.HandlePlayerInput(_game._Opponent._X, _game._Opponent._Y);
             }
         }
 

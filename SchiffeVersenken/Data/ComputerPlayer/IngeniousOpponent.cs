@@ -1,4 +1,5 @@
 ﻿using SchiffeVersenken.Data.Controller;
+using SchiffeVersenken.Data.Model;
 using SchiffeVersenken.Data.Sea;
 using SchiffeVersenken.Data.View;
 
@@ -7,9 +8,9 @@ namespace SchiffeVersenken.Data.ComputerPlayer
     public class IngeniousOpponent: CleverOpponent
     {
         private List<int[,]> _possibleFields;
-        public IngeniousOpponent(Battlefield battlefield, ComputerOpponent computer) : base(battlefield, computer)
+        public IngeniousOpponent(GameLogic game) : base(game)
         {
-            _size = battlefield._Size;
+            _size = _battlefield._Size;
         }
 
         public void ShootIngenious()
