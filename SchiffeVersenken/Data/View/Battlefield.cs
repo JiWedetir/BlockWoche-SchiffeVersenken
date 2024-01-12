@@ -37,5 +37,20 @@ namespace SchiffeVersenken.Data.View
         {
             _Board[x, y].ShootOnSquare();
         }
+
+        public bool CheckGameOver()
+        {
+            for (int i = 0; i < _size; i++)
+            {
+                for (int j = 0; j < _size; j++)
+                {
+                    if (_Board[i, j]._State == SquareState.Ship)
+                    {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
     }
 }
