@@ -7,26 +7,30 @@ namespace SchiffeVersenken.Components.Pages
     {
 		private int _fieldcnt;
 		private List<ShipDetails> _ships;
-		private List<int> _shipSizes = new List<int> { 5, 4, 4, 3, 3, 3, 2, 2, 2};
+		private List<int> _shipSizes;
+		private ShipDetails _lastClickedShip = null;
 
 		protected override void OnInitialized()
 		{
-			_fieldcnt = 15;
-			shipsTemplate shipsTemplate = new shipsTemplate(_shipSizes);
+			_fieldcnt = 10;
 			_ships = shipsTemplate._Ships;
+			_shipSizes = shipsTemplate._ShipSizes;
 		}
 
 		private void ShipClicked(ShipDetails ship)
 		{
-			ship.IsClicked = !ship.IsClicked;
+			if (_lastClickedShip == null || _lastClickedShip == ship)
+			{
+				ship.IsClicked = !ship.IsClicked;
+			}
+			else
+			{
+				_lastClickedShip.IsClicked = false;
+				ship.IsClicked = true;
+			}
+			_lastClickedShip = ship;
 		}
 
-		// Methode zum Erstellen des SVG-Elements
-		//< svg  width = "@shipWidth" height = "@shipHeight" >
-		//	< rect @onclick = "() => ShipClicked(ship)" class="@(ship.IsClicked ? "clicked" : "")" width="@shipWidth" height="@shipHeight"/>
-		//</svg> 
-
-		//
 		RenderFragment BuildSvg(ShipDetails ship) => builder =>
 		{
 			int size = ship.Size;
@@ -39,6 +43,7 @@ namespace SchiffeVersenken.Components.Pages
 			builder.OpenElement(9, "rect");
 			builder.AddAttribute(12, "width", $"{size * squareSize}vw");
 			builder.AddAttribute(13, "height", $"{squareSize}vw");
+			builder.AddAttribute(15, "onclick", EventCallback.Factory.Create(this, () => ShipClicked(ship)));
 			builder.AddAttribute(14, "class", $"rectangle {(ship.IsClicked ? "clicked" : "")}");
 			builder.CloseElement();
 
@@ -46,10 +51,10 @@ namespace SchiffeVersenken.Components.Pages
 			for (int i = 0; i < size; i++)
 			{
 				builder.OpenElement(3, "rect");
-				builder.AddAttribute(4, "x", $"calc{i * squareSize - (1/size)}vw");
+				builder.AddAttribute(4, "x", $"{i * squareSize}vw");
 				builder.AddAttribute(5, "y", "0");
-				builder.AddAttribute(6, "width", $"{squareSize}vw");
-				builder.AddAttribute(7, "height", $"{squareSize}vw");
+				builder.AddAttribute(6, "width", $"calc({squareSize - (2 / size)}vw");
+				builder.AddAttribute(7, "height", $"calc({squareSize - (2 / size)})vw");
 				builder.AddAttribute(8, "class", "quadrat");
 				builder.CloseElement();
 			}
