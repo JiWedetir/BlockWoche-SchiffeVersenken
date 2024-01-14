@@ -12,6 +12,7 @@
 		public int PositionY { get; set; }
 		public int Size { get; set; }
 		public bool IsClicked { get; set; }
+		public bool IsPlaced { get; set; }
 		public Orientation Orientation { get; set; } = Orientation.Horizontal;
 	}
 	public static class shipsTemplate

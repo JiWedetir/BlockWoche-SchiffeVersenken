@@ -1,6 +1,7 @@
 ﻿@page "/PregameVsComputer"
 @inject Microsoft.AspNetCore.Components.NavigationManager NavigationManager;
-@inject GameLogic Game;
+@using SchiffeVersenken.Data.Controller;
+@inherits LayoutComponentBase
 
 <div class="container vertical" style="height:100%; width: 100%;">
 	<h1 class="container center">Pregame Vs Computer</h1>
@@ -18,9 +19,10 @@
 			<label>Difficulty:</label>
 			<select @bind="@_Difficulty" style="font-size: 1rem">
 				@_Difficulty
-				<option value="0">Dumm</option>
-				<option value="1">Klug</option>
-				<option value="2">Genie</option>
+				@foreach (var difficulty in Enum.GetValues(typeof(ComputerDifficulty)))
+				{
+					<option value="@difficulty">@difficulty</option>
+				}
 			</select>
 		</div>
 	</div>
