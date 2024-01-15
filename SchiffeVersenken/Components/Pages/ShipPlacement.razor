@@ -1,6 +1,8 @@
 ﻿@page "/ShipPlacement"
 @inject Microsoft.AspNetCore.Components.NavigationManager NavigationManager;
+@inject IDialogService DialogService;
 @using IImage = Microsoft.Maui.Graphics.IImage;
+@inherits LayoutComponentBase
 
 <div class="container vertical" style="height:100%; width: 100%;">
 
@@ -13,7 +15,7 @@
 		<div class="container vertical" style="width: 40vw; align-items: center">
 			<div class="container fitspace" style="width: 100%; height:100%">	
 				
-				@foreach (var ship in @_ships)
+				@foreach (var ship in _shipsToSet)
 				{
 					<div class="rechteck">
 						@BuildSvg(ship)
@@ -24,7 +26,7 @@
 			
 			@* NavigationsButtons *@
 			<div class="container horizontal" style="width:100%">
-				<button class="Btn-2D" role="button">Drehen&ensp;<i class="fa fa-repeat" /></button>
+				<button class="Btn-2D" role="button" @onclick="ChangeOrientation" >Drehen&ensp;<i class="fa fa-repeat" /></button>
 				<button class="Btn-2D" role="button">Reset Ship&ensp;<i class="fa fa-backward" /></button>
 				<button class="Btn-2D" role="button">Reset All&ensp;<i class="fa fa-undo" /></button>
 			</div>
@@ -34,12 +36,15 @@
 		<div class="container vertical" style="width: fit-content; align-items: center; margin: 2vw; overflow: hidden;">
 			<div class="bg-img-ownfield">
 				<table class="battlefieldsize" style="margin-inline: auto;">
-					@for (int i = 1; i <= @_fieldcnt; i++)
+					@for (int i = 0; i < @_fieldcnt; i++)
 					{
 						<tr>
-							@for (int j = 1; j <= @_fieldcnt; j++)
+							@for (int j = 0; j < @_fieldcnt; j++)
 							{
-								<td class="square">
+								int row = i;
+								int col = j;
+
+								<td class="square @(_fieldBoolArray[col,row] ? "active" : "")" @onclick="() => OnSquareClick(col,row)">
 								</td>
 							}
 						</tr>

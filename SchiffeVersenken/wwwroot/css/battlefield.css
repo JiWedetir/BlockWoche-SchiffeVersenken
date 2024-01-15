@@ -11,6 +11,11 @@
     background: lightgray;
 }
 
+.square.active {
+    pointer-events: none;
+    background: red;
+}
+
 .battlefieldsize {
     width: var(--fieldsize);
     height: var(--fieldsize);
@@ -27,20 +32,11 @@
     padding: 1vw;
 }
 
-#draggableContainer {
-    position: relative;
-    width: 100%;
-    height: 100vh;
-}
-
-#draggableSvg {
-    cursor: move;
-}
-
-
 .quadrat {
     fill: rgb(137,207,240);
 }
+
+
 
 .rectangle {
     fill: rgb(137,207,240);
@@ -49,12 +45,20 @@
 }
 
 
+rect.placed {
+    visibility: hidden;
+    pointer-events: none;
+}
 
 rect.clicked {
     stroke: rgb(196, 30, 58);
     /*stroke-width: 2;
     fill: red;*/
-    animation: pulse 1.5s infinite alternate;
+    /*animation: pulse 1.5s infinite alternate;*/
+}
+
+rect.vertical {
+    transform: rotate(90deg);
 }
 
 @keyframes pulse {

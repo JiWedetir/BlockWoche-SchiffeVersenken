@@ -76,6 +76,12 @@ label {
     margin: 0 0.5rem;
 }
 
+.reset-styles {
+    display: initial; /* Setzt die Anzeige auf den Standardwert zurück */
+    flex-direction: initial; /* Setzt die Flex-Richtung auf den Standardwert zurück */
+    justify-content: unset; /* Setzt die Ausrichtung auf den Standardwert zurück */
+    align-self: auto; /* Setzt die Selbstausrichtung auf den Standardwert zurück */
+}
 
 .bg-img-shipplacement2 {
     background-image: url('../../Resources/Images/backgroudbattlefieldtwo.png');

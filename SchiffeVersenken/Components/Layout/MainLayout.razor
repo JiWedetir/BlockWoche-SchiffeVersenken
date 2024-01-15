@@ -1,5 +1,8 @@
 ﻿@inherits LayoutComponentBase
+@inject GameLogic Game;
 
 <div class="page">
-    @Body
+    <CascadingValue Value="Game">
+        @Body
+    </CascadingValue>
 </div>
