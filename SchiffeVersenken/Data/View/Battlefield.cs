@@ -33,9 +33,29 @@ namespace SchiffeVersenken.Data.View
             }
         }
 
-        public void Shoot(int x, int y)
+        public async Task<bool> ShootAsync(int x, int y)
         {
-            _Board[x, y].ShootOnSquare();
+            await _Board[x, y].ShootOnSquareAsync();
+            if (_Board[x, y]._State == SquareState.Hit || _Board[x, y]._State == SquareState.Sunk)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public bool CheckGameOver()
+        {
+            for (int i = 0; i < _size; i++)
+            {
+                for (int j = 0; j < _size; j++)
+                {
+                    if (_Board[i, j]._State == SquareState.Ship)
+                    {
+                        return false;
+                    }
+                }
+            }
+            return true;
         }
     }
 }

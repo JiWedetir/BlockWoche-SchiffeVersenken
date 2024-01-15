@@ -19,16 +19,20 @@ namespace SchiffeVersenken.Data.Model
         public BattlefieldOpponent _BattlefieldOpponent { get; set; }
         public Player1TurnState _Player1TurnState { get; set; }
         public Player2TurnState _Player2TurnState { get; set; }
-        public StupidOpponent _StupidOpponent { get; set; }
-        public CleverOpponent _CleverOpponent { get; set; }
-        public IngeniousOpponent _IngeniousOpponent { get; set; }
+        public IngeniousOpponent _Opponent { get; set; }
+        public IPlayerBehaviour _Winner { get; private set; }
+        public ComputerDifficulty _ComputerDifficulty { get; private set; }
         public int _Size { get; private set; }
+        public bool _OpponentShipsSet { get; set; }
+        public bool _GameOver { get; set; }
+        public int _PlayerScore { get; set; } = 0;
+        public int _OpponentScore { get; set; } = 0;
+        public List<(int x, int y, bool hit)> shoots = new List<(int x, int y, bool hit)>();
 
         public GameLogic()
         {
             _Player = new Player(this);
             _ComputerOpponent = new ComputerOpponent(this);
-            SetSize(9);
         }
 
         public void Initialize()
@@ -75,57 +79,84 @@ namespace SchiffeVersenken.Data.Model
         public void SetSize(int size)
         {
             this._Size = size;
+        }
+
+        public void SetDifficulty(ComputerDifficulty difficulty)
+        {
+            this._ComputerDifficulty = difficulty;
+        }
+
+        public void StartPlacingShips()
+        {
+            if(_Size == null)
+            {
+                _Size = 10;
+            }
+            if(_ComputerDifficulty == null)
+            {
+                _ComputerDifficulty = ComputerDifficulty.Klug;
+            }
             TransistionToState(new PreGameState());
         }
 
         public void AllShipAreSet()
         {
+            if (!_OpponentShipsSet)
+            {
+                throw new Exception("Gegner hat noch keine Schiffe gesetzt");
+            }
             TransistionToState(new GameReadyState());
+            SelectPlayer(false, false);
         }
 
-        public void StartGame()
+        public void SelectPlayer(bool hit, bool gameOver)
         {
-            TransistionToState(new GameReadyState());
-        }
-
-        public void PlayerOneTurn()
-        {
-            TransistionToState(_Player1TurnState);
-        }
-
-        public void PlayerTwoTurn()
-        {
-            TransistionToState(_Player2TurnState);
-        }
-
-        public void GameOverState()
-        {
-            TransistionToState(new GameOverState());
-        }
-
-        public void SelectPlayer()
-        {
+            IBattleShipsGameState nextState;
             if(_currentState is GameReadyState)
             {
                 Random rnd = new Random();
                 bool first = rnd.Next(2) == 0;
                 if(first)
                 {
-                    PlayerOneTurn();
+                    nextState = _Player1TurnState;
                 }
                 else
                 {
-                    PlayerTwoTurn();
+                    nextState = _Player2TurnState;
+                }
+            }
+            else if(gameOver)
+            {
+                if (_currentState is Player1TurnState)
+                {
+                    _Winner = _Player;
+                }
+                else
+                {
+                    _Winner = _ComputerOpponent;
+                }
+                nextState = new GameOverState();
+            }
+            else if(hit)
+            {
+                if(_currentState is Player1TurnState)
+                {
+                    nextState = _Player1TurnState;
+                }
+                else
+                {
+                    nextState = _Player2TurnState;
                 }
             }
             else if(_currentState is Player1TurnState)
             {
-                PlayerTwoTurn();
+                nextState = _Player2TurnState;
             }
             else
             {
-                PlayerOneTurn();
+                nextState = _Player1TurnState;
             }
+            TransistionToState(nextState);
         }
     }
 }

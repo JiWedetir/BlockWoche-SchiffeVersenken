@@ -19,7 +19,7 @@ namespace SchiffeVersenken.Data.Controller
         private GameLogic _game;
         private int[,] _tryBoard;
         private int[] shipLengths = { 5, 4, 4, 3, 3, 3, 2, 2, 2, 2 };
-        public ComputerDifficulty ComputerDifficulty { get; set; } = ComputerDifficulty.Dumm;
+        public List<(int x, int y, bool hit, bool sunk)> _shootHistory = new List<(int x, int y, bool hit, bool sunk)>();
         public ComputerOpponent(GameLogic game)
         {
             _game = game;
@@ -34,9 +34,13 @@ namespace SchiffeVersenken.Data.Controller
             List<ShipDetails> placedShips = new List<ShipDetails>();
 
             bool success = PlaceShips(shipLengths, 0, maxTries, placedShips);
-            if (!success)
+            if (success)
             {
-                throw new Exception("Could not place ships");
+                _game._OpponentShipsSet = true;
+            }
+            else
+            {
+                throw new Exception("Schiffe konnten nicht gesetzt werden");
             }
         }
 
@@ -212,22 +216,22 @@ namespace SchiffeVersenken.Data.Controller
             }
         }
 
-        public void Shoot()
+        public async Task ShootAsync()
         {
-            if(ComputerDifficulty == ComputerDifficulty.Dumm)
+            if(_game._ComputerDifficulty == ComputerDifficulty.Dumm)
             {
-                _game._StupidOpponent.SelectSquare();
-                _game.HandlePlayerInput(_game._StupidOpponent._X, _game._StupidOpponent._Y);
+                await _game._Opponent.SelectSquareAsync();
+                _game.HandlePlayerInput(_game._Opponent._X, _game._Opponent._Y);
             }
-            else if(ComputerDifficulty == ComputerDifficulty.Klug)
+            else if(_game._ComputerDifficulty == ComputerDifficulty.Klug)
             {
-                _game._CleverOpponent.ShootClever();
-                _game.HandlePlayerInput(_game._CleverOpponent._X, _game._CleverOpponent._Y);
+                await _game._Opponent.ShootCleverAsync();
+                _game.HandlePlayerInput(_game._Opponent._X, _game._Opponent._Y);
             }
-            else if(ComputerDifficulty == ComputerDifficulty.Genie)
+            else if(_game._ComputerDifficulty == ComputerDifficulty.Genie)
             {
-                _game._IngeniousOpponent.ShootIngenious();
-                _game.HandlePlayerInput(_game._IngeniousOpponent._X, _game._IngeniousOpponent._Y);
+                await _game._Opponent.ShootIngeniousAsync();
+                _game.HandlePlayerInput(_game._Opponent._X, _game._Opponent._Y);
             }
         }
 

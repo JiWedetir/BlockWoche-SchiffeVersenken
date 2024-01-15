@@ -6,6 +6,7 @@ namespace SchiffeVersenken.Data.Model.StateMachine
     {
         public void AfterEnterState(GameLogic game)
         {
+
         }
 
         public void EnterState(GameLogic game)
@@ -19,7 +20,7 @@ namespace SchiffeVersenken.Data.Model.StateMachine
         {
         }
 
-        public void HandleInput(GameLogic game, int x, int y)
+        public Task HandleInput(GameLogic game, int x, int y)
         {
             throw new NotImplementedException();
         }
