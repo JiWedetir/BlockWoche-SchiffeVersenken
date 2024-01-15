@@ -1,4 +1,3 @@
-﻿using SchiffeVersenken.Data.Controller;
 using SchiffeVersenken.Data.Model;
 using SchiffeVersenken.Data.Sea;
 using SchiffeVersenken.Data.View;
@@ -13,46 +12,48 @@ namespace SchiffeVersenken.Data.ComputerPlayer
             _size = _battlefield._Size;
         }
 
-        public void ShootIngenious()
+        public async Task ShootIngeniousAsync()
         {
-            ShootClever();
+            await ShootCleverAsync();
             if (!_cleverFieldFound)
             {
-                CreatePossiblePossitions();
+                await CreatePossiblePossitions();
             }
         }
 
-        public void CreatePossiblePossitions()
+        public async Task CreatePossiblePossitions()
         {
-            int[, ] _tryField = new int[_size, _size];
+            await Task.Run(() =>
+            {
+                _possibleFields = new List<int[,]>();
+                for (int i = 0; i < 10; i++)
+                {
+                    CreatePossibleFields();
+                }
+                int[,] averageShipPlacement = GetAverageShipPlacement();
+                GetHighestAverage(averageShipPlacement);
+            });
+        }
+
+        private void CreatePossibleFields()
+        {
+            List<ShipDetails> placedShips = new List<ShipDetails>();
+            int[,] tryField = new int[_size, _size];
             for (int i = 0; i < _size; i++)
             {
                 for (int j = 0; j < _size; j++)
                 {
-                    if (_battlefield._Board[i, j]._State == SquareState.Empty)
+                    if (_battlefield._Board[i, j]._State == SquareState.Empty || _battlefield._Board[i, j]._State == SquareState.Ship)
                     {
-                        _tryField[i, j] = 0;
+                        tryField[i, j] = 0;
                     }
                     else
                     {
-                        _tryField[i, j] = 1;
+                        tryField[i, j] = 1;
                     }
                 }
             }
-            _possibleFields = new List<int[, ]>();
-            for (int i = 0; i < 10; i++)
-            {
-                int[,] tryField = _tryField;
-                CreatePossibleFields(tryField);
-            }
-            int[,] averageShipPlacement = GetAverageShipPlacement();
-            GetHighestAverage(averageShipPlacement);
-        }
-
-        private void CreatePossibleFields(int[, ] tryField)
-        {
-            List<ShipDetails> placedShips = new List<ShipDetails>();
-            int maxTries = 10;
+            int maxTries = 1;
             int[] shipLengths = _shipsToFinde;
             bool success = PlaceShips(shipLengths, 0, maxTries, placedShips, tryField);
             if (success)
@@ -99,8 +100,41 @@ namespace SchiffeVersenken.Data.ComputerPlayer
                     }
                 }
             }
+
+            if (_battlefield._Board[maxI, maxJ]._State == SquareState.Empty || _battlefield._Board[maxI, maxJ]._State == SquareState.Ship)
+            {
+                _x = maxI;
+                _y = maxJ;
+            }
+            else
+            {
+                int tries = 0;
+                do
+                {
+                    for (int i = 0; i < _size; i++)
+                    {
+                        for (int j = 0; j < _size; j++)
+                        {
+                            if (averageShipPlacement[i, j] == maxValue)
+                            {
+                                maxI = i;
+                                maxJ = j;
+                                if (_battlefield._Board[maxI, maxJ]._State == SquareState.Empty || _battlefield._Board[maxI, maxJ]._State == SquareState.Ship)
+                                {
+                                    _x = maxI;
+                                    _y = maxJ;
+                                    return;
+                                }
+                    }
+                }
+            }
+                    tries++;
+                    maxValue --;
+                } while (tries < 8);
             _x = maxI;
             _y = maxJ;
+        }
+
         }
 
         private bool PlaceShips(int[] shipLengths, int index, int maxTries, List<ShipDetails> placedShips, int[, ] tryField)

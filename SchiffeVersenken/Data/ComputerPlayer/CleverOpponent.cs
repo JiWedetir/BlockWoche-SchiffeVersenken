@@ -1,7 +1,3 @@
-﻿using SchiffeVersenken.Data.View;
-using SchiffeVersenken.Data.Controller;
-using SchiffeVersenken.Data.Sea;
-using Microsoft.Maui.ApplicationModel.DataTransfer;
 using SchiffeVersenken.Data.Model;
 
 namespace SchiffeVersenken.Data.ComputerPlayer
@@ -14,27 +10,37 @@ namespace SchiffeVersenken.Data.ComputerPlayer
         {
         }
 
-        public void ShootClever()
+        public async Task ShootCleverAsync()
         {
             _cleverFieldFound = false;
-            for (int i = 0; i < _size; i++)
+            await Task.Run(() =>
             {
-                for (int j = 0; j < _size; j++)
+                for (int i = _computer._shootHistory.Count - 1; i >= 0; i--)
                 {
-                    if (_battlefield._Board[i, j]._State == SquareState.Hit)
+                    if (_computer._shootHistory[i].hit == true && _computer._shootHistory[i].sunk == false)
                     {
-                        _cleverFieldFound = CheckAdjacentSquares(i, j);
+                        int x = _computer._shootHistory[i].x;
+                        int y = _computer._shootHistory[i].y;
+                        if (_battlefield._Board[x, y]._State == SquareState.Hit)
+                        {
+                            if (CheckAdjacentSquares(x, y))
+                            {
+                                _cleverFieldFound = true;
+                                return;
                     }
-                    else if (_battlefield._Board[i, j]._State == SquareState.Sunk)
+                        }
+                        else if (_battlefield._Board[x, y]._State == SquareState.Sunk)
                     {
-                        MarkAdjacentSquares(i, j);
-                        RemoveShipFromShipToFind(_battlefield._Board[i, j]._Ship._Length);
+                            MarkAdjacentSquares(x, y);
+                            _computer._shootHistory[i] = (_computer._shootHistory[i].x, _computer._shootHistory[i].y, _computer._shootHistory[i].hit, true);
+                            _cleverFieldFound = false;
                     }
                 }
             }
+            });
             if (!_cleverFieldFound)
             {
-                SelectSquare();
+                await SelectSquareAsync();
             }
         }
         private void MarkAdjacentSquares(int x, int y)
@@ -43,8 +49,6 @@ namespace SchiffeVersenken.Data.ComputerPlayer
             {
                 for (int j = -1; j <= 1; j++)
                 {
-                    if (Math.Abs(i) == Math.Abs(j))
-                        continue;
 
                     int checkX = x + i;
                     int checkY = y + j;
@@ -73,25 +77,25 @@ namespace SchiffeVersenken.Data.ComputerPlayer
             }
             else
             {
-                if(y > 0 && _battlefield._Board[x, y - 1]._State == SquareState.Empty)
+                if(y > 0 && _battlefield._Board[x, y - 1]._State == SquareState.Empty || y > 0 && _battlefield._Board[x, y - 1]._State == SquareState.Ship)
                 {
                     _y = y - 1;
                     _x = x;
                     return true;
                 }
-                else if (y < _battlefield._Size - 1 && _battlefield._Board[x, y + 1]._State == SquareState.Empty)
+                else if (y < _battlefield._Size - 1 && _battlefield._Board[x, y + 1]._State == SquareState.Empty || y < _battlefield._Size - 1 && _battlefield._Board[x, y + 1]._State == SquareState.Ship)
                 {
                     _y = y + 1;
                     _x = x;
                     return true;
                 }
-                else if (x > 0 && _battlefield._Board[x - 1, y]._State == SquareState.Empty)
+                else if (x > 0 && _battlefield._Board[x - 1, y]._State == SquareState.Empty || x > 0 && _battlefield._Board[x - 1, y]._State == SquareState.Ship)
                 {
                     _x = x - 1;
                     _y = y;
                     return true;
                 }
-                else if (x < _battlefield._Size - 1 && _battlefield._Board[x + 1, y]._State == SquareState.Empty)
+                else if (x < _battlefield._Size - 1 && _battlefield._Board[x + 1, y]._State == SquareState.Empty || x < _battlefield._Size - 1 && _battlefield._Board[x + 1, y]._State == SquareState.Ship)
                 {
                     _x = x + 1;
                     _y = y;
@@ -126,15 +130,19 @@ namespace SchiffeVersenken.Data.ComputerPlayer
             bool foundMiss = false;
             do
             {
-                if (tryY < _battlefield._Size - 1 && _battlefield._Board[x, tryY + 1]._State == SquareState.Empty)
+                if (tryY < _battlefield._Size - 1)
                 {
-                    _y = y + 1;
+                    var state = _battlefield._Board[x, tryY + 1]._State;
+                    if (state == SquareState.Empty || state == SquareState.Ship)
+                {
+                        _y = tryY + 1;
                     _x = x;
                     return true;
                 }
-                else if (tryY < _battlefield._Size - 1 && _battlefield._Board[x, tryY + 1]._State == SquareState.Miss)
+                    else if (state != SquareState.Empty && state != SquareState.Ship)
                 {
                     foundMiss = true;
+                }
                 }
                 tryY++;
             } while (tryY < _battlefield._Size && !foundMiss);
@@ -143,15 +151,19 @@ namespace SchiffeVersenken.Data.ComputerPlayer
             foundMiss = false;
             do
             {
-                if (tryY > 0 && _battlefield._Board[x, tryY - 1]._State == SquareState.Empty)
+                if (tryY > 0)
                 {
-                    _y = y - 1;
+                    var state = _battlefield._Board[x, tryY - 1]._State;
+                    if (state == SquareState.Empty || state == SquareState.Ship)
+                    {
+                        _y = tryY - 1;
                     _x = x;
                     return true;
                 }
-                else if (tryY > 0 && _battlefield._Board[x, tryY - 1]._State == SquareState.Miss)
+                    else if (state != SquareState.Empty || state != SquareState.Ship)
                 {
                     foundMiss = true;
+                }
                 }
                 tryY--;
             } while (tryY > 0 && !foundMiss);
@@ -183,15 +195,19 @@ namespace SchiffeVersenken.Data.ComputerPlayer
             bool foundMiss = false;
             do
             {
-                if (tryX < _battlefield._Size - 1 && _battlefield._Board[tryX + 1, y]._State == SquareState.Empty)
+                if (tryX < _battlefield._Size - 1)
                 {
-                    _x = x + 1;
+                    var state = _battlefield._Board[tryX + 1, y]._State;
+                    if (state == SquareState.Empty || state == SquareState.Ship)
+                {
+                        _x = tryX + 1;
                     _y = y;
                     return true;
                 }
-                else if (tryX < _battlefield._Size - 1 && _battlefield._Board[tryX + 1, y]._State == SquareState.Miss)
+                    else if (state != SquareState.Empty || state != SquareState.Ship)
                 {
                     foundMiss = true;
+                }
                 }
                 tryX++;
             } while (tryX < _battlefield._Size && !foundMiss);
@@ -200,15 +216,19 @@ namespace SchiffeVersenken.Data.ComputerPlayer
             foundMiss = false;
             do
             {
-                if (tryX > 0 && _battlefield._Board[tryX - 1, y]._State == SquareState.Empty)
+                if (tryX > 0)
                 {
-                    _x = x - 1;
+                    var state = _battlefield._Board[tryX - 1, y]._State;
+                    if (state == SquareState.Empty || state == SquareState.Ship)
+                {
+                        _x = tryX - 1;
                     _y = y;
                     return true;
                 }
-                else if (tryX > 0 && _battlefield._Board[tryX - 1, y]._State == SquareState.Miss)
+                    else if (state != SquareState.Empty || state != SquareState.Ship)
                 {
                     foundMiss = true;
+                }
                 }
                 tryX--;
             } while (tryX > 0 && !foundMiss);

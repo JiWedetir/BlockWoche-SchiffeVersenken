@@ -14,7 +14,7 @@
         {
         }
 
-        public void HandleInput(GameLogic game, int x, int y)
+        public Task HandleInput(GameLogic game, int x, int y)
         {
             throw new NotImplementedException();
         }

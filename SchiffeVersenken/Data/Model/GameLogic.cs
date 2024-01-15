@@ -32,6 +32,10 @@ namespace SchiffeVersenken.Data.Model
         {
             _Player = new Player(this);
             _ComputerOpponent = new ComputerOpponent(this);
+            SetSize(10);
+            SetDifficulty(ComputerDifficulty.Klug);
+            StartPlacingShips();
+            AllShipAreSet();
         }
 
         public void Initialize()
@@ -83,7 +87,6 @@ namespace SchiffeVersenken.Data.Model
         public void SetDifficulty(ComputerDifficulty difficulty)
         {
             this._ComputerDifficulty = difficulty;
-            _Opponent = new IngeniousOpponent(this);
         }
 
         public void StartPlacingShips()
@@ -106,21 +109,23 @@ namespace SchiffeVersenken.Data.Model
                 throw new Exception("Gegner hat noch keine Schiffe gesetzt");
             }
             TransistionToState(new GameReadyState());
+            SelectPlayer(false, false);
         }
 
         public void SelectPlayer(bool hit, bool gameOver)
         {
+            IBattleShipsGameState nextState;
             if(_currentState is GameReadyState)
             {
                 Random rnd = new Random();
                 bool first = rnd.Next(2) == 0;
                 if(first)
                 {
-                    TransistionToState(_Player1TurnState);
+                    nextState = _Player2TurnState;
                 }
                 else
                 {
-                    TransistionToState(_Player2TurnState);
+                    nextState = _Player2TurnState;
                 }
             }
             else if(gameOver)
@@ -133,27 +138,28 @@ namespace SchiffeVersenken.Data.Model
                 {
                     _Winner = _ComputerOpponent;
                 }
-                TransistionToState(new GameOverState());
+                nextState = new GameOverState();
             }
             else if(hit)
             {
                 if(_currentState is Player1TurnState)
                 {
-                    TransistionToState(_Player1TurnState);
+                    nextState = _Player2TurnState;
                 }
                 else
                 {
-                    TransistionToState(_Player2TurnState);
+                    nextState = _Player2TurnState;
                 }
             }
             else if(_currentState is Player1TurnState)
             {
-                TransistionToState(_Player2TurnState);
+                nextState = _Player2TurnState;
             }
             else
             {
-                TransistionToState(_Player1TurnState);
+                nextState = _Player2TurnState;
             }
+            TransistionToState(nextState);
         }
     }
 }

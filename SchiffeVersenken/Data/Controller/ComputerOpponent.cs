@@ -19,7 +19,7 @@ namespace SchiffeVersenken.Data.Controller
         private GameLogic _game;
         private int[,] _tryBoard;
         private int[] shipLengths = { 5, 4, 4, 3, 3, 3, 2, 2, 2, 2 };
-        public ComputerDifficulty ComputerDifficulty { get; set; } = ComputerDifficulty.Dumm;
+        public List<(int x, int y, bool hit, bool sunk)> _shootHistory = new List<(int x, int y, bool hit, bool sunk)>();
         public ComputerOpponent(GameLogic game)
         {
             _game = game;
@@ -38,6 +38,10 @@ namespace SchiffeVersenken.Data.Controller
             {
                 _game._OpponentShipsSet = true;
             }
+            else
+            {
+                throw new Exception("Schiffe konnten nicht gesetzt werden");
+        }
         }
 
         private bool PlaceShips(int[] shipLengths, int index, int maxTries, List<ShipDetails> placedShips)
@@ -212,21 +216,21 @@ namespace SchiffeVersenken.Data.Controller
             }
         }
 
-        public void Shoot()
+        public async Task ShootAsync()
         {
-            if(ComputerDifficulty == ComputerDifficulty.Dumm)
+            if(_game._ComputerDifficulty == ComputerDifficulty.Dumm)
             {
-                _game._Opponent.SelectSquare();
+                await _game._Opponent.SelectSquareAsync();
                 _game.HandlePlayerInput(_game._Opponent._X, _game._Opponent._Y);
             }
-            else if(ComputerDifficulty == ComputerDifficulty.Klug)
+            else if(_game._ComputerDifficulty == ComputerDifficulty.Klug)
             {
-                _game._Opponent.ShootClever();
+                await _game._Opponent.ShootCleverAsync();
                 _game.HandlePlayerInput(_game._Opponent._X, _game._Opponent._Y);
             }
-            else if(ComputerDifficulty == ComputerDifficulty.Genie)
+            else if(_game._ComputerDifficulty == ComputerDifficulty.Genie)
             {
-                _game._Opponent.ShootIngenious();
+                await _game._Opponent.ShootIngeniousAsync();
                 _game.HandlePlayerInput(_game._Opponent._X, _game._Opponent._Y);
             }
         }

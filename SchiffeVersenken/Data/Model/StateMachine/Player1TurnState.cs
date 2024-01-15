@@ -10,9 +10,9 @@
         {
             game._Player._YourTurn = false;
         }
-        public override void HandleInput(GameLogic game, int x, int y)
+        public override async Task HandleInput(GameLogic game, int x, int y)
         {
-            bool hit = game._BattlefieldOpponent.Shoot(x, y);
+            bool hit = await game._BattlefieldOpponent.ShootAsync(x, y);
             if (!hit)
             {
                 game._PlayerScore++;

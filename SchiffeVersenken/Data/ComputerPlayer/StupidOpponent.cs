@@ -21,15 +21,22 @@ namespace SchiffeVersenken.Data.ComputerPlayer
             _computer = game._ComputerOpponent;
         }
 
-        public bool SelectSquare()
+        public async Task SelectSquareAsync()
         {
-            _x = _random.Next(_battlefield._Size);
-            _y = _random.Next(_battlefield._Size);
-            if (_battlefield._Board[_x, _y]._State == SquareState.Hit || _battlefield._Board[_x, _y]._State == SquareState.Miss || _battlefield._Board[_x, _y]._State == SquareState.Sunk || _battlefield._Board[_x, _y]._State == SquareState.Blocked)
+            await Task.Run(() =>
             {
-                SelectSquare();
+                int x = _random.Next(_battlefield._Size);
+                int y = _random.Next(_battlefield._Size);
+                if (_battlefield._Board[x, y]._State == SquareState.Hit || _battlefield._Board[x, y]._State == SquareState.Miss || _battlefield._Board[x, y]._State == SquareState.Sunk || _battlefield._Board[x, y]._State == SquareState.Blocked)
+                {
+                    SelectSquareAsync();
+                }
+                else
+            {
+                    _x = x;
+                    _y = y;
             }
-            return true;
+            });
         }
     }
 }

@@ -17,7 +17,7 @@
 
         }
 
-        public virtual void HandleInput(GameLogic game, int x, int y)
+        public virtual async Task HandleInput(GameLogic game, int x, int y)
         {
             
         }

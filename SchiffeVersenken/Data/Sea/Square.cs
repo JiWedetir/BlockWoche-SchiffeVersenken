@@ -15,9 +15,10 @@
         public SquareState _State { get; set; } = SquareState.Empty;
         public Ship ?_Ship { get; set; }
 
-        public void ShootOnSquare()
+        public async Task ShootOnSquareAsync()
         {
-            if(_State == SquareState.Empty || _State == SquareState.Blocked)
+            await Task.Run(() => { 
+            if (_State == SquareState.Empty || _State == SquareState.Blocked)
             {
                 _State = SquareState.Miss;
             }
@@ -25,7 +26,7 @@
             {
                 _State = SquareState.Hit;
                 _Ship?.ShipUpdate();
-            }
+            }});
         }
 
         public void SetToEmptySquare()
