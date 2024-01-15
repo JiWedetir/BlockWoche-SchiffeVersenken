@@ -41,7 +41,7 @@ namespace SchiffeVersenken.Data.Controller
             else
             {
                 throw new Exception("Schiffe konnten nicht gesetzt werden");
-        }
+            }
         }
 
         private bool PlaceShips(int[] shipLengths, int index, int maxTries, List<ShipDetails> placedShips)

@@ -1,6 +1,5 @@
-using SchiffeVersenken.Data.Model;
+﻿using SchiffeVersenken.Data.Model;
 using SchiffeVersenken.Data.Sea;
-using SchiffeVersenken.Data.View;
 
 namespace SchiffeVersenken.Data.ComputerPlayer
 {
@@ -125,15 +124,15 @@ namespace SchiffeVersenken.Data.ComputerPlayer
                                     _y = maxJ;
                                     return;
                                 }
+                            }
+                        }
                     }
-                }
-            }
                     tries++;
                     maxValue --;
                 } while (tries < 8);
-            _x = maxI;
-            _y = maxJ;
-        }
+                _x = maxI;
+                _y = maxJ;
+            }
 
         }
 

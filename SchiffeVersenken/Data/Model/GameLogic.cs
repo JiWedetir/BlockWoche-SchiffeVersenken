@@ -27,15 +27,12 @@ namespace SchiffeVersenken.Data.Model
         public bool _GameOver { get; set; }
         public int _PlayerScore { get; set; } = 0;
         public int _OpponentScore { get; set; } = 0;
+        public List<(int x, int y, bool hit)> shoots = new List<(int x, int y, bool hit)>();
 
         public GameLogic()
         {
             _Player = new Player(this);
             _ComputerOpponent = new ComputerOpponent(this);
-            SetSize(10);
-            SetDifficulty(ComputerDifficulty.Klug);
-            StartPlacingShips();
-            AllShipAreSet();
         }
 
         public void Initialize()
@@ -121,7 +118,7 @@ namespace SchiffeVersenken.Data.Model
                 bool first = rnd.Next(2) == 0;
                 if(first)
                 {
-                    nextState = _Player2TurnState;
+                    nextState = _Player1TurnState;
                 }
                 else
                 {
@@ -144,7 +141,7 @@ namespace SchiffeVersenken.Data.Model
             {
                 if(_currentState is Player1TurnState)
                 {
-                    nextState = _Player2TurnState;
+                    nextState = _Player1TurnState;
                 }
                 else
                 {
@@ -157,7 +154,7 @@ namespace SchiffeVersenken.Data.Model
             }
             else
             {
-                nextState = _Player2TurnState;
+                nextState = _Player1TurnState;
             }
             TransistionToState(nextState);
         }

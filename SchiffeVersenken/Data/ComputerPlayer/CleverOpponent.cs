@@ -1,4 +1,5 @@
-using SchiffeVersenken.Data.Model;
+﻿using SchiffeVersenken.Data.Model;
+using SchiffeVersenken.Data.Sea;
 
 namespace SchiffeVersenken.Data.ComputerPlayer
 {
@@ -27,16 +28,16 @@ namespace SchiffeVersenken.Data.ComputerPlayer
                             {
                                 _cleverFieldFound = true;
                                 return;
-                    }
+                            }
                         }
                         else if (_battlefield._Board[x, y]._State == SquareState.Sunk)
-                    {
+                        {
                             MarkAdjacentSquares(x, y);
                             _computer._shootHistory[i] = (_computer._shootHistory[i].x, _computer._shootHistory[i].y, _computer._shootHistory[i].hit, true);
                             _cleverFieldFound = false;
+                        }
                     }
                 }
-            }
             });
             if (!_cleverFieldFound)
             {
@@ -134,15 +135,15 @@ namespace SchiffeVersenken.Data.ComputerPlayer
                 {
                     var state = _battlefield._Board[x, tryY + 1]._State;
                     if (state == SquareState.Empty || state == SquareState.Ship)
-                {
+                    {
                         _y = tryY + 1;
-                    _x = x;
-                    return true;
-                }
+                        _x = x;
+                        return true;
+                    }
                     else if (state != SquareState.Empty && state != SquareState.Ship)
-                {
-                    foundMiss = true;
-                }
+                    {
+                        foundMiss = true;
+                    }
                 }
                 tryY++;
             } while (tryY < _battlefield._Size && !foundMiss);
@@ -157,13 +158,13 @@ namespace SchiffeVersenken.Data.ComputerPlayer
                     if (state == SquareState.Empty || state == SquareState.Ship)
                     {
                         _y = tryY - 1;
-                    _x = x;
-                    return true;
-                }
+                        _x = x;
+                        return true;
+                    }
                     else if (state != SquareState.Empty || state != SquareState.Ship)
-                {
-                    foundMiss = true;
-                }
+                    {
+                        foundMiss = true;
+                    }
                 }
                 tryY--;
             } while (tryY > 0 && !foundMiss);
@@ -199,15 +200,15 @@ namespace SchiffeVersenken.Data.ComputerPlayer
                 {
                     var state = _battlefield._Board[tryX + 1, y]._State;
                     if (state == SquareState.Empty || state == SquareState.Ship)
-                {
+                    {
                         _x = tryX + 1;
-                    _y = y;
-                    return true;
-                }
+                        _y = y;
+                        return true;
+                    }
                     else if (state != SquareState.Empty || state != SquareState.Ship)
-                {
-                    foundMiss = true;
-                }
+                    {
+                        foundMiss = true;
+                    }
                 }
                 tryX++;
             } while (tryX < _battlefield._Size && !foundMiss);
@@ -220,15 +221,15 @@ namespace SchiffeVersenken.Data.ComputerPlayer
                 {
                     var state = _battlefield._Board[tryX - 1, y]._State;
                     if (state == SquareState.Empty || state == SquareState.Ship)
-                {
+                    {
                         _x = tryX - 1;
-                    _y = y;
-                    return true;
-                }
+                        _y = y;
+                        return true;
+                    }
                     else if (state != SquareState.Empty || state != SquareState.Ship)
-                {
-                    foundMiss = true;
-                }
+                    {
+                        foundMiss = true;
+                    }
                 }
                 tryX--;
             } while (tryX > 0 && !foundMiss);

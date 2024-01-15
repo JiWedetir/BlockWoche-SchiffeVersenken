@@ -19,6 +19,7 @@ namespace SchiffeVersenken.Data.Controller
 
         public bool CheckShips(List<ShipDetails> shipsToCheck)
         {
+            int[, ] testField = new int[_size, _size];
             foreach (var ship in shipsToCheck)
             {
                 if ((ship.Orientation == Orientation.Horizontal && ship.PositionX + ship.Size > _size) || (ship.Orientation == Orientation.Vertical && ship.PositionY + ship.Size > _size))
@@ -33,8 +34,9 @@ namespace SchiffeVersenken.Data.Controller
                         int posX = ship.Orientation == Orientation.Horizontal ? ship.PositionX + i : ship.PositionX + j;
                         int posY = ship.Orientation == Orientation.Vertical ? ship.PositionY + j : ship.PositionY + i;
 
-                        if (posX >= 0 && posX < _size && posY >= 0 && posY < _size && _board[posX, posY]._State != SquareState.Empty)
+                        if (posX >= 0 && posX < _size && posY >= 0 && posY < _size && testField[posX, posY] == 0)
                         {
+                            testField[posX, posY] = 1;
                             fieldOccupied = true;
                             break;
                         }

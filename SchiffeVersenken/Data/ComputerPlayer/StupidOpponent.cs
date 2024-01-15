@@ -32,10 +32,10 @@ namespace SchiffeVersenken.Data.ComputerPlayer
                     SelectSquareAsync();
                 }
                 else
-            {
+                {
                     _x = x;
                     _y = y;
-            }
+                }
             });
         }
     }
