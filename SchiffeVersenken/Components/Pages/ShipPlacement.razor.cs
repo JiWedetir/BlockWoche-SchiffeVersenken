@@ -21,16 +21,25 @@ namespace SchiffeVersenken.Components.Pages
 		protected override void OnInitialized()
 		{
 			_fieldcnt = 10;
+			setDefaultValues();
+			//Game._Player.SetBoardSize(_fieldcnt);
+		}
+
+		private void setDefaultValues()
+		{
 			_shipsToSet = shipsTemplate._Ships;
 			_shipSizes = shipsTemplate._ShipSizes;
 			_fieldBoolArray = new bool[_fieldcnt, _fieldcnt];
 			_lastClickedShip = null;
-			foreach(var ship in _shipsToSet)
+			foreach (var ship in _shipsToSet)
 			{
 				ship.IsClicked = false;
 				ship.IsPlaced = false;
+				ship.PositionX = 0;
+				ship.PositionY = 0;
+				ship.Orientation = Orientation.Horizontal;
 			}
-			Game._Player.SetBoardSize(_fieldcnt);
+			_shipsPlaced.Clear();
 		}
 
 		private void ShipClicked(ShipDetails ship)
@@ -134,12 +143,18 @@ namespace SchiffeVersenken.Components.Pages
 			builder.AddAttribute(4, "width", $"{width}vw");
 			builder.AddAttribute(5, "height", $"{height}vw");
 			builder.AddAttribute(6, "onclick", EventCallback.Factory.Create(this, () => ShipClicked(ship)));
-			builder.AddAttribute(7, "class", $"rectangle {(ship.IsClicked ? "clicked" : "")} {(ship.IsPlaced ? "placed" : "")}");
+			builder.AddAttribute(7, "class", $"rectangle {(ship.IsClicked ? "clicked" : "")} {(ship.IsPlaced ? "placed" : "notPlaced")}");
 			builder.CloseElement();
 
 
 			builder.CloseElement();
 		};
+
+
+		private void OnClickResetAll()
+		{
+			setDefaultValues();
+		}
 
 
 		private void GoToPreviousPage()
