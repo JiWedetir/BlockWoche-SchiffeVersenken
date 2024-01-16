@@ -20,7 +20,7 @@ namespace SchiffeVersenken.Components.Pages
 		
 		protected override void OnInitialized()
 		{
-			_fieldcnt = 10;
+			_fieldcnt = Game._Size;
 			setDefaultValues();
 			//Game._Player.SetBoardSize(_fieldcnt);
 		}
@@ -62,17 +62,16 @@ namespace SchiffeVersenken.Components.Pages
 			{
 				return;
 			}
-			_lastClickedShip.PositionX = x + 1;
-			_lastClickedShip.PositionY = y + 1;
+			_lastClickedShip.PositionX = x;
+			_lastClickedShip.PositionY = y;
 			_shipsPlaced.Add(_lastClickedShip);
 
-			//Fehlende Einstellungen im Game
-			//if (!Game._Player.SetShips(_shipsPlaced))
-			//{
-			//	_shipsPlaced.Remove(_lastClickedShip);
-			//	DialogService.ShowPopup("Ship can't be placed there");
-			//	return;
-			//}
+			if (!Game._Player.CheckShips(_shipsPlaced))
+			{
+				_shipsPlaced.Remove(_lastClickedShip);
+				DialogService.ShowPopup("Ship can't be placed there");
+				return;
+			}
 
 
 			int shipLength = _lastClickedShip.Size;

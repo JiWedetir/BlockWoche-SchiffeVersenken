@@ -52,7 +52,7 @@ namespace SchiffeVersenken.Data.Model
             this._currentState?.ExitState(this);
             this._currentState = newState;
             newState.EnterState(this);
-            this.NotifyObservers();
+            //this.NotifyObservers();
             newState.AfterEnterState(this);
         }
 
