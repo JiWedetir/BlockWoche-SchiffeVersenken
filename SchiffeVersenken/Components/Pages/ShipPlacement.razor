@@ -15,7 +15,7 @@
 		<div class="container vertical" style="width: 40vw; align-items: center">
 			<div class="container fitspace" style="width: 100%; height:100%">	
 				
-				@foreach (var ship in _shipsToSet)
+				@foreach (var ship in _ships)
 				{
 					<div class="rechteck">
 						@BuildSvg(ship)
@@ -26,8 +26,8 @@
 			
 			@* NavigationsButtons *@
 			<div class="container horizontal" style="width:100%">
-				<button class="Btn-2D" role="button" @onclick="ChangeOrientation" >Drehen&ensp;<i class="fa fa-repeat" /></button>
-				<button class="Btn-2D" role="button">Reset Ship&ensp;<i class="fa fa-backward" /></button>
+				<button class="Btn-2D" role="button" @onclick="ChangeOrientation"> Drehen&ensp;<i class="fa fa-repeat" /></button>
+				<button class="Btn-2D" role="button" @onclick="OnClickResetLastShip">Reset Ship&ensp;<i class="fa fa-backward" /></button>
 				<button class="Btn-2D" role="button" @onclick="OnClickResetAll">Reset All&ensp;<i class="fa fa-undo" /></button>
 			</div>
 		</div>
@@ -36,15 +36,15 @@
 		<div class="container vertical" style="width: fit-content; align-items: center; margin: 2vw; overflow: hidden;">
 			<div class="bg-img-ownfield">
 				<table class="battlefieldsize" style="margin-inline: auto;">
-					@for (int i = 0; i < @_fieldcnt; i++)
+					@for (int y = 0; y < @_fieldcnt; y++)
 					{
 						<tr>
-							@for (int j = 0; j < @_fieldcnt; j++)
+							@for (int x = 0; x < @_fieldcnt; x++)
 							{
-								int row = i;
-								int col = j;
+								int col = x;
+								int row = y;
 
-								<td class="square @(_fieldBoolArray[col,row] ? "active" : "")" @onclick="() => OnSquareClick(col,row)">
+								<td class="square @(_fieldBoolArray[col, row] ? "active" : "")" @onclick="() => OnSquareClick(col, row)">
 								</td>
 							}
 						</tr>
@@ -58,8 +58,8 @@
 
 
 	<div class="container horizontal" style="margin-inline:5vw; margin-bottom: 1vh;">
-		<button class="Btn-2D" role="button" @onclick="GoToPreviousPage">Go Back To Settings</button>
-		<button class="Btn-2D" role="button" @onclick="GoToNextPage">Start Placing Ships</button>
+		<button class="Btn-2D" role="button" @onclick="GoToPreviousPage" disabled>Go Back To Settings</button>
+		<button class="Btn-2D" role="button" @onclick="GoToNextPage" disabled=@(_shipsPlaced.Count() != _ships.Count())>Start the Battle!!</button>
 	</div>
 
 </div>

@@ -47,12 +47,12 @@
 
 
 rect.placed {
-    visibility: hidden;
+    opacity: 0.5;
     pointer-events: none;
 }
 
 rect.notPlaced {
-    visibility: visible;
+    opacity: 1;
     pointer-events: all;
 }
 

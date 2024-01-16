@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.UI.Xaml.Controls;
 using SchiffeVersenken.Data;
 using SchiffeVersenken.Data.Model;
+using Orientation = SchiffeVersenken.Data.Orientation;
 
 
 namespace SchiffeVersenken.Components.Pages
@@ -12,7 +14,7 @@ namespace SchiffeVersenken.Components.Pages
 
 		private int _fieldcnt;
 		private List<ShipDetails> _shipsPlaced = new List<ShipDetails>();
-		private List<ShipDetails> _shipsToSet;
+		private List<ShipDetails> _ships;
 		private List<int> _shipSizes;
 		private ShipDetails _lastClickedShip;
 
@@ -20,18 +22,18 @@ namespace SchiffeVersenken.Components.Pages
 		
 		protected override void OnInitialized()
 		{
+			StateHasChanged();
 			_fieldcnt = Game._Size;
 			setDefaultValues();
-			//Game._Player.SetBoardSize(_fieldcnt);
 		}
 
 		private void setDefaultValues()
 		{
-			_shipsToSet = shipsTemplate._Ships;
+			_ships = shipsTemplate._Ships;
 			_shipSizes = shipsTemplate._ShipSizes;
 			_fieldBoolArray = new bool[_fieldcnt, _fieldcnt];
 			_lastClickedShip = null;
-			foreach (var ship in _shipsToSet)
+			foreach (var ship in _ships)
 			{
 				ship.IsClicked = false;
 				ship.IsPlaced = false;
@@ -62,9 +64,9 @@ namespace SchiffeVersenken.Components.Pages
 			{
 				return;
 			}
+			_shipsPlaced.Add(_lastClickedShip);
 			_lastClickedShip.PositionX = x;
 			_lastClickedShip.PositionY = y;
-			_shipsPlaced.Add(_lastClickedShip);
 
 			if (!Game._Player.CheckShips(_shipsPlaced))
 			{
@@ -77,7 +79,7 @@ namespace SchiffeVersenken.Components.Pages
 			int shipLength = _lastClickedShip.Size;
 			Orientation orientation = _lastClickedShip.Orientation;
 			_lastClickedShip.IsPlaced = true;
-			_shipsToSet.Remove(_lastClickedShip);
+			_lastClickedShip = null;
 
 			if (orientation == Orientation.Horizontal)
 			{
@@ -119,7 +121,7 @@ namespace SchiffeVersenken.Components.Pages
 		{
 			int size = ship.Size;
 			int squareSize = 30 / _fieldcnt;
-			int shipIndex = _shipsToSet.IndexOf(ship);
+			int shipIndex = _ships.IndexOf(ship);
 			int width, height;
 
 			if(ship.Orientation == Orientation.Horizontal)
@@ -155,6 +157,41 @@ namespace SchiffeVersenken.Components.Pages
 			setDefaultValues();
 		}
 
+		private void OnClickResetLastShip()
+		{
+			if(_shipsPlaced.Count > 0)
+			{
+				_lastClickedShip = null;
+				ShipDetails ship = _shipsPlaced[_shipsPlaced.Count - 1];
+				ship.IsClicked = false;
+				ship.IsPlaced = false;
+				
+
+				Orientation orientation = ship.Orientation;
+				int shipLength = ship.Size;
+				int x = ship.PositionX;
+				int y = ship.PositionY;
+
+				if (orientation == Orientation.Horizontal)
+				{
+					for (int i = 0; i < shipLength; i++)
+					{
+						//Change Squares Horizontal
+						_fieldBoolArray[(x + i), y] = false;
+					}
+				}
+				else
+				{
+					for (int i = 0; i < shipLength; i++)
+					{
+						//Change Squares Vertical
+						_fieldBoolArray[x, (y + i)] = false;
+					}
+				}
+
+				_shipsPlaced.Remove(ship);
+			}
+		}
 
 		private void GoToPreviousPage()
 		{
@@ -163,6 +200,12 @@ namespace SchiffeVersenken.Components.Pages
 
 		private void GoToNextPage()
 		{
+			if (!Game._Player.SetShips(_shipsPlaced))
+			{
+				DialogService.ShowPopup("Error in ship Placement");
+				return;
+			}
+
 			NavigationManager.NavigateTo("/Game", true);
 		}
 	}
