@@ -11,6 +11,11 @@ namespace SchiffeVersenken.Data.ComputerPlayer
         {
         }
 
+        /// <summary>
+        /// Shoots at a random square, if it hits it will shoot at the adjacent squares and if it hits 
+        /// again it will detect the direction of the ship and shoot in that direction
+        /// </summary>
+        /// <returns></returns>
         public async Task ShootCleverAsync()
         {
             _cleverFieldFound = false;
@@ -44,6 +49,12 @@ namespace SchiffeVersenken.Data.ComputerPlayer
                 await SelectSquareAsync();
             }
         }
+
+        /// <summary>
+        /// Marks the adjacent squares of a sunk ship as blocked
+        /// </summary>
+        /// <param name="x">X coordinate</param>
+        /// <param name="y">Y coordinate</param>
         private void MarkAdjacentSquares(int x, int y)
         {
             for (int i = -1; i <= 1; i++)
@@ -63,8 +74,16 @@ namespace SchiffeVersenken.Data.ComputerPlayer
                     }
                 }
             }
+            int length = _battlefield._Board[x, y]._Ship._Length;
+            RemoveShipFromShipToFind(length);
         }
 
+        /// <summary>
+        /// Checks if there are adjacent squares to shoot at
+        /// </summary>
+        /// <param name="x">X coordinate</param>
+        /// <param name="y">Y coordinate</param>
+        /// <returns></returns>
         private bool CheckAdjacentSquares(int x, int y)
         {
             if (CheckVerticalNeighbors(x, y))
@@ -106,6 +125,12 @@ namespace SchiffeVersenken.Data.ComputerPlayer
             return false;
         }
 
+        /// <summary>
+        /// Checks if there are vertical neighbors to shoot at
+        /// </summary>
+        /// <param name="x">X coordinate</param>
+        /// <param name="y">Y coordinate</param>
+        /// <returns></returns>
         private bool CheckVerticalNeighbors(int x, int y)
         {
             if (y > 0 && _battlefield._Board[x, y - 1]._State == SquareState.Hit)
@@ -125,6 +150,12 @@ namespace SchiffeVersenken.Data.ComputerPlayer
             return false;
         }
 
+        /// <summary>
+        /// Searches for a square to shoot at in a row
+        /// </summary>
+        /// <param name="x">X coordinate</param>
+        /// <param name="y">Y coordinate</param>
+        /// <returns></returns>
         private bool SearchInRow(int x, int y)
         {
             int tryY = y;
@@ -171,6 +202,12 @@ namespace SchiffeVersenken.Data.ComputerPlayer
             return false;
         }
 
+        /// <summary>
+        /// Checks if there are horizontal neighbors to shoot at
+        /// </summary>
+        /// <param name="x">X coordinate</param>
+        /// <param name="y">Y coordinate</param>
+        /// <returns></returns>
         private bool CheckHorizontalNeighbors(int x, int y)
         {
             if (x > 0 && _battlefield._Board[x - 1, y]._State == SquareState.Hit)
@@ -190,6 +227,12 @@ namespace SchiffeVersenken.Data.ComputerPlayer
             return false;
         }
 
+        /// <summary>
+        /// Searches for a square to shoot at in a collumn
+        /// </summary>
+        /// <param name="x">X coordinate</param>
+        /// <param name="y">Y coordinate</param>
+        /// <returns></returns>
         private bool SeachInCollumn(int x, int y)
         {
             int tryX = x;
@@ -236,6 +279,10 @@ namespace SchiffeVersenken.Data.ComputerPlayer
             return false;
         }
 
+        /// <summary>
+        /// Removes the ship from the list of ships to find for IngeniousOpponent
+        /// </summary>
+        /// <param name="length"></param>
         private void RemoveShipFromShipToFind(int length)
         {
             int indexToRemove = Array.IndexOf(_shipsToFinde, length);

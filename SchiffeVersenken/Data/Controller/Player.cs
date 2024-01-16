@@ -7,7 +7,6 @@ namespace SchiffeVersenken.Data.Controller
     public class Player: IPlayerBehaviour
     {
         private int _size;
-        private Square[,] _board;
         private List<Ship> placedShips = new List<Ship>();
         private GameLogic _game;
         public bool _YourTurn = false;
@@ -15,8 +14,14 @@ namespace SchiffeVersenken.Data.Controller
         public Player(GameLogic game)
         {
             _game = game;
+            _size = game._Size;
         }
 
+        /// <summary>
+        /// Checks if the ships can be set on the board
+        /// </summary>
+        /// <param name="shipsToCheck">List with shipdetails of all ships to check</param>
+        /// <returns>true if all ships can be set</returns>
         public bool CheckShips(List<ShipDetails> shipsToCheck)
         {
             int[, ] testField = new int[_size, _size];
@@ -52,8 +57,13 @@ namespace SchiffeVersenken.Data.Controller
                 }
             }
             return true;
-        }   
+        }
 
+        /// <summary>
+        /// Sets the ships on the board
+        /// </summary>
+        /// <param name="shipsToSet">List with shipdeatils of the ships to set</param>
+        /// <returns>true if all ships are set successfully</returns>
         public bool SetShips(List<ShipDetails> shipsToSet)
         {
             if (!CheckShips(shipsToSet))
@@ -68,11 +78,11 @@ namespace SchiffeVersenken.Data.Controller
                 {
                     if (ship.Orientation == Orientation.Horizontal)
                     {
-                        validShip.SetShip(_board[ship.PositionX + i, ship.PositionY]);
+                        validShip.SetShip(_game._BattlefieldPlayer._Board[ship.PositionX + i, ship.PositionY]);
                     }
                     else
                     {
-                        validShip.SetShip(_board[ship.PositionX, ship.PositionY + i]);
+                        validShip.SetShip(_game._BattlefieldPlayer._Board[ship.PositionX, ship.PositionY + i]);
                     }
                 }
                 if (CheckIfAllShipsSet())
@@ -87,17 +97,20 @@ namespace SchiffeVersenken.Data.Controller
             return true;
         }
 
+        /// <summary>
+        /// Checks if all ships are set
+        /// </summary>
+        /// <returns>true if all ship are set</returns>
         public bool CheckIfAllShipsSet()
         {
             return placedShips.Count == 10;
         }
 
-        public void SetBoardSize(int size)
-        {
-            _size = size;
-            _game.SetSize(size);
-        }
-
+        /// <summary>
+        /// Shoots at the given position
+        /// </summary>
+        /// <param name="x">X coordinate</param>
+        /// <param name="y">Y coordinate</param>
         public void Shoot(int x, int y)
         {
             if(_YourTurn)
