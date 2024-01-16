@@ -89,13 +89,17 @@ namespace SchiffeVersenken.Data.Controller
                 if (CheckIfAllShipsSet())
                 {
                     _game.AllShipAreSet();
+                    // unteres neu
+                    return true;
                 }
-                else
-                {
-                    return false;
-                }
+                //////////////// Wahr Fehlerhaft ////////////////////////////////////////////////////////////////////
+                //else
+                //{
+                //    return false;
+                //}
             }
-            return true;
+            // alt return true
+            return false;
         }
 
         /// <summary>
