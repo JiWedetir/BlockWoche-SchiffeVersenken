@@ -30,7 +30,6 @@
                 foreach (Square shipSquare in _shipSquares)
                 {
                     shipSquare._State = SquareState.Sunk;
-                    shipSquare.UpdateView();
                 }
             }
         }

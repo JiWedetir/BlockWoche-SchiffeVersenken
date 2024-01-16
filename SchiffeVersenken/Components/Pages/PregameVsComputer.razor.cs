@@ -10,7 +10,7 @@ namespace SchiffeVersenken.Components.Pages
     {
         [CascadingParameter]
         public GameLogic Game { get; set; }
-        private const int _minFieldSize = 8;
+        private const int _minFieldSize = 9;
         private const int _maxFieldSize = 15;
         private string _minFieldSizeString = $"{_minFieldSize}x{_minFieldSize}";
         private string _maxFieldSizeString = $"{_maxFieldSize}x{_maxFieldSize}";
@@ -20,15 +20,12 @@ namespace SchiffeVersenken.Components.Pages
 
         private void SendSettings()
         {
-            //Game._Player  fieldsize
-            //Game._Opponent  difficulty
+            Game.StartPlacingShips(_FieldSize, _Difficulty);
             ChangePage();
         }
 
         private void ChangePage()
         {
-            //Game._Player.SetBoardSize(_FieldSize);
-            //Game._ComputerOpponent.SetDificulty(_Difficulty);
             NavigationManager.NavigateTo("/ShipPlacement", true);
         }
     }

@@ -24,7 +24,8 @@ namespace SchiffeVersenken.Data.Controller
         /// <returns>true if all ships can be set</returns>
         public bool CheckShips(List<ShipDetails> shipsToCheck)
         {
-            int[, ] testField = new int[_size, _size];
+			_size = _game._Size;
+			int[, ] testField = new int[_size, _size];
             foreach (var ship in shipsToCheck)
             {
                 if ((ship.Orientation == Orientation.Horizontal && ship.PositionX + ship.Size > _size) || (ship.Orientation == Orientation.Vertical && ship.PositionY + ship.Size > _size))
@@ -42,7 +43,7 @@ namespace SchiffeVersenken.Data.Controller
                         if (posX >= 0 && posX < _size && posY >= 0 && posY < _size && testField[posX, posY] == 0)
                         {
                             testField[posX, posY] = 1;
-                            fieldOccupied = true;
+                            fieldOccupied = false;
                             break;
                         }
                     }

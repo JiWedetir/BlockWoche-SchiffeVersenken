@@ -9,6 +9,7 @@
 
 .square:hover {
     background: lightgray;
+    cursor: pointer;
 }
 
 .square.active {
@@ -50,6 +51,11 @@ rect.placed {
     pointer-events: none;
 }
 
+rect.notPlaced {
+    visibility: visible;
+    pointer-events: all;
+}
+
 rect.clicked {
     stroke: rgb(196, 30, 58);
     /*stroke-width: 2;
@@ -65,4 +71,9 @@ rect.vertical {
     to {
         stroke: rgb(255, 49, 49);
     }
+}
+
+
+svg:hover {
+    cursor: pointer;
 }
