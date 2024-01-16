@@ -16,7 +16,6 @@
                 game._OpponentScore++;
             }
             game._ComputerOpponent._shootHistory.Add((x, y, hit, false));
-            game.shoots.Add((x, y, hit));
             bool gameOver = game._BattlefieldOpponent.CheckGameOver();
             game.SelectPlayer(hit, gameOver);
         }

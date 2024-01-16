@@ -25,23 +25,26 @@ namespace SchiffeVersenken.Data.Controller
             _game = game;
         }
 
-        public void SetShipRandom()
+        public async void SetShipRandomAsync()
         {
-            _board = _game._BattlefieldOpponent._Board;
-            _size = _game._Size;
-            _tryBoard = new int[_size, _size];
-            int maxTries = 10;
-            List<ShipDetails> placedShips = new List<ShipDetails>();
+            await Task.Run(() =>
+            {
+                _board = _game._BattlefieldOpponent._Board;
+                _size = _game._Size;
+                _tryBoard = new int[_size, _size];
+                int maxTries = 10;
+                List<ShipDetails> placedShips = new List<ShipDetails>();
 
-            bool success = PlaceShips(shipLengths, 0, maxTries, placedShips);
-            if (success)
-            {
-                _game._OpponentShipsSet = true;
-            }
-            else
-            {
-                throw new Exception("Schiffe konnten nicht gesetzt werden");
-            }
+                bool success = PlaceShips(shipLengths, 0, maxTries, placedShips);
+                if (success)
+                {
+                    _game._OpponentShipsSet = true;
+                }
+                else
+                {
+                    throw new Exception("Schiffe konnten nicht gesetzt werden");
+                }
+            });
         }
 
         private bool PlaceShips(int[] shipLengths, int index, int maxTries, List<ShipDetails> placedShips)

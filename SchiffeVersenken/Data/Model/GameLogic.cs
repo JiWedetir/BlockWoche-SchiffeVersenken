@@ -27,7 +27,6 @@ namespace SchiffeVersenken.Data.Model
         public bool _GameOver { get; set; }
         public int _PlayerScore { get; set; } = 0;
         public int _OpponentScore { get; set; } = 0;
-        public List<(int x, int y, bool hit)> shoots = new List<(int x, int y, bool hit)>();
 
         public GameLogic()
         {
@@ -35,11 +34,18 @@ namespace SchiffeVersenken.Data.Model
             _ComputerOpponent = new ComputerOpponent(this);
         }
 
+        /// <summary>
+        /// Initializes the game
+        /// </summary>
         public void Initialize()
         {
             TransistionToState(new GameReadyState());
         }
 
+        /// <summary>
+        /// Changes the current state to the new state, enters the new state and notifies all observers
+        /// </summary>
+        /// <param name="newState">the new state after transistion</param>
         public void TransistionToState(IBattleShipsGameState newState)
         {
             Debug.WriteLine($"Spiellogik: Wechsel von {this._currentState} zu {newState}");
@@ -50,11 +56,19 @@ namespace SchiffeVersenken.Data.Model
             newState.AfterEnterState(this);
         }
 
+        /// <summary>
+        /// Adds a view to the observer list
+        /// </summary>
+        /// <param name="view"></param>
         public void RegisterView(IGameView view)
         {
             this._gameObservers.Add(view);
         }
 
+        /// <summary>
+        /// Removes a view from the observer list
+        /// </summary>
+        /// <param name="view"></param>
         public void UnregisterView(IGameView view)
         {
             if (this._gameObservers.Contains(view))
@@ -63,6 +77,9 @@ namespace SchiffeVersenken.Data.Model
             }
         }
 
+        /// <summary>
+        /// Notifies all observers to update
+        /// </summary>
         private void NotifyObservers()
         {
             foreach (var observer in this._gameObservers)
@@ -71,23 +88,25 @@ namespace SchiffeVersenken.Data.Model
             }
         }
 
+        /// <summary>
+        /// Call to shoot on a field
+        /// </summary>
+        /// <param name="x">X coordinate</param>
+        /// <param name="y">Y coordinate</param>
         public void HandlePlayerInput(int x, int y)
         {
             this._currentState.HandleInput(this, x, y);
         }
 
-        public void SetSize(int size)
+        /// <summary>
+        /// Call if the boardsize and the difficulty is set to get to PreGameState
+        /// </summary>
+        /// <param name="size">board size</param>
+        /// <param name="difficulty">Difficulty of the Computeropponent</param>
+        public void StartPlacingShips(int size, ComputerDifficulty difficulty)
         {
             this._Size = size;
-        }
-
-        public void SetDifficulty(ComputerDifficulty difficulty)
-        {
             this._ComputerDifficulty = difficulty;
-        }
-
-        public void StartPlacingShips()
-        {
             if(_Size == null)
             {
                 _Size = 10;
@@ -99,6 +118,10 @@ namespace SchiffeVersenken.Data.Model
             TransistionToState(new PreGameState());
         }
 
+        /// <summary>
+        /// Call if the player has set all ships to get to GameReadyState
+        /// </summary>
+        /// <exception cref="Exception"></exception>
         public void AllShipAreSet()
         {
             if (!_OpponentShipsSet)
@@ -109,6 +132,11 @@ namespace SchiffeVersenken.Data.Model
             SelectPlayer(false, false);
         }
 
+        /// <summary>
+        /// Selects the next player
+        /// </summary>
+        /// <param name="hit">true if a ship is hit</param>
+        /// <param name="gameOver">true if all ship are hit</param>
         public void SelectPlayer(bool hit, bool gameOver)
         {
             IBattleShipsGameState nextState;

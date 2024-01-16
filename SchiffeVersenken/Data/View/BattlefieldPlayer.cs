@@ -1,14 +1,15 @@
-﻿using SchiffeVersenken.Data.Sea;
+﻿using SchiffeVersenken.Data.Model;
+using SchiffeVersenken.Data.Sea;
 
 namespace SchiffeVersenken.Data.View
 
 {
     public class BattlefieldPlayer: Battlefield
     {
-        public BattlefieldPlayer(int size) : base(size)
+        public BattlefieldPlayer(GameLogic game) : base(game)
         {
-            _size = size;
             CreateField();
+            game.RegisterView(this);
         }
     }
 }
