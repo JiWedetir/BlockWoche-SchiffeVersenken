@@ -32,29 +32,33 @@ namespace SchiffeVersenken.Data.Controller
                 {
                     return false;
                 }
-                bool fieldOccupied = false;
-                for (int i = -1; i <= ship.Size; i++)
-                {
-                    for (int j = -1; j <= 1; j++)
-                    {
-                        int posX = ship.Orientation == Orientation.Horizontal ? ship.PositionX + i : ship.PositionX + j;
-                        int posY = ship.Orientation == Orientation.Vertical ? ship.PositionY + j : ship.PositionY + i;
+                bool horizontal = ship.Orientation == Orientation.Horizontal;
 
-                        if (posX >= 0 && posX < _size && posY >= 0 && posY < _size && testField[posX, posY] == 0)
+                int startX = Math.Max(0, ship.PositionX - 1);
+                int startY = Math.Max(0, ship.PositionY - 1);
+                int endX = Math.Min(_size - 1, horizontal ? ship.PositionX + ship.Size : ship.PositionX + 1);
+                int endY = Math.Min(_size - 1, horizontal ? ship.PositionY + 1 : ship.PositionY + ship.Size);
+
+                for (int posX = startX; posX <= endX; posX++)
+                {
+                    for (int posY = startY; posY <= endY; posY++)
+                    {
+                        if (testField[posX, posY] != 0)
                         {
-                            testField[posX, posY] = 1;
-                            fieldOccupied = false;
-                            break;
+                            return false;
                         }
                     }
-                    if (fieldOccupied)
-                    {
-                        break;
-                    }
                 }
-                if (fieldOccupied)
+                for (int i = 0; i < ship.Size; i++)
                 {
-                    return false;
+                    if (horizontal)
+                    {
+                        testField[ship.PositionX + i, ship.PositionY] = 1;
+                    }
+                    else
+                    {
+                        testField[ship.PositionX, ship.PositionY + i] = 1;
+                    }
                 }
             }
             return true;
