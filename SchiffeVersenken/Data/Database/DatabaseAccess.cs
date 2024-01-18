@@ -59,10 +59,10 @@ namespace SchiffeVersenken.Data.Database
             List<UserScore> userScores = await Database.QueryAsync<UserScore>(query, username);
             return userScores;
         }
-        public async Task UpdateScoresAsync(Highscore highscore)
+        public async Task<int> UpdateScoresAsync(Highscore highscore)
         {
             await Init();
-            await Database.InsertAsync(highscore);
+            return await Database.InsertAsync(highscore);
         }
     }
 }
