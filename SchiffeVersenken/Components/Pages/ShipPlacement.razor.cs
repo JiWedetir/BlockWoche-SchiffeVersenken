@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Components;
-using Microsoft.UI.Xaml.Controls;
 using SchiffeVersenken.Data;
 using SchiffeVersenken.Data.Model;
 using Orientation = SchiffeVersenken.Data.Orientation;
