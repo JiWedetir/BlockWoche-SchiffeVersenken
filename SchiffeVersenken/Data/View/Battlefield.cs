@@ -14,7 +14,11 @@ namespace SchiffeVersenken.Data.View
         {
             _size = game._Size;
         }
-
+        /// <summary>
+        /// Updates the view not implemented!!!
+        /// </summary>
+        /// <param name="game"></param>
+        /// <exception cref="NotImplementedException"></exception>
         public void Update(GameLogic game)
         {
             throw new NotImplementedException();
