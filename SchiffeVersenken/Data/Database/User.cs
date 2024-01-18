@@ -14,6 +14,6 @@ namespace SchiffeVersenken.Data.Database
         public string PasswordHash { get; set; }
 
         [NotNull, Unique]
-        public int[] Salt { get; set; }
+        public string Salt { get; set; }
     }
 }
