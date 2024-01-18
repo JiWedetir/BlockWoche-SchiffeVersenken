@@ -14,7 +14,6 @@ namespace SchiffeVersenken.Data.Controller
         public Player(GameLogic game)
         {
             _game = game;
-            _size = game._Size;
         }
 
         /// <summary>
@@ -93,16 +92,9 @@ namespace SchiffeVersenken.Data.Controller
                 if (CheckIfAllShipsSet())
                 {
                     _game.AllShipAreSet();
-                    // unteres neu
                     return true;
                 }
-                //////////////// Wahr Fehlerhaft ////////////////////////////////////////////////////////////////////
-                //else
-                //{
-                //    return false;
-                //}
             }
-            // alt return true
             return false;
         }
 
