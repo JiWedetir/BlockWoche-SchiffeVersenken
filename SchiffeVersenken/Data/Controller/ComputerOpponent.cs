@@ -1,8 +1,6 @@
-﻿using SchiffeVersenken.Data.Model.Interfaces;
-using SchiffeVersenken.Data.View;
+﻿using SchiffeVersenken.Data.Model;
+using SchiffeVersenken.Data.Model.Interfaces;
 using SchiffeVersenken.Data.Sea;
-using SchiffeVersenken.Data.Model;
-using System;
 
 namespace SchiffeVersenken.Data.Controller
 {
