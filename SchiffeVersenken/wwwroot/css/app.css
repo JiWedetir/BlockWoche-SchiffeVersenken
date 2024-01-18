@@ -60,12 +60,12 @@ h3 {
     justify-content: space-evenly;
 }
 
-.container.horizontal {
+.horizontal {
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: space-evenly;
 }
 
-.container.vertical {
+.vertical {
     flex-direction: column;
     justify-content: space-between;
 }
@@ -91,6 +91,16 @@ label {
 }
 
 
+
+.Container {
+    width: max-content;
+    display: flex;
+    border: 2px solid black;
+}
+
+#reset-element {
+    all: unset;
+}
 
 
 

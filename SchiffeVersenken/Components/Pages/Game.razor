@@ -1,7 +1,57 @@
 ﻿@page "/Game"
 
-<h3>Game</h3>
 
-<a href="/Lobby">Go Back to Lobby</a>
-<br />
-<a href="/PregameVsComputer">Start a new Game</a>
+<MudStack>
+	<MudText Typo="Typo.h3"><b>Let It Rip</b></MudText>
+	<MudContainer>
+        <table Class="fieldsize bg-img-field own-field">
+            <thead>
+                <tr>
+                    @for (int z = -1; z <= _ownfield.GetLength(0); z++)
+                    {
+                        if (z == -1 || z == _ownfield.GetLength(0))
+                        {
+                            <th class="square1"></th>
+                        }
+                        else
+                        {
+                            <th class="square1">@_alphabet[z]</th>
+                        }
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @for(int y = 0; y < _ownfield.GetLength(0); y++)
+                {
+                    <tr>
+                        @for (int x = -1; x <= _ownfield.GetLength(0); x++)
+                        {
+                            if (x == -1)
+                            {
+                                <td class="square1">@(y + 1)</td>
+                            }
+                            else if (x == _ownfield.GetLength(0))
+                            {
+                                <td class="square1"></td>
+                            }
+                            else
+                            {
+                                <td class="square1 content"></td>
+                            }
+                        }
+                    </tr>
+                }
+            </tbody>
+            <tfoot>
+                <tr>
+                    @for(int z = -1; z <= _ownfield.GetLength(0); z++)
+                    {
+                        <td class="square1" style="color: transparent;">X</td>
+                    }
+                </tr>
+            </tfoot>
+        </table>
+	</MudContainer>
+</MudStack>
+
+
