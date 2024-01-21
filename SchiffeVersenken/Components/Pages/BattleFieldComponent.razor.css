@@ -1,0 +1,37 @@
+﻿table {
+    width: 35vw;
+    height: 35vw;
+    background-repeat: no-repeat;
+    opacity: 0.65;
+    background-size: cover;
+    background-position: center;
+    border: 2px solid black;
+}
+
+td {
+    width: calc(35vw / var(--field-count));
+    height: calc(35vw / var(--field-count));
+    text-align: center;
+    vertical-align: middle;
+    font-weight: bold;
+    color: black;
+    font-size: 150%;
+}
+
+.cell {
+    border: 2px solid rgb(0,0,0,0.75);
+}
+
+.square-enemy:hover {
+    background: lightgray;
+    cursor: pointer;
+}
+
+.square-enemy.active {
+    pointer-events: none;
+    background: red;
+}
+
+.ship-placed {
+    color: black;
+}

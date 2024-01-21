@@ -64,7 +64,6 @@
       <None Include="wwwroot\font-awesome-4.7.0\fonts\fontawesome-webfont.woff2" />
       <None Include="wwwroot\font-awesome-4.7.0\fonts\FontAwesome.otf" />
       <None Include="wwwroot\font-awesome-4.7.0\HELP-US-OUT.txt" />
-      <None Include="wwwroot\images\backgroundbattlefield.png" />
     </ItemGroup>
 
     <ItemGroup>
@@ -78,7 +77,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <MauiImage Include="wwwroot\images\backgroundbattlefield.png" Resize="false" />
+      <Folder Include="Components\Shared\" />
     </ItemGroup>
 
 </Project>
