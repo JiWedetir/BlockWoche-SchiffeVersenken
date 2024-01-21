@@ -1,0 +1,96 @@
+﻿<table style="background-image: @_bgUrl">
+	@for (int y = -1; y <= _fieldSize; y++)
+	{
+		<tr>
+			@for (int x = -1; x <= _fieldSize; x++)
+			{
+                if (y == -1)
+                {
+                    <!-- Header -->
+                    if (x == -1 || x == _fieldSize)
+                    {
+                        <td></td>
+                    }
+                    else
+                    {
+                        <td>@_alphabet[x]</td>
+                    }
+                }
+                else if (y == _fieldSize)
+                {
+                    <!-- Footer -->
+                    <td></td>
+                }
+                else
+                {
+                    if (x == -1)
+                    {
+                        <td>@(y + 1)</td>
+                    }
+                    else if (x == _fieldSize)
+                    {
+                        <td></td>
+                    }
+                    else
+                    {
+                        int col = x;
+                        int row = y;
+                        <!-- Square -->
+                        if (IsEnemyField)
+                        {
+                            <td class="cell square-enemy"></td>
+                        }
+                        else
+                        {
+                            <td class="cell @(Field[col, row] == 1 ? "ship-placed" : "")"></td>
+                        }                        
+                    }
+                }
+			}
+		</tr>
+	}
+</table>
+
+
+<style>
+    :root {
+        --field-count: calc(@_fieldSize + 2);
+        --bg-url: @_bgUrl;
+    }
+</style>
+
+
+@code {
+    private char[] _alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToCharArray();
+    private int _fieldSize;
+    private string _bgUrl;
+    
+    [Parameter]
+    public int[,] Field { get; set; }
+
+    [Parameter]
+    public bool IsPlacementField { get; set; }
+
+    [Parameter]
+    public bool IsOwnField { get; set; }
+
+    [Parameter]
+    public bool IsEnemyField { get; set; }
+
+    protected override void OnInitialized()
+    {
+        _fieldSize = Field.GetLength(0);
+        if (IsPlacementField)
+        {
+            _bgUrl = "url(../images/backgroundbattlefieldown.png)";
+        }
+        else if (IsOwnField)
+        {
+            _bgUrl = "url(../images/ownfield.png)";
+        }
+		else if (IsEnemyField)
+		{
+			_bgUrl = "url(../images/enemyfield.png)";
+		}
+	}
+}
