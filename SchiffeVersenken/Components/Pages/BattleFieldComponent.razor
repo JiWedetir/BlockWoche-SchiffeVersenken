@@ -1,4 +1,6 @@
-﻿<table style="background-image: @_bgUrl">
+﻿@using SchiffeVersenken.Data.Sea;
+
+<table style="background-image: @_bgUrl">
 	@for (int y = -1; y <= _fieldSize; y++)
 	{
 		<tr>
@@ -38,11 +40,11 @@
                         <!-- Square -->
                         if (IsEnemyField)
                         {
-                            <td class="cell square-enemy"></td>
+                            <td class="cell square-enemy" @onclick="() => FieldClicked(col, row)"></td>
                         }
                         else
                         {
-                            <td class="cell @(Field[col, row] == 1 ? "ship-placed" : "")"></td>
+                            <td class="cell @(Field[col, row]._State == SquareState.Ship ? "ship-placed" : "")"></td>
                         }                        
                     }
                 }
@@ -64,9 +66,9 @@
     private char[] _alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToCharArray();
     private int _fieldSize;
     private string _bgUrl;
-    
+
     [Parameter]
-    public int[,] Field { get; set; }
+    public Square[,] Field { get; set; }
 
     [Parameter]
     public bool IsPlacementField { get; set; }
@@ -76,6 +78,17 @@
 
     [Parameter]
     public bool IsEnemyField { get; set; }
+
+    // EventCallback-Delegat, der die Funktion in der Parent Page aufruft
+    [Parameter] public EventCallback<int[]> OnFieldClicked { get; set; }
+
+    // Funktion, die vom Button aufgerufen wird
+    private async Task FieldClicked(int x, int y)
+    {
+        // Aufruf der Funktion in der Parent Page über den EventCallback
+        int[] coords = new int[] { x, y };
+        await OnFieldClicked.InvokeAsync(coords);
+    }
 
     protected override void OnInitialized()
     {
