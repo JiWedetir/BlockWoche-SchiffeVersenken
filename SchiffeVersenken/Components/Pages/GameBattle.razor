@@ -7,8 +7,8 @@
 <MudStack style="height:100%; width: 100%;" Justify="Justify.SpaceEvenly">
 		<MudText Align="Align.Center" Typo="Typo.h3"><b>Let It Rip</b></MudText>
 		<MudStack Row="true" Justify="Justify.SpaceEvenly">
-			<BattleFieldComponent IsOwnField="true" Field="@_ownfield" OnFieldClicked="@HandeFieldClicked" />
-			<BattleFieldComponent IsEnemyField="true" Field="@_enemyfield" />
+		<BattleFieldComponent FieldType="@BattleFieldComponent.FieldTypes.OwnField" Field="@_ownfield" />
+		<BattleFieldComponent FieldType="@BattleFieldComponent.FieldTypes.EnemyField" Field="@_enemyfield" OnFieldClicked="@HandeFieldClicked" />
 		</MudStack>
 		<MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.SavedSearch" Size="Size.Large" Style="width: max-content; align-self:center;" Color="Color.Primary" Disabled="@(!_playerTurn)">Shoot</MudButton>
 		<MudText Align="Align.Center">Schuss Koordinate: @_currentXCord | @_currentYCord</MudText>

@@ -11,11 +11,11 @@
                     <!-- Header -->
                     if (x == -1 || x == _fieldSize)
                     {
-                        <td></td>
+                        <td class="border"></td>
                     }
                     else
                     {
-                        <td>@_alphabet[x]</td>
+                        <td class="border">@_alphabet[x]</td>
                     }
                 }
                 else if (y == _fieldSize)
@@ -27,24 +27,36 @@
                 {
                     if (x == -1)
                     {
-                        <td>@(y + 1)</td>
+                        <td class="border">@(y + 1)</td>
                     }
                     else if (x == _fieldSize)
                     {
-                        <td></td>
+                        <td class="border"></td>
                     }
                     else
                     {
                         int col = x;
                         int row = y;
                         <!-- Square -->
-                        if (IsEnemyField)
+                        if (FieldType == FieldTypes.EnemyField)
                         {
-                            <td class="cell square-enemy" @onclick="() => FieldClicked(col, row)"></td>
+                            string cssClassEnemy = Field[col, row]._State switch{
+                                SquareState.Ship => "ship-placed",
+                                SquareState.Hit => "ship-hit",
+                                SquareState.Miss => "ship-missed",
+                                _ => ""
+                            };
+                            <td class="cell square-enemy @cssClassEnemy" @onclick="() => FieldClicked(col, row)"></td>
                         }
                         else
                         {
-                            <td class="cell @(Field[col, row]._State == SquareState.Ship ? "ship-placed" : "")"></td>
+                            string cssClassOwn = Field[col, row]._State switch{
+                                SquareState.Ship => "ship-placed",
+                                SquareState.Hit => "ship-hit",
+                                SquareState.Miss => "ship-missed",
+                                _ => ""
+                            };
+                            <td class="cell @cssClassOwn"></td>
                         }                        
                     }
                 }
@@ -57,7 +69,8 @@
 <style>
     :root {
         --field-count: calc(@_fieldSize + 2);
-        --bg-url: @_bgUrl;
+        --field-size: 40vw;
+        --cell-size: calc(var(--field-size) / var(--field-count));
     }
 </style>
 
@@ -67,17 +80,18 @@
     private int _fieldSize;
     private string _bgUrl;
 
+    public enum FieldTypes
+    {
+        PlacementField,
+        OwnField,
+        EnemyField
+    }
+
     [Parameter]
     public Square[,] Field { get; set; }
 
     [Parameter]
-    public bool IsPlacementField { get; set; }
-
-    [Parameter]
-    public bool IsOwnField { get; set; }
-
-    [Parameter]
-    public bool IsEnemyField { get; set; }
+    public FieldTypes FieldType { get; set; }
 
     // EventCallback-Delegat, der die Funktion in der Parent Page aufruft
     [Parameter] public EventCallback<int[]> OnFieldClicked { get; set; }
@@ -93,17 +107,20 @@
     protected override void OnInitialized()
     {
         _fieldSize = Field.GetLength(0);
-        if (IsPlacementField)
-        {
-            _bgUrl = "url(../images/backgroundbattlefieldown.png)";
-        }
-        else if (IsOwnField)
-        {
-            _bgUrl = "url(../images/ownfield.png)";
-        }
-		else if (IsEnemyField)
+        switch (FieldType)
 		{
-			_bgUrl = "url(../images/enemyfield.png)";
+			case FieldTypes.PlacementField:
+				_bgUrl = "url(../images/backgroundbattlefieldown.png)";
+				break;
+			case FieldTypes.OwnField:
+				_bgUrl = "url(../images/ownfield.png)";
+				break;
+			case FieldTypes.EnemyField:
+				_bgUrl = "url(../images/enemyfield.png)";
+				break;
+			default:
+				break;
 		}
-	}
+    }
+
 }
