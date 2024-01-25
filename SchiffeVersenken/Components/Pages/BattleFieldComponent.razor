@@ -1,4 +1,6 @@
-﻿<table style="background-image: @_bgUrl">
+﻿@using SchiffeVersenken.Data.Sea;
+
+<table style="background-image: @_bgUrl">
 	@for (int y = -1; y <= _fieldSize; y++)
 	{
 		<tr>
@@ -9,11 +11,11 @@
                     <!-- Header -->
                     if (x == -1 || x == _fieldSize)
                     {
-                        <td></td>
+                        <td class="border"></td>
                     }
                     else
                     {
-                        <td>@_alphabet[x]</td>
+                        <td class="border">@_alphabet[x]</td>
                     }
                 }
                 else if (y == _fieldSize)
@@ -25,24 +27,36 @@
                 {
                     if (x == -1)
                     {
-                        <td>@(y + 1)</td>
+                        <td class="border">@(y + 1)</td>
                     }
                     else if (x == _fieldSize)
                     {
-                        <td></td>
+                        <td class="border"></td>
                     }
                     else
                     {
                         int col = x;
                         int row = y;
                         <!-- Square -->
-                        if (IsEnemyField)
+                        if (FieldType == FieldTypes.EnemyField)
                         {
-                            <td class="cell square-enemy"></td>
+                            string cssClassEnemy = Field[col, row]._State switch{
+                                SquareState.Ship => "ship-placed",
+                                SquareState.Hit => "ship-hit",
+                                SquareState.Miss => "ship-missed",
+                                _ => ""
+                            };
+                            <td class="cell square-enemy @cssClassEnemy" @onclick="() => FieldClicked(col, row)"></td>
                         }
                         else
                         {
-                            <td class="cell @(Field[col, row] == 1 ? "ship-placed" : "")"></td>
+                            string cssClassOwn = Field[col, row]._State switch{
+                                SquareState.Ship => "ship-placed",
+                                SquareState.Hit => "ship-hit",
+                                SquareState.Miss => "ship-missed",
+                                _ => ""
+                            };
+                            <td class="cell @cssClassOwn"></td>
                         }                        
                     }
                 }
@@ -55,7 +69,8 @@
 <style>
     :root {
         --field-count: calc(@_fieldSize + 2);
-        --bg-url: @_bgUrl;
+        --field-size: 40vw;
+        --cell-size: calc(var(--field-size) / var(--field-count));
     }
 </style>
 
@@ -64,33 +79,48 @@
     private char[] _alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToCharArray();
     private int _fieldSize;
     private string _bgUrl;
-    
-    [Parameter]
-    public int[,] Field { get; set; }
+
+    public enum FieldTypes
+    {
+        PlacementField,
+        OwnField,
+        EnemyField
+    }
 
     [Parameter]
-    public bool IsPlacementField { get; set; }
+    public Square[,] Field { get; set; }
 
     [Parameter]
-    public bool IsOwnField { get; set; }
+    public FieldTypes FieldType { get; set; }
 
-    [Parameter]
-    public bool IsEnemyField { get; set; }
+    // EventCallback-Delegat, der die Funktion in der Parent Page aufruft
+    [Parameter] public EventCallback<int[]> OnFieldClicked { get; set; }
+
+    // Funktion, die vom Button aufgerufen wird
+    private async Task FieldClicked(int x, int y)
+    {
+        // Aufruf der Funktion in der Parent Page über den EventCallback
+        int[] coords = new int[] { x, y };
+        await OnFieldClicked.InvokeAsync(coords);
+    }
 
     protected override void OnInitialized()
     {
         _fieldSize = Field.GetLength(0);
-        if (IsPlacementField)
-        {
-            _bgUrl = "url(../images/backgroundbattlefieldown.png)";
-        }
-        else if (IsOwnField)
-        {
-            _bgUrl = "url(../images/ownfield.png)";
-        }
-		else if (IsEnemyField)
+        switch (FieldType)
 		{
-			_bgUrl = "url(../images/enemyfield.png)";
+			case FieldTypes.PlacementField:
+				_bgUrl = "url(../images/backgroundbattlefieldown.png)";
+				break;
+			case FieldTypes.OwnField:
+				_bgUrl = "url(../images/ownfield.png)";
+				break;
+			case FieldTypes.EnemyField:
+				_bgUrl = "url(../images/enemyfield.png)";
+				break;
+			default:
+				break;
 		}
-	}
+    }
+
 }

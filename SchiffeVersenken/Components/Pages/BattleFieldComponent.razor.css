@@ -1,25 +1,27 @@
 ﻿table {
-    width: 35vw;
-    height: 35vw;
+    width: var(--field-size);
+    height: var(--field-size);
     background-repeat: no-repeat;
-    opacity: 0.65;
+    opacity: 0.75;
     background-size: cover;
     background-position: center;
     border: 2px solid black;
 }
 
-td {
-    width: calc(35vw / var(--field-count));
-    height: calc(35vw / var(--field-count));
-    text-align: center;
-    vertical-align: middle;
-    font-weight: bold;
-    color: black;
-    font-size: 150%;
+td.cell {
+    width: var(--cell-size);
+    height: var(--cell-size);
+    border: 2px solid rgb(0,0,0,0.75);
 }
 
-.cell {
-    border: 2px solid rgb(0,0,0,0.75);
+td.border {
+    width: var(--cell-size);
+    height: var(--cell-size);
+    text-align: center;
+    vertical-align: middle;
+    color: black;
+    font-weight: bold;
+    font-size: large;
 }
 
 .square-enemy:hover {
@@ -33,5 +35,13 @@ td {
 }
 
 .ship-placed {
-    color: black;
+    background-color: black;
+}
+
+.ship-hit {
+    background-color: red;
+}
+
+.ship-sunk {
+    background-color: yellow;
 }
