@@ -2,5 +2,7 @@
 {
     public interface IOpponent : IPlayerBehaviour
     {
+        public Task SetShipAsync();
+        public Task ShootAsync();
     }
 }

@@ -15,14 +15,17 @@ namespace SchiffeVersenken.Data.Model
         public IBattleShipsGameState CurrentState => this._currentState;
         private List<IGameView> _gameObservers = new List<IGameView>();
         public Player _Player { get; set; }
-        public ComputerOpponent _ComputerOpponent { get; set; }
+        public IOpponent _Opponent { get; set; }
         public BattlefieldPlayer _BattlefieldPlayer { get; set; }
         public BattlefieldOpponent _BattlefieldOpponent { get; set; }
         public Player1TurnState _Player1TurnState { get; set; }
         public Player2TurnState _Player2TurnState { get; set; }
-        public IngeniousOpponent _Opponent { get; set; }
         public string _Winner { get; private set; }
+<<<<<<< HEAD
         public string _Looser { get; private set; }
+=======
+        public IngeniousOpponent _ComputerOpponent { get; set; }
+>>>>>>> 2474026 (Vorbereitungen für einen Netzwerkgegner)
         public ComputerDifficulty _ComputerDifficulty { get; private set; }
         public int _Size { get; private set; }
         public bool _OpponentShipsSet { get; set; }
@@ -33,7 +36,7 @@ namespace SchiffeVersenken.Data.Model
         public GameLogic()
         {
             _Player = new Player(this);
-            _ComputerOpponent = new ComputerOpponent(this);
+            _Opponent = new ComputerOpponent(this);
         }
 
         /// <summary>

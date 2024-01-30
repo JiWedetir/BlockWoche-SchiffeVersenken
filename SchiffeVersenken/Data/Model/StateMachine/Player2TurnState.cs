@@ -5,7 +5,7 @@
         
         public override void AfterEnterState(GameLogic game)
         {
-            game._ComputerOpponent.ShootAsync();
+            game._Opponent.ShootAsync();
         }
         public override async Task HandleInput(GameLogic game, int x, int y)
         {

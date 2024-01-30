@@ -21,12 +21,12 @@ namespace SchiffeVersenken.Data.ComputerPlayer
             _cleverFieldFound = false;
             await Task.Run(() =>
             {
-                for (int i = _computer._shootHistory.Count - 1; i >= 0; i--)
+                for (int i = _shootHistory.Count - 1; i >= 0; i--)
                 {
-                    if (_computer._shootHistory[i].hit == true && _computer._shootHistory[i].sunk == false)
+                    if (_shootHistory[i].hit == true && _shootHistory[i].sunk == false)
                     {
-                        int x = _computer._shootHistory[i].x;
-                        int y = _computer._shootHistory[i].y;
+                        int x = _shootHistory[i].x;
+                        int y = _shootHistory[i].y;
                         if (_battlefield._Board[x, y]._State == SquareState.Hit)
                         {
                             if (CheckAdjacentSquares(x, y))
@@ -38,7 +38,7 @@ namespace SchiffeVersenken.Data.ComputerPlayer
                         else if (_battlefield._Board[x, y]._State == SquareState.Sunk)
                         {
                             MarkAdjacentSquares(x, y);
-                            _computer._shootHistory[i] = (_computer._shootHistory[i].x, _computer._shootHistory[i].y, _computer._shootHistory[i].hit, true);
+                            _shootHistory[i] = (_shootHistory[i].x, _shootHistory[i].y, _shootHistory[i].hit, true);
                             _cleverFieldFound = false;
                         }
                     }
@@ -46,7 +46,7 @@ namespace SchiffeVersenken.Data.ComputerPlayer
             });
             if (!_cleverFieldFound)
             {
-                await SelectSquareAsync();
+                await ShootStupidAsync();
             }
         }
 

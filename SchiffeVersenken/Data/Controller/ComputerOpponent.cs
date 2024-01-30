@@ -17,13 +17,12 @@ namespace SchiffeVersenken.Data.Controller
         private GameLogic _game;
         private int[,] _tryBoard;
         private int[] shipLengths = { 5, 4, 4, 3, 3, 3, 2, 2, 2, 2 };
-        public List<(int x, int y, bool hit, bool sunk)> _shootHistory = new List<(int x, int y, bool hit, bool sunk)>();
         public ComputerOpponent(GameLogic game)
         {
             _game = game;
         }
 
-        public async void SetShipRandomAsync()
+        public async Task SetShipAsync()
         {
             await Task.Run(() =>
             {
@@ -221,145 +220,19 @@ namespace SchiffeVersenken.Data.Controller
         {
             if(_game._ComputerDifficulty == ComputerDifficulty.Dumm)
             {
-                await _game._Opponent.SelectSquareAsync();
-                _game.HandlePlayerInput(_game._Opponent._X, _game._Opponent._Y);
+                await _game._ComputerOpponent.ShootStupidAsync();
+                _game.HandlePlayerInput(_game._ComputerOpponent._X, _game._ComputerOpponent._Y);
             }
             else if(_game._ComputerDifficulty == ComputerDifficulty.Klug)
             {
-                await _game._Opponent.ShootCleverAsync();
-                _game.HandlePlayerInput(_game._Opponent._X, _game._Opponent._Y);
+                await _game._ComputerOpponent.ShootCleverAsync();
+                _game.HandlePlayerInput(_game._ComputerOpponent._X, _game._ComputerOpponent._Y);
             }
             else if(_game._ComputerDifficulty == ComputerDifficulty.Genie)
             {
-                await _game._Opponent.ShootIngeniousAsync();
-                _game.HandlePlayerInput(_game._Opponent._X, _game._Opponent._Y);
+                await _game._ComputerOpponent.ShootIngeniousAsync();
+                _game.HandlePlayerInput(_game._ComputerOpponent._X, _game._ComputerOpponent._Y);
             }
-        }
-
-
-        //public void SetShipRandom()
-        //{
-        //    _board = _game._Player2Board._Board;
-        //    _size = _game._Size;
-        //    int[] shipLengths = { 5, 4, 4, 3, 3, 3, 2, 2, 2, 2 };
-        //    Random randomShip = new Random();
-        //    int[,] tryBoard = new int[_size, _size];
-        //    List<(int x, int y, bool horizontal, int length, Square square)> placedShips = new List<(int, int, bool, int, Square)>();
-        //    bool allShipsPlaced = false;
-        //    int maxTries = 10000000;
-
-        //    while (!allShipsPlaced)
-        //    {
-        //        Array.Clear(tryBoard, 0, tryBoard.Length);
-
-        //        foreach (int length in shipLengths)
-        //        {
-        //            bool shipSet = false;
-        //            int tries = 0;
-
-        //            while (!shipSet && tries < maxTries)
-        //            {
-        //                int x = randomShip.Next(_size);
-        //                int y = randomShip.Next(_size);
-        //                bool horizontal = randomShip.Next(2) == 0;
-
-        //                if ((horizontal && x + length > _size) || (!horizontal && y + length > _size))
-        //                {
-        //                    tries++;
-        //                    continue;
-        //                }
-
-        //                bool fieldOccupied = false;
-        //                for (int i = -1; i <= length; i++)
-        //                {
-        //                    for (int j = -1; j <= 1; j++)
-        //                    {
-        //                        int posX = horizontal ? x + i : x + j;
-        //                        int posY = horizontal ? y + j : y + i;
-
-        //                        if (posX >= 0 && posX < _size && posY >= 0 && posY < _size && tryBoard[posX, posY] != 0)
-        //                        {
-        //                            fieldOccupied = true;
-        //                            break;
-        //                        }
-        //                    }
-        //                    if (fieldOccupied)
-        //                    {
-        //                        break;
-        //                    }
-        //                }
-
-        //                if (fieldOccupied)
-        //                {
-        //                    if (placedShips.Count > 0)
-        //                    {
-        //                        var lastShip = placedShips[placedShips.Count - 1];
-        //                        placedShips.RemoveAt(placedShips.Count - 1);
-        //                        for (int i = 0; i < lastShip.length; i++)
-        //                        {
-        //                            if (lastShip.horizontal)
-        //                            {
-        //                                tryBoard[lastShip.x + i, lastShip.y] = 0;
-        //                            }
-        //                            else
-        //                            {
-        //                                tryBoard[lastShip.x, lastShip.y + i] = 0;
-        //                            }
-        //                        }
-        //                    }
-        //                    tries++;
-        //                    continue;
-        //                }
-
-        //                placedShips.Add((x, y, horizontal, length, _board[x, y]));
-        //                for (int i = 0; i < length; i++)
-        //                {
-        //                    if (horizontal)
-        //                    {
-        //                        tryBoard[x + i, y] = 1;
-        //                    }
-        //                    else
-        //                    {
-        //                        tryBoard[x, y + i] = 1;
-        //                    }
-        //                }
-
-        //                shipSet = true;
-        //            }
-        //            if(tries >= maxTries)
-        //            {
-        //                break;
-        //            }
-        //        }
-        //        if (placedShips.Count == shipLengths.Length)
-        //        {
-        //            allShipsPlaced = true;
-        //        }
-        //    }
-        //    foreach (var ship in placedShips)
-        //    {
-        //        Kreuzer kreuzer = new Kreuzer();
-        //        if (ship.horizontal)
-        //        {
-        //            for (int i = 0; i < ship.length; i++)
-        //            {
-        //                kreuzer.SetShip(_board[ship.x + i, ship.y]);
-        //            }
-        //        }
-        //        else
-        //        {
-        //            for (int i = 0; i < ship.length; i++)
-        //            {
-        //                kreuzer.SetShip(_board[ship.x, ship.y + i]);
-        //            }
-        //        }
-        //    }
-        //}
-
-
-        public void SetDificulty(ComputerDifficulty difficulty)
-        {
-            throw new NotImplementedException();
         }
     }
 }

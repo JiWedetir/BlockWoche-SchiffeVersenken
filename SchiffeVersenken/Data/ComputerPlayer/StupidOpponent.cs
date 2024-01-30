@@ -13,15 +13,16 @@ namespace SchiffeVersenken.Data.ComputerPlayer
         protected int _x;
         protected int _y;
         protected int[] _shipsToFinde = { 5, 4, 4, 3, 3, 3, 2, 2, 2, 2 };
+        public List<(int x, int y, bool hit, bool sunk)> _shootHistory = new List<(int x, int y, bool hit, bool sunk)>();
         public int _X { get { return _x; } }
         public int _Y { get { return _y; } }
         public StupidOpponent(GameLogic game)
         {
             _battlefield = game._BattlefieldPlayer;
-            _computer = game._ComputerOpponent;
+            _computer = (ComputerOpponent)game._Opponent;
         }
 
-        public async Task SelectSquareAsync()
+        public async Task ShootStupidAsync()
         {
             await Task.Run(() =>
             {
@@ -29,7 +30,7 @@ namespace SchiffeVersenken.Data.ComputerPlayer
                 int y = _random.Next(_battlefield._Size);
                 if (_battlefield._Board[x, y]._State == SquareState.Hit || _battlefield._Board[x, y]._State == SquareState.Miss || _battlefield._Board[x, y]._State == SquareState.Sunk || _battlefield._Board[x, y]._State == SquareState.Blocked)
                 {
-                    SelectSquareAsync();
+                    ShootStupidAsync();
                 }
                 else
                 {
