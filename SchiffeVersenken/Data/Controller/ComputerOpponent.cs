@@ -235,7 +235,7 @@ namespace SchiffeVersenken.Data.Controller
             }
         }
 
-        public Task SetShipAsync(int[,] board)
+        public Task<bool> SetShipAsync(int[,] board)
         {
             throw new NotImplementedException();
         }

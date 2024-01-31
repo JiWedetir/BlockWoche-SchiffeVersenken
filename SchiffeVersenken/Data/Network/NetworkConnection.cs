@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json.Linq;
 using SchiffeVersenken.Data.Model;
 using System.Diagnostics;
+using System.Globalization;
 
 namespace SchiffeVersenken.Data.Network
 {
@@ -12,6 +13,8 @@ namespace SchiffeVersenken.Data.Network
         private static int _port = 5000; // muss noch geändert werden
         private static bool _isServer;
         private static GameLogic _game;
+        private static List<(string message, string time)> _sentMessages = new List<(string message, string time)>();
+        private static List<(string message, string time)> _receivedMessages = new List<(string message, string time)>();
 
         public static void StartNetwork()
         {
@@ -55,6 +58,7 @@ namespace SchiffeVersenken.Data.Network
             bool valid = false;
             try
             {
+                _receivedMessages.Add((message, DateTime.Now.ToString("d.M.yyyy HH:mm:ss", CultureInfo.InvariantCulture)));
                 var jObjectMessage = JObject.Parse(message);
                 string type = jObjectMessage.Properties().FirstOrDefault()?.Name;
                 switch (type)
@@ -70,6 +74,9 @@ namespace SchiffeVersenken.Data.Network
                         break;
                     case "Message":
                         valid = await ReciveTextMessage(jObjectMessage);
+                        break;
+                    case "Error":
+                        valid = false;
                         break;
                     default:
                         valid = false;
@@ -117,8 +124,8 @@ namespace SchiffeVersenken.Data.Network
                         board[i, j] = (int)rows[i][j];
                     }
                 }
-                _game._BattlefieldOpponent._Board = board;
-                return true;
+                bool success = await _game._Opponent.SetShipAsync(board);
+                return success;
             }
             catch (Exception e)
             {
@@ -159,6 +166,22 @@ namespace SchiffeVersenken.Data.Network
             }
         }
 
+        private static async Task<bool> ReciveErrorMessage(JObject message)
+        {
+            try
+            {
+                string repetedMessage = _sentMessages[_sentMessages.Count - 1].message;
+                SendMessageAsync(repetedMessage);
+                _sentMessages.Add((repetedMessage, DateTime.Now.ToString("d.M.yyyy HH:mm:ss", CultureInfo.InvariantCulture)));
+                return true;
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e.Message);
+                return false;
+            }
+        }
+
         private async static Task<bool> SendInitMessage(string userName, int boardSize)
         {
             try
@@ -169,6 +192,7 @@ namespace SchiffeVersenken.Data.Network
                 message.Add("BoardSize", boardSize);
                 message.Add("UserName", userName);
                 SendMessageAsync(message.ToString());
+                _sentMessages.Add((message.ToString(), DateTime.Now.ToString("d.M.yyyy HH:mm:ss", CultureInfo.InvariantCulture)));
                 return true;
             }
             catch (Exception e)
@@ -195,6 +219,7 @@ namespace SchiffeVersenken.Data.Network
                 JObject message = new JObject();
                 message.Add("Board", boardArray);
                 SendMessageAsync(message.ToString());
+                _sentMessages.Add((message.ToString(), DateTime.Now.ToString("d.M.yyyy HH:mm:ss", CultureInfo.InvariantCulture)));
                 return true;
             }
             catch (Exception e)
@@ -218,6 +243,7 @@ namespace SchiffeVersenken.Data.Network
                     { "ShotAt", shotAtObject }
                 };
                 SendMessageAsync(message.ToString());
+                _sentMessages.Add((message.ToString(), DateTime.Now.ToString("d.M.yyyy HH:mm:ss", CultureInfo.InvariantCulture)));
                 return true;
             }
             catch (Exception e)
@@ -234,6 +260,7 @@ namespace SchiffeVersenken.Data.Network
                 JObject message = new JObject();
                 message.Add("Message", messageText);
                 SendMessageAsync(message.ToString());
+                _sentMessages.Add((message.ToString(), DateTime.Now.ToString("d.M.yyyy HH:mm:ss", CultureInfo.InvariantCulture)));
                 return true;
             }
             catch (Exception e)

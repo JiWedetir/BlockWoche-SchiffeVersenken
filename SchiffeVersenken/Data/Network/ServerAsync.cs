@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using Newtonsoft.Json.Linq;
+using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -51,6 +52,12 @@ namespace SchiffeVersenken.Data.Network
                     var message = Encoding.UTF8.GetString(buffer, 0, count);
                     Console.WriteLine("Empfangen: " + message);
 
+                    bool success = await NetworkConnection.ReceiveMessageAsync(message);
+                    if (!success)
+                    {
+                        JObject error = new JObject { { "Error", 1 } };
+                        await SendMessageAsync(error.ToString());
+                    }
                     
                 }
             }

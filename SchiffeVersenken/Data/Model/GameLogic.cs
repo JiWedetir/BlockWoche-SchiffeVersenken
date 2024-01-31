@@ -31,7 +31,6 @@ namespace SchiffeVersenken.Data.Model
         public bool _OpponentShipsSet { get; set; }
         public bool _GameOver { get; set; }
         public int _PlayerScore { get; set; } = 0;
-        public int _OpponentScore { get; set; } = 0;
 
         public GameLogic()
         {
