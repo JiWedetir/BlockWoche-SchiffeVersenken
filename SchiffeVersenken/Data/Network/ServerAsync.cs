@@ -7,21 +7,21 @@ namespace SchiffeVersenken.Data.Network
 {
     internal class ServerAsync
     {
-        public bool IsServerConnected => client.Connected;
-        private TcpClient client;
-        private TcpListener listener;
+        public bool _IsServerConnected => _client.Connected;
+        private TcpClient _client;
+        private TcpListener _listener;
         public void StartServerAsync(int port)
         {
-            listener = new TcpListener(IPAddress.Any, port);
-            listener.Start();
+            _listener = new TcpListener(IPAddress.Any, port);
+            _listener.Start();
             Debug.WriteLine("Server gestartet, warte auf eine Verbindung...");
 
             Task.Run(async () => {
-                while (NetworkConnection.IsRunning)
+                while (NetworkConnection._IsRunning)
                 {
-                    if (IsServerConnected)
+                    if (_IsServerConnected)
                     {
-                        client = await listener.AcceptTcpClientAsync();
+                        _client = await _listener.AcceptTcpClientAsync();
                         NetworkConnection.ServerConnectedtoClient();
                         Debug.WriteLine("Client verbunden. Spiel kann beginnen...");
                         _ = HandleClientAsync(); // Startet eine neue Task, um den Client zu verarbeiten
@@ -38,12 +38,12 @@ namespace SchiffeVersenken.Data.Network
 
         private async Task HandleClientAsync()
         {
-            var stream = client.GetStream();
+            var stream = _client.GetStream();
             var buffer = new byte[1024];
 
             try
             {
-                while (NetworkConnection.IsRunning && client.Connected)
+                while (NetworkConnection._IsRunning && _client.Connected)
                 {
                     var count = await stream.ReadAsync(buffer, 0, buffer.Length);
                     if (count == 0) break;
@@ -61,21 +61,21 @@ namespace SchiffeVersenken.Data.Network
             finally
             {
                 stream.Close();
-                client.Close();
+                _client.Close();
             }
         }
 
         public async Task SendMessageAsync(string message)
         {
-            var stream = client.GetStream();
+            var stream = _client.GetStream();
             byte[] messageBytes = Encoding.UTF8.GetBytes(message);
             await stream.WriteAsync(messageBytes, 0, messageBytes.Length);
         }
 
         public void StopServer()
         {
-            client.Close();
-            listener.Stop();
+            _client.Close();
+            _listener.Stop();
             Debug.WriteLine("Server gestoppt.");
         }
     }

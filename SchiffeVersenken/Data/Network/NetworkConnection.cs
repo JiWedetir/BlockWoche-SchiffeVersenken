@@ -1,45 +1,52 @@
 ﻿using Newtonsoft.Json.Linq;
+using SchiffeVersenken.Data.Model;
 using System.Diagnostics;
 
 namespace SchiffeVersenken.Data.Network
 {
     internal static class NetworkConnection
     {
-        public static bool IsRunning { get; private set; } 
-        private static ServerAsync? server;
-        private static ClientAsync? client;
-        private static int port = 5000; // muss noch geändert werden
-        private static bool isServer;
+        public static bool _IsRunning { get; private set; } 
+        private static ServerAsync? _server;
+        private static ClientAsync? _client;
+        private static int _port = 5000; // muss noch geändert werden
+        private static bool _isServer;
+        private static GameLogic _game;
 
         public static void StartNetwork()
         {
-            server = new ServerAsync();
-            server.StartServerAsync(port);
+            _server = new ServerAsync();
+            _server.StartServerAsync(_port);
+        }
+
+        public static void GameLogicConnectedtoNetwork(GameLogic gameLogic)
+        {
+            _game = gameLogic;
         }
 
         public static void ServerConnectedtoClient()
         {
-            isServer = true;
+            _isServer = true;
         }
 
         public static async Task<bool> ConnectToServer(string ip, string userName, int boardSize)
         {
-            client = new ClientAsync();
-            await client.ConnectAsync(ip, port);
+            _client = new ClientAsync();
+            await _client.ConnectAsync(ip, _port);
             SendInitMessage(userName, boardSize);
-            isServer = false;
-            return client.IsClientConnected;
+            _isServer = false;
+            return _client._IsClientConnected;
         }
 
         public static async Task SendMessageAsync(string message)
         {
-            if (isServer)
+            if (_isServer)
             {
-                await server.SendMessageAsync(message);
+                await _server.SendMessageAsync(message);
             }
             else
             {
-                await client.SendMessageAsync(message);
+                await _client.SendMessageAsync(message);
             }
         }
 
@@ -110,6 +117,7 @@ namespace SchiffeVersenken.Data.Network
                         board[i, j] = (int)rows[i][j];
                     }
                 }
+                _game._BattlefieldOpponent._Board = board;
                 return true;
             }
             catch (Exception e)
@@ -126,7 +134,7 @@ namespace SchiffeVersenken.Data.Network
                 JObject shotAtObject = (JObject)message["ShotAt"];
                 int.TryParse(shotAtObject["X"].ToString(), out int x);
                 int.TryParse(shotAtObject["Y"].ToString(), out int y);
-                // schuss auf das board
+                _game.HandlePlayerInput(x, y);
                 return true;
             }
             catch (Exception e)

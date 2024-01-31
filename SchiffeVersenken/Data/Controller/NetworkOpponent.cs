@@ -4,6 +4,11 @@ namespace SchiffeVersenken.Data.Controller
 {
     public class NetworkOpponent : IOpponent
     {
+        public Task SetShipAsync(int[, ] board)
+        {
+            
+        }
+
         public Task SetShipAsync()
         {
             throw new NotImplementedException();

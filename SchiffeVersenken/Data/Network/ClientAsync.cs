@@ -1,25 +1,25 @@
-﻿using System.Net.Sockets;
+﻿using System.Diagnostics;
+using System.Net.Sockets;
 using System.Text;
-using System.Diagnostics;
 
 namespace SchiffeVersenken.Data.Network
 {
     internal class ClientAsync
     {
-        private TcpClient client;
-        private NetworkStream stream;
-        private CancellationTokenSource cancellationTokenSource;
-        public bool IsClientConnected => client.Connected;
+        private TcpClient _client;
+        private NetworkStream _stream;
+        private CancellationTokenSource _cancellationTokenSource;
+        public bool _IsClientConnected => _client.Connected;
         public async Task ConnectAsync(string ip, int port)
         {
             try
             {
-                client = new TcpClient();
-                cancellationTokenSource = new CancellationTokenSource();
-                await client.ConnectAsync(ip, port);
-                stream = client.GetStream();
+                _client = new TcpClient();
+                _cancellationTokenSource = new CancellationTokenSource();
+                await _client.ConnectAsync(ip, port);
+                _stream = _client.GetStream();
             
-                Task.Run(() => ListenForMessage(cancellationTokenSource.Token));
+                Task.Run(() => ListenForMessage(_cancellationTokenSource.Token));
             }
             catch (Exception e)
             {
@@ -34,7 +34,7 @@ namespace SchiffeVersenken.Data.Network
                 while (!cancellationToken.IsCancellationRequested)
                 {
                     var buffer = new byte[1024];
-                    var count = await stream.ReadAsync(buffer, 0, buffer.Length, cancellationToken);
+                    var count = await _stream.ReadAsync(buffer, 0, buffer.Length, cancellationToken);
                     if (count == 0) break;
 
                     var message = Encoding.UTF8.GetString(buffer, 0, count);
@@ -51,7 +51,7 @@ namespace SchiffeVersenken.Data.Network
             try
             {
                 var buffer = Encoding.UTF8.GetBytes(message);
-                await stream.WriteAsync(buffer, 0, buffer.Length);
+                await _stream.WriteAsync(buffer, 0, buffer.Length);
             }
             catch (Exception e)
             {
@@ -61,9 +61,9 @@ namespace SchiffeVersenken.Data.Network
 
         public void Disconnect()
         {
-            cancellationTokenSource.Cancel();
-            stream.Close();
-            client.Close();
+            _cancellationTokenSource.Cancel();
+            _stream.Close();
+            _client.Close();
         }
     }
 }

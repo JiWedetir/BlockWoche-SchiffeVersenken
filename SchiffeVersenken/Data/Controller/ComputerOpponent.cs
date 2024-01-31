@@ -234,5 +234,10 @@ namespace SchiffeVersenken.Data.Controller
                 _game.HandlePlayerInput(_game._ComputerOpponent._X, _game._ComputerOpponent._Y);
             }
         }
+
+        public Task SetShipAsync(int[,] board)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
