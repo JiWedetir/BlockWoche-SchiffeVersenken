@@ -1,10 +1,10 @@
 ﻿namespace SchiffeVersenken.Data.Database
 {
-    public static class Constants
+    internal static class Constants
     {
-        public const string DatabaseFilename = "BattleShipSQLite.db3";
+        internal const string DatabaseFilename = "BattleShipSQLite.db3";
 
-        public const SQLite.SQLiteOpenFlags Flags =
+        internal const SQLite.SQLiteOpenFlags Flags =
         // open the database in read/write mode
             SQLite.SQLiteOpenFlags.ReadWrite |
         // create the database if it doesn't exist
@@ -12,7 +12,7 @@
         // enable multi-threaded database access
             SQLite.SQLiteOpenFlags.SharedCache;
 
-        public static string DatabasePath =>
+        internal static string DatabasePath =>
             Path.Combine(FileSystem.AppDataDirectory, DatabaseFilename);
     }
 }

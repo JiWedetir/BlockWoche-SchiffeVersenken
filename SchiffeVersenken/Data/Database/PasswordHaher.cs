@@ -3,7 +3,7 @@ using System.Text;
 
 namespace SchiffeVersenken.Data.Database
 {
-    public static class PasswordHasher
+    internal static class PasswordHasher
     {
         public static string GenerateSalt()
         {
