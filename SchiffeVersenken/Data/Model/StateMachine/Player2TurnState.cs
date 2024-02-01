@@ -15,10 +15,12 @@
 
         public void EnterState(GameLogic game)
         {
+            game._Opponent._YourTurn = true;
         }
 
         public void ExitState(GameLogic game)
         {
+            game._Opponent._YourTurn = false;
         }
 
         public async Task HandleInput(GameLogic game, int x, int y)

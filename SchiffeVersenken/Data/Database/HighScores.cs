@@ -20,18 +20,19 @@
         /// <param name="opponent">string opponent</param>
         /// <param name="score">int gamescore</param>
         /// <returns></returns>
-        public async static Task<bool> SaveHighScore(string username, string opponent, int score)
+        public async static Task<bool> SaveHighScore(string winner, int score)
         {
             DatabaseAccess db = new DatabaseAccess();
-            User user = await db.GetUserAsync(username);
-            if (user == null)
+            if (UserManagement._Player == null)
             {
                 return false;
             }
+            bool won = UserManagement._Player.Name == winner;
             Highscore highscore = new Highscore();
-            highscore.User_Id = user.Id;
-            highscore.Opponent = opponent;
+            highscore.User_Id = UserManagement._Player.Id;
+            highscore.Opponent = UserManagement._Opponent.Name;
             highscore.Score = score;
+            highscore.Won = won;
             int changedRows = await db.UpdateScoresAsync(highscore);
             return changedRows > 0;
         }

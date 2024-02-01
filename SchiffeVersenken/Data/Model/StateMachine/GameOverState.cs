@@ -10,7 +10,7 @@ namespace SchiffeVersenken.Data.Model.StateMachine
 
         public void EnterState(GameLogic game)
         {
-            HighScores.SaveHighScore(game._Winner, game._Looser, game._PlayerScore);
+            _ = HighScores.SaveHighScore(game._Winner, game._PlayerScore);
 		}
 
         public void ExitState(GameLogic game)
