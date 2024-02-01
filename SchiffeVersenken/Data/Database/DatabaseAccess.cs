@@ -1,4 +1,5 @@
 ﻿using SQLite;
+using System.Diagnostics;
 
 namespace SchiffeVersenken.Data.Database
 {
@@ -12,8 +13,25 @@ namespace SchiffeVersenken.Data.Database
                 return;
 
             Database = new SQLiteAsyncConnection(Constants.DatabasePath, Constants.Flags);
-            await Database.CreateTableAsync<User>();
+            var result = await Database.CreateTableAsync<User>();
             await Database.CreateTableAsync<Highscore>();
+            if (result == CreateTableResult.Created)
+            {
+                await CreateDefaultUsers();
+            }
+        }
+        internal async Task CreateDefaultUsers()
+        {
+            User player = new User() { Name = "Player", PasswordHash="1234", Salt="1234" };
+            User dumm = new User() { Name = "Dummer_Computer", PasswordHash = "1234", Salt = "1234" };
+            User klug = new User() { Name = "Kluger_Computer", PasswordHash = "1234", Salt = "1234" };
+            User genial = new User() { Name = "Genialer_Computer", PasswordHash = "1234", Salt = "1234" };
+            await Database.InsertAllAsync(new List<User>() { player, dumm, klug, genial });
+            List<User> users = await Database.Table<User>().ToListAsync();
+            foreach (User user in users)
+            {
+                Debug.WriteLine(user.Name);
+            }
         }
         internal async Task<List<User>> GetUserNamesAsync()
         {

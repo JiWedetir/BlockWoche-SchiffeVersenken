@@ -5,7 +5,12 @@
         
         public void AfterEnterState(GameLogic game)
         {
-            game._Opponent.ShootAsync();
+            if (game._LocalGame)
+            {
+                // sleep for 500ms to make sure the player sees where the computer shot
+                Thread.Sleep(500);
+                game._Opponent.ShootAsync();
+            }
         }
 
         public void EnterState(GameLogic game)
