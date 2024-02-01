@@ -1,11 +1,9 @@
-﻿using SchiffeVersenken.Data.Database;
-using SchiffeVersenken.Data.Model;
-using SchiffeVersenken.Data.Model.Interfaces;
+﻿using SchiffeVersenken.Data.Model;
 using SchiffeVersenken.Data.Sea;
 
 namespace SchiffeVersenken.Data.Controller
 {
-    public class Player: IPlayerBehaviour
+    public class Player
     {
         private int _size;
         private List<Ship> placedShips = new List<Ship>();

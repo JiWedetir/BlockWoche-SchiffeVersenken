@@ -1,31 +1,26 @@
 ﻿using SchiffeVersenken.Data.ComputerPlayer;
 using SchiffeVersenken.Data.Controller;
-using SchiffeVersenken.Data.Model.Interfaces;
 using SchiffeVersenken.Data.Model.StateMachine;
 using SchiffeVersenken.Data.View;
 using System.Diagnostics;
 
 namespace SchiffeVersenken.Data.Model
 {
-	public class GameLogic
+    public class GameLogic
     {
 		public event Action<string> OnGameOver;
 
 		private IBattleShipsGameState _currentState;
         public IBattleShipsGameState CurrentState => this._currentState;
-        private List<IGameView> _gameObservers = new List<IGameView>();
         public Player _Player { get; set; }
         public IOpponent _Opponent { get; set; }
-        public BattlefieldPlayer _BattlefieldPlayer { get; set; }
-        public BattlefieldOpponent _BattlefieldOpponent { get; set; }
+        public Battlefield _BattlefieldPlayer { get; set; }
+        public Battlefield _BattlefieldOpponent { get; set; }
         public Player1TurnState _Player1TurnState { get; set; }
         public Player2TurnState _Player2TurnState { get; set; }
         public string _Winner { get; private set; }
-<<<<<<< HEAD
         public string _Looser { get; private set; }
-=======
         public IngeniousOpponent _ComputerOpponent { get; set; }
->>>>>>> 2474026 (Vorbereitungen für einen Netzwerkgegner)
         public ComputerDifficulty _ComputerDifficulty { get; private set; }
         public int _Size { get; private set; }
         public bool _OpponentShipsSet { get; set; }
@@ -56,40 +51,7 @@ namespace SchiffeVersenken.Data.Model
             this._currentState?.ExitState(this);
             this._currentState = newState;
             newState.EnterState(this);
-            //this.NotifyObservers();
             newState.AfterEnterState(this);
-        }
-
-        /// <summary>
-        /// Adds a view to the observer list
-        /// </summary>
-        /// <param name="view"></param>
-        public void RegisterView(IGameView view)
-        {
-            this._gameObservers.Add(view);
-        }
-
-        /// <summary>
-        /// Removes a view from the observer list
-        /// </summary>
-        /// <param name="view"></param>
-        public void UnregisterView(IGameView view)
-        {
-            if (this._gameObservers.Contains(view))
-            {
-                this._gameObservers.Remove(view);
-            }
-        }
-
-        /// <summary>
-        /// Notifies all observers to update
-        /// </summary>
-        private void NotifyObservers()
-        {
-            foreach (var observer in this._gameObservers)
-            {
-                observer.Update(this);
-            }
         }
 
         /// <summary>

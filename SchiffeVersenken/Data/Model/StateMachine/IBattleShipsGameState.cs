@@ -6,6 +6,5 @@
         void EnterState(GameLogic game);
         void AfterEnterState(GameLogic game);
         Task HandleInput(GameLogic game, int x, int y);
-
     }
 }

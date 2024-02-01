@@ -1,5 +1,4 @@
 ﻿using SchiffeVersenken.Data.Model;
-using SchiffeVersenken.Data.Model.Interfaces;
 using SchiffeVersenken.Data.Sea;
 
 namespace SchiffeVersenken.Data.Controller

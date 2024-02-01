@@ -1,6 +1,6 @@
-﻿namespace SchiffeVersenken.Data.Model.Interfaces
+﻿namespace SchiffeVersenken.Data.Controller
 {
-    public interface IOpponent : IPlayerBehaviour
+    public interface IOpponent
     {
         public Task SetShipAsync();
         public Task<bool> SetShipAsync(int[,] board);
