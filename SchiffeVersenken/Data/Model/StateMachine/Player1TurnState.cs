@@ -15,7 +15,7 @@
             bool hit = await game._BattlefieldOpponent.ShootAsync(x, y);
             if (!hit)
             {
-                game._PlayerScore++;
+                game._PlayerScore--;
             }
             bool gameOver = game._BattlefieldOpponent.CheckGameOver();
             game.SelectPlayer(hit, gameOver);

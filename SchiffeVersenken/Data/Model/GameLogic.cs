@@ -22,6 +22,7 @@ namespace SchiffeVersenken.Data.Model
         public Player2TurnState _Player2TurnState { get; set; }
         public IngeniousOpponent _Opponent { get; set; }
         public string _Winner { get; private set; }
+        public string _Looser { get; private set; }
         public ComputerDifficulty _ComputerDifficulty { get; private set; }
         public int _Size { get; private set; }
         public bool _OpponentShipsSet { get; set; }
@@ -160,11 +161,13 @@ namespace SchiffeVersenken.Data.Model
                 {
                     //_Winner = _Player;
                     _Winner = "Player";
+                    _Looser = "Computer";
                 }
                 else
                 {
                     //_Winner = _ComputerOpponent;
                     _Winner = "Computer";
+                    _Looser = "Player";
                 }
 				OnGameOver?.Invoke(_Winner);
 				nextState = new GameOverState();
