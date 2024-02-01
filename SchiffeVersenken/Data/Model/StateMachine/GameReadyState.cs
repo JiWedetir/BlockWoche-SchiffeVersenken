@@ -6,7 +6,6 @@ namespace SchiffeVersenken.Data.Model.StateMachine
     {
         public void AfterEnterState(GameLogic game)
         {
-
         }
 
         public void EnterState(GameLogic game)

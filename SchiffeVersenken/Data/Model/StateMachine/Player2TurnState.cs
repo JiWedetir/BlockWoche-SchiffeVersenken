@@ -1,19 +1,24 @@
 ﻿namespace SchiffeVersenken.Data.Model.StateMachine
 {
-    public class Player2TurnState: PlayersTurnState
+    public class Player2TurnState : IBattleShipsGameState
     {
         
-        public override void AfterEnterState(GameLogic game)
+        public void AfterEnterState(GameLogic game)
         {
-            game._ComputerOpponent.ShootAsync();
+            game._Opponent.ShootAsync();
         }
-        public override async Task HandleInput(GameLogic game, int x, int y)
+
+        public void EnterState(GameLogic game)
+        {
+        }
+
+        public void ExitState(GameLogic game)
+        {
+        }
+
+        public async Task HandleInput(GameLogic game, int x, int y)
         {
             bool hit = await game._BattlefieldPlayer.ShootAsync(x, y);
-            if (!hit)
-            {
-                game._OpponentScore++;
-            }
             game._ComputerOpponent._shootHistory.Add((x, y, hit, false));
             bool gameOver = game._BattlefieldPlayer.CheckGameOver();
             game.SelectPlayer(hit, gameOver);

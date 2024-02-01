@@ -1,10 +1,9 @@
 ﻿using SchiffeVersenken.Data.Model;
-using SchiffeVersenken.Data.Model.Interfaces;
 using SchiffeVersenken.Data.Sea;
 
 namespace SchiffeVersenken.Data.View
 {
-	public abstract class Battlefield: IGameView
+    public class Battlefield
     {
         public event Action<SquareState> OnPlayerAction;
 		public event Action<string> OnGameOver;
@@ -16,15 +15,7 @@ namespace SchiffeVersenken.Data.View
         public Battlefield(GameLogic game)
         {
             _size = game._Size;
-        }
-        /// <summary>
-        /// Updates the view not implemented!!!
-        /// </summary>
-        /// <param name="game"></param>
-        /// <exception cref="NotImplementedException"></exception>
-        public void Update(GameLogic game)
-        {
-            throw new NotImplementedException();
+            CreateField();
         }
 
         /// <summary>

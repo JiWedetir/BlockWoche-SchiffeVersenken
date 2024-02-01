@@ -12,11 +12,11 @@ namespace SchiffeVersenken.Data.Model.StateMachine
         public void EnterState(GameLogic game)
         {
             Debug.WriteLine("Spiellogik: GameBoard wird generiert");
-            game._BattlefieldPlayer = new BattlefieldPlayer(game);
-            game._BattlefieldOpponent = new BattlefieldOpponent(game);
-            game._ComputerOpponent.SetShipRandomAsync();
-            game._Opponent = new IngeniousOpponent(game);
+            game._BattlefieldPlayer = new Battlefield(game);
+            game._BattlefieldOpponent = new Battlefield(game);
             game._PlayerScore = game._Size * game._Size;
+            game._Opponent.SetShipAsync();
+            game._ComputerOpponent = new IngeniousOpponent(game);
         }
 
         public void ExitState(GameLogic game)
