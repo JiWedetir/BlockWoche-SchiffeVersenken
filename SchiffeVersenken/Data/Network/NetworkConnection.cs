@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json.Linq;
+using SchiffeVersenken.Data.Database;
 using SchiffeVersenken.Data.Model;
 using System.Diagnostics;
 using System.Globalization;
@@ -32,11 +33,11 @@ namespace SchiffeVersenken.Data.Network
             _isServer = true;
         }
 
-        public static async Task<bool> ConnectToServer(string ip, string userName, int boardSize)
+        public static async Task<bool> ConnectToServer(string ip, int boardSize)
         {
             _client = new ClientAsync();
             await _client.ConnectAsync(ip, _port);
-            SendInitMessage(userName, boardSize);
+            await SendInitMessage(UserManagement._Player.Name, boardSize);
             _isServer = false;
             return _client._IsClientConnected;
         }
@@ -76,19 +77,23 @@ namespace SchiffeVersenken.Data.Network
                         valid = await ReciveTextMessage(jObjectMessage);
                         break;
                     case "Error":
-                        valid = false;
+                        valid = await ReciveErrorMessage(jObjectMessage);
                         break;
                     default:
                         valid = false;
                         break;
                 }
-                return valid;
             }
             catch (Exception e)
             {
                 Debug.WriteLine(e.Message);
-                return false;
+                valid = false;
             }
+            if (!valid)
+            {
+                await SendErrorMessage("Message not valide");
+            }
+            return valid;
         }
 
         private static async Task<bool> ReciveInitMessage(JObject message)
@@ -136,19 +141,26 @@ namespace SchiffeVersenken.Data.Network
 
         private static async Task<bool> ReciveShotAtMessage(JObject message)
         {
-            try
+            if(_game._Opponent._YourTurn)
             {
-                JObject shotAtObject = (JObject)message["ShotAt"];
-                int.TryParse(shotAtObject["X"].ToString(), out int x);
-                int.TryParse(shotAtObject["Y"].ToString(), out int y);
-                _game.HandlePlayerInput(x, y);
-                return true;
+                try
+                {
+                    JObject shotAtObject = (JObject)message["ShotAt"];
+                    int.TryParse(shotAtObject["X"].ToString(), out int x);
+                    int.TryParse(shotAtObject["Y"].ToString(), out int y);
+                    _game.HandlePlayerInput(x, y);
+                    return true;
+                }
+                catch (Exception e)
+                {
+                    Debug.WriteLine(e.Message);
+                }
             }
-            catch (Exception e)
+            else
             {
-                Debug.WriteLine(e.Message);
-                return false;
+                await SendErrorMessage("Not your turn");
             }
+            return false;
         }
 
         private static async Task<bool> ReciveTextMessage(JObject message)
@@ -170,9 +182,19 @@ namespace SchiffeVersenken.Data.Network
         {
             try
             {
-                string repetedMessage = _sentMessages[_sentMessages.Count - 1].message;
-                SendMessageAsync(repetedMessage);
-                _sentMessages.Add((repetedMessage, DateTime.Now.ToString("d.M.yyyy HH:mm:ss", CultureInfo.InvariantCulture)));
+                switch (message["Error"].ToString())
+                {
+                    case "Message not valide":
+                        string repetedMessage = _sentMessages[_sentMessages.Count - 1].message;
+                        await SendMessageAsync(repetedMessage);
+                        _sentMessages.Add((repetedMessage, DateTime.Now.ToString("d.M.yyyy HH:mm:ss", CultureInfo.InvariantCulture)));
+                        break;
+                    case "Not your turn":
+                        // nachricht anzeigen im frontend
+                        break;
+                    default:
+                        return false;
+                }
                 return true;
             }
             catch (Exception e)
@@ -191,7 +213,7 @@ namespace SchiffeVersenken.Data.Network
                 message.Add("Version", 1);
                 message.Add("BoardSize", boardSize);
                 message.Add("UserName", userName);
-                SendMessageAsync(message.ToString());
+                await SendMessageAsync(message.ToString());
                 _sentMessages.Add((message.ToString(), DateTime.Now.ToString("d.M.yyyy HH:mm:ss", CultureInfo.InvariantCulture)));
                 return true;
             }
@@ -218,7 +240,7 @@ namespace SchiffeVersenken.Data.Network
                 }
                 JObject message = new JObject();
                 message.Add("Board", boardArray);
-                SendMessageAsync(message.ToString());
+                await SendMessageAsync(message.ToString());
                 _sentMessages.Add((message.ToString(), DateTime.Now.ToString("d.M.yyyy HH:mm:ss", CultureInfo.InvariantCulture)));
                 return true;
             }
@@ -242,7 +264,7 @@ namespace SchiffeVersenken.Data.Network
                 {
                     { "ShotAt", shotAtObject }
                 };
-                SendMessageAsync(message.ToString());
+                await SendMessageAsync(message.ToString());
                 _sentMessages.Add((message.ToString(), DateTime.Now.ToString("d.M.yyyy HH:mm:ss", CultureInfo.InvariantCulture)));
                 return true;
             }
@@ -257,9 +279,30 @@ namespace SchiffeVersenken.Data.Network
         {
             try
             {
-                JObject message = new JObject();
-                message.Add("Message", messageText);
-                SendMessageAsync(message.ToString());
+                JObject message = new JObject
+                {
+                    { "Message", messageText }
+                };
+                await SendMessageAsync(message.ToString());
+                _sentMessages.Add((message.ToString(), DateTime.Now.ToString("d.M.yyyy HH:mm:ss", CultureInfo.InvariantCulture)));
+                return true;
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e.Message);
+                return false;
+            }
+        }
+
+        public async static Task<bool> SendErrorMessage(string error)
+        {
+            try
+            {
+                JObject message = new JObject
+                {
+                    { "Error", error }
+                };
+                await SendMessageAsync(message.ToString());
                 _sentMessages.Add((message.ToString(), DateTime.Now.ToString("d.M.yyyy HH:mm:ss", CultureInfo.InvariantCulture)));
                 return true;
             }

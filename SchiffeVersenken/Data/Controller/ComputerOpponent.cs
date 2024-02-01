@@ -16,6 +16,7 @@ namespace SchiffeVersenken.Data.Controller
         private GameLogic _game;
         private int[,] _tryBoard;
         private int[] shipLengths = { 5, 4, 4, 3, 3, 3, 2, 2, 2, 2 };
+        public bool _YourTurn { get; set; }
         public ComputerOpponent(GameLogic game)
         {
             _game = game;
@@ -217,20 +218,23 @@ namespace SchiffeVersenken.Data.Controller
 
         public async Task ShootAsync()
         {
-            if(_game._ComputerDifficulty == ComputerDifficulty.Dumm)
+            if(_YourTurn)
             {
-                await _game._ComputerOpponent.ShootStupidAsync();
-                _game.HandlePlayerInput(_game._ComputerOpponent._X, _game._ComputerOpponent._Y);
-            }
-            else if(_game._ComputerDifficulty == ComputerDifficulty.Klug)
-            {
-                await _game._ComputerOpponent.ShootCleverAsync();
-                _game.HandlePlayerInput(_game._ComputerOpponent._X, _game._ComputerOpponent._Y);
-            }
-            else if(_game._ComputerDifficulty == ComputerDifficulty.Genie)
-            {
-                await _game._ComputerOpponent.ShootIngeniousAsync();
-                _game.HandlePlayerInput(_game._ComputerOpponent._X, _game._ComputerOpponent._Y);
+                if(_game._ComputerDifficulty == ComputerDifficulty.Dumm)
+                {
+                    await _game._ComputerOpponent.ShootStupidAsync();
+                    _game.HandlePlayerInput(_game._ComputerOpponent._X, _game._ComputerOpponent._Y);
+                }
+                else if(_game._ComputerDifficulty == ComputerDifficulty.Klug)
+                {
+                    await _game._ComputerOpponent.ShootCleverAsync();
+                    _game.HandlePlayerInput(_game._ComputerOpponent._X, _game._ComputerOpponent._Y);
+                }
+                else if(_game._ComputerDifficulty == ComputerDifficulty.Genie)
+                {
+                    await _game._ComputerOpponent.ShootIngeniousAsync();
+                    _game.HandlePlayerInput(_game._ComputerOpponent._X, _game._ComputerOpponent._Y);
+                }
             }
         }
 

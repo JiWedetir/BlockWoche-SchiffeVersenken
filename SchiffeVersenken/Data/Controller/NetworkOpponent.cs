@@ -7,6 +7,7 @@ namespace SchiffeVersenken.Data.Controller
     {
         private GameLogic _game;
         private Square[,] _board;
+        public bool _YourTurn {get; set;}
 
         public NetworkOpponent(GameLogic game)
         {

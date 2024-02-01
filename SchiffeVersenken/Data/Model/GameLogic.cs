@@ -40,15 +40,7 @@ namespace SchiffeVersenken.Data.Model
             {
                 _Opponent = new NetworkOpponent(this);
             }
-            UserManagement.SetDefaultPlayer();
-        }
-
-        /// <summary>
-        /// Initializes the game
-        /// </summary>
-        public void Initialize()
-        {
-            TransistionToState(new GameReadyState());
+            _ = UserManagement.SetDefaultPlayer();
         }
 
         /// <summary>
@@ -91,7 +83,7 @@ namespace SchiffeVersenken.Data.Model
             {
                 _ComputerDifficulty = ComputerDifficulty.Klug;
             }
-            UserManagement.SetComputerOpponent(_ComputerDifficulty);
+            _ = UserManagement.SetComputerOpponent(_ComputerDifficulty);
             TransistionToState(new PreGameState());
         }
 
@@ -105,7 +97,9 @@ namespace SchiffeVersenken.Data.Model
             {
                 throw new Exception("Gegner hat noch keine Schiffe gesetzt");
             }
-            TransistionToState(new GameReadyState());
+            _Player1TurnState = new Player1TurnState();
+            _Player2TurnState = new Player2TurnState();
+            Debug.WriteLine("Spiellogik: Alle Schiffe gesetzt, Spiel ist ready");
             SelectPlayer(false, false);
         }
 
@@ -117,7 +111,7 @@ namespace SchiffeVersenken.Data.Model
         public void SelectPlayer(bool hit, bool gameOver)
         {
             IBattleShipsGameState nextState;
-            if(_currentState is GameReadyState)
+            if(_currentState is PreGameState)
             {
                 Random rnd = new Random();
                 bool first = rnd.Next(2) == 0;

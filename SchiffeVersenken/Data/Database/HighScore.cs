@@ -14,6 +14,9 @@ namespace SchiffeVersenken.Data.Database
         [NotNull]
         public string Opponent { get; set; }
 
+        [NotNull]
+        public bool Won { get; set; }
+
         [ForeignKey("User")]
         public int User_Id { get; set; }
     }
