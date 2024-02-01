@@ -4,14 +4,41 @@
 @inherits LayoutComponentBase
 
 
-<MudStack style="height:100%; width: 100%;" Justify="Justify.SpaceEvenly">
-		<MudText Align="Align.Center" Typo="Typo.h3"><b>Let It Rip</b></MudText>
-		<MudStack Row="true" Justify="Justify.SpaceEvenly">
-		<BattleFieldComponent FieldType="@BattleFieldComponent.FieldTypes.OwnField" Field="@_ownfield" />
-		<BattleFieldComponent FieldType="@BattleFieldComponent.FieldTypes.EnemyField" Field="@_enemyfield" OnFieldClicked="@HandeFieldClicked" />
+<MudGrid style="height:100%; width: 100%;" Justify="Justify.Center">
+	<MudItem xs="12" Class="mt-2">
+		@if (_playerTurn)
+		{
+			<MudText Align="Align.Center" Typo="Typo.h5"><b>It's Our Turn Captain!</b></MudText>
+		}
+		else
+		{
+			<MudText Align="Align.Center" Typo="Typo.h5"><b>The Enemy Is Shooting...</b></MudText>
+		}
+	</MudItem>
+
+	<MudItem xs="6">
+		<MudStack AlignItems="AlignItems.Center">
+			<MudText Typo="Typo.h5"><b>Our Field</b></MudText>
+			<BattleFieldComponent FieldType="@BattleFieldComponent.FieldTypes.OwnField" Field="@_ownfield" />
+			<MudText Typo="Typo.h6">Score: @_score</MudText>
 		</MudStack>
-		<MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.SavedSearch" Size="Size.Large" Style="width: max-content; align-self:center;" Color="Color.Primary" Disabled="@(!_playerTurn)">Shoot</MudButton>
-		<MudText Align="Align.Center">Schuss Koordinate: @_currentXCord | @_currentYCord</MudText>
-</MudStack> 
+	</MudItem>
+
+	<MudItem xs="6">
+		<MudStack AlignItems="AlignItems.Center">
+			<MudText Typo="Typo.h5"><b>Enemy Field</b></MudText>
+			<BattleFieldComponent FieldType="@BattleFieldComponent.FieldTypes.EnemyField" Field="@_enemyfield" OnFieldClicked="@HandeFieldClicked" />
+			<MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.SavedSearch" Color="Color.Success" OnClick="@OnPlayerShoot" Disabled="@(!_playerTurn)">Shoot</MudButton>
+		</MudStack>
+	</MudItem>
+
+	<MudItem>
+		
+		<MudText Align="Align.Center">Schuss Koordinate: @(_alphabet[_currentXCord]) | @(_currentYCord + 1)</MudText>
+			<MudText Align="Align.Center">Winner: @_winner</MudText>
+			
+	</MudItem>
+	
+</MudGrid> 
 
 

@@ -1,16 +1,17 @@
-﻿using System.Diagnostics;
-using SchiffeVersenken.Data.Model.StateMachine;
-using SchiffeVersenken.Data.Model.Interfaces;
-using SchiffeVersenken.Data.View;
+﻿using SchiffeVersenken.Data.ComputerPlayer;
 using SchiffeVersenken.Data.Controller;
-using SchiffeVersenken.Data.ComputerPlayer;
+using SchiffeVersenken.Data.Model.Interfaces;
+using SchiffeVersenken.Data.Model.StateMachine;
+using SchiffeVersenken.Data.View;
+using System.Diagnostics;
 
 namespace SchiffeVersenken.Data.Model
 {
-    public class GameLogic
+	public class GameLogic
     {
+		public event Action<string> OnGameOver;
 
-        private IBattleShipsGameState _currentState;
+		private IBattleShipsGameState _currentState;
         public IBattleShipsGameState CurrentState => this._currentState;
         private List<IGameView> _gameObservers = new List<IGameView>();
         public Player _Player { get; set; }
@@ -20,7 +21,7 @@ namespace SchiffeVersenken.Data.Model
         public Player1TurnState _Player1TurnState { get; set; }
         public Player2TurnState _Player2TurnState { get; set; }
         public IngeniousOpponent _Opponent { get; set; }
-        public IPlayerBehaviour _Winner { get; private set; }
+        public string _Winner { get; private set; }
         public ComputerDifficulty _ComputerDifficulty { get; private set; }
         public int _Size { get; private set; }
         public bool _OpponentShipsSet { get; set; }
@@ -157,13 +158,16 @@ namespace SchiffeVersenken.Data.Model
             {
                 if (_currentState is Player1TurnState)
                 {
-                    _Winner = _Player;
+                    //_Winner = _Player;
+                    _Winner = "Player";
                 }
                 else
                 {
-                    _Winner = _ComputerOpponent;
+                    //_Winner = _ComputerOpponent;
+                    _Winner = "Computer";
                 }
-                nextState = new GameOverState();
+				OnGameOver?.Invoke(_Winner);
+				nextState = new GameOverState();
             }
             else if(hit)
             {

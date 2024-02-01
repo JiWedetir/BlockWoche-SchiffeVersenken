@@ -1,7 +1,9 @@
 ﻿using Microsoft.Extensions.Logging;
 using SchiffeVersenken.Components.Pages;
 using SchiffeVersenken.Data.Model;
+using SchiffeVersenken.Data.View;
 using MudBlazor.Services;
+using SchiffeVersenken.Data.Model.Interfaces;
 
 namespace SchiffeVersenken
 {

@@ -9,14 +9,13 @@
         }
         public override async Task HandleInput(GameLogic game, int x, int y)
         {
-            //Battlefield gewechslet zum testen!
-            bool hit = await game._BattlefieldOpponent.ShootAsync(x, y);
+            bool hit = await game._BattlefieldPlayer.ShootAsync(x, y);
             if (!hit)
             {
                 game._OpponentScore++;
             }
             game._ComputerOpponent._shootHistory.Add((x, y, hit, false));
-            bool gameOver = game._BattlefieldOpponent.CheckGameOver();
+            bool gameOver = game._BattlefieldPlayer.CheckGameOver();
             game.SelectPlayer(hit, gameOver);
         }
     }

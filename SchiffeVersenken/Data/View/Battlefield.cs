@@ -1,12 +1,15 @@
 ﻿using SchiffeVersenken.Data.Model;
-using SchiffeVersenken.Data.Sea;
 using SchiffeVersenken.Data.Model.Interfaces;
+using SchiffeVersenken.Data.Sea;
 
 namespace SchiffeVersenken.Data.View
 {
-    public abstract class Battlefield: IGameView
+	public abstract class Battlefield: IGameView
     {
-        protected int _size;
+        public event Action<SquareState> OnPlayerAction;
+		public event Action<string> OnGameOver;
+
+		protected int _size;
         protected Square[,] _board;
         public Square[,] _Board { get { return _board; } }
         public int _Size { get { return _size; } }
@@ -49,6 +52,9 @@ namespace SchiffeVersenken.Data.View
         public async Task<bool> ShootAsync(int x, int y)
         {
             await _Board[x, y].ShootOnSquareAsync();
+
+            OnPlayerAction?.Invoke(_Board[x, y]._State);
+
             if (_Board[x, y]._State == SquareState.Hit || _Board[x, y]._State == SquareState.Sunk)
             {
                 return true;

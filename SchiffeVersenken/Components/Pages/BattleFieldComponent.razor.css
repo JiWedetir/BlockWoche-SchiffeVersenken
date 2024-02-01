@@ -40,8 +40,15 @@ td.border {
 
 .ship-hit {
     background-color: red;
+    pointer-events: none;
+}
+
+.ship-missed {
+    background-color: blue;
+    pointer-events: none;
 }
 
 .ship-sunk {
     background-color: yellow;
+    pointer-events: none;
 }
