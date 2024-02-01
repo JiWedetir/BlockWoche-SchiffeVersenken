@@ -2,13 +2,14 @@
 {
     public class GameOverState : IBattleShipsGameState
     {
-        public void AfterEnterState(GameLogic game)
+		public void AfterEnterState(GameLogic game)
         {
         }
 
         public void EnterState(GameLogic game)
         {
-        }
+
+		}
 
         public void ExitState(GameLogic game)
         {

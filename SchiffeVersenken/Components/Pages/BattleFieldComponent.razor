@@ -44,6 +44,7 @@
                                 SquareState.Ship => "ship-placed",
                                 SquareState.Hit => "ship-hit",
                                 SquareState.Miss => "ship-missed",
+                                SquareState.Sunk => "ship-sunk",
                                 _ => ""
                             };
                             <td class="cell square-enemy @cssClassEnemy" @onclick="() => FieldClicked(col, row)"></td>
@@ -54,6 +55,7 @@
                                 SquareState.Ship => "ship-placed",
                                 SquareState.Hit => "ship-hit",
                                 SquareState.Miss => "ship-missed",
+                                SquareState.Sunk => "ship-sunk",
                                 _ => ""
                             };
                             <td class="cell @cssClassOwn"></td>
@@ -69,7 +71,7 @@
 <style>
     :root {
         --field-count: calc(@_fieldSize + 2);
-        --field-size: 40vw;
+        --field-size: 35vw;
         --cell-size: calc(var(--field-size) / var(--field-count));
     }
 </style>
