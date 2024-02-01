@@ -16,6 +16,7 @@ namespace SchiffeVersenken.Data.Model.StateMachine
             game._BattlefieldOpponent = new BattlefieldOpponent(game);
             game._ComputerOpponent.SetShipRandomAsync();
             game._Opponent = new IngeniousOpponent(game);
+            game._PlayerScore = game._Size * game._Size;
         }
 
         public void ExitState(GameLogic game)
