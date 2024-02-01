@@ -1,5 +1,6 @@
 ﻿using SchiffeVersenken.Data.ComputerPlayer;
 using SchiffeVersenken.Data.Controller;
+using SchiffeVersenken.Data.Database;
 using SchiffeVersenken.Data.Model.StateMachine;
 using SchiffeVersenken.Data.View;
 using System.Diagnostics;
@@ -26,11 +27,20 @@ namespace SchiffeVersenken.Data.Model
         public bool _OpponentShipsSet { get; set; }
         public bool _GameOver { get; set; }
         public int _PlayerScore { get; set; } = 0;
+        public bool _LocalGame { get; private set; } = true;
 
         public GameLogic()
         {
             _Player = new Player(this);
-            _Opponent = new ComputerOpponent(this);
+            if(_LocalGame)
+            {
+                _Opponent = new ComputerOpponent(this);
+            }
+            else
+            {
+                _Opponent = new NetworkOpponent(this);
+            }
+            UserManagement.SetDefaultPlayer();
         }
 
         /// <summary>
@@ -81,6 +91,7 @@ namespace SchiffeVersenken.Data.Model
             {
                 _ComputerDifficulty = ComputerDifficulty.Klug;
             }
+            UserManagement.SetComputerOpponent(_ComputerDifficulty);
             TransistionToState(new PreGameState());
         }
 
@@ -123,15 +134,13 @@ namespace SchiffeVersenken.Data.Model
             {
                 if (_currentState is Player1TurnState)
                 {
-                    //_Winner = _Player;
-                    _Winner = "Player";
-                    _Looser = "Computer";
+                    _Winner = UserManagement._Player.Name;
+                    _Looser = UserManagement._Opponent.Name;
                 }
                 else
                 {
-                    //_Winner = _ComputerOpponent;
-                    _Winner = "Computer";
-                    _Looser = "Player";
+                    _Winner = UserManagement._Opponent.Name;
+                    _Looser = UserManagement._Player.Name;
                 }
 				OnGameOver?.Invoke(_Winner);
 				nextState = new GameOverState();

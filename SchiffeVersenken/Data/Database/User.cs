@@ -7,13 +7,13 @@ namespace SchiffeVersenken.Data.Database
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
 
-        [NotNull]
+        [NotNull, Unique]
         public string Name { get; set; }
 
         [NotNull]
         public string PasswordHash { get; set; }
 
-        [NotNull, Unique]
+        [NotNull]
         public string Salt { get; set; }
     }
 }
