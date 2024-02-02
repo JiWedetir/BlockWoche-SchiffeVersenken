@@ -171,7 +171,7 @@ namespace SchiffeVersenken.Data.ComputerPlayer
                         _x = x;
                         return true;
                     }
-                    else if (state != SquareState.Empty && state != SquareState.Ship)
+                    else if (state == SquareState.Miss)
                     {
                         foundMiss = true;
                     }
@@ -192,7 +192,7 @@ namespace SchiffeVersenken.Data.ComputerPlayer
                         _x = x;
                         return true;
                     }
-                    else if (state != SquareState.Empty || state != SquareState.Ship)
+                    else if (state == SquareState.Miss)
                     {
                         foundMiss = true;
                     }
@@ -248,7 +248,7 @@ namespace SchiffeVersenken.Data.ComputerPlayer
                         _y = y;
                         return true;
                     }
-                    else if (state != SquareState.Empty || state != SquareState.Ship)
+                    else if (state == SquareState.Miss)
                     {
                         foundMiss = true;
                     }
@@ -269,7 +269,7 @@ namespace SchiffeVersenken.Data.ComputerPlayer
                         _y = y;
                         return true;
                     }
-                    else if (state != SquareState.Empty || state != SquareState.Ship)
+                    else if (state == SquareState.Miss)
                     {
                         foundMiss = true;
                     }
