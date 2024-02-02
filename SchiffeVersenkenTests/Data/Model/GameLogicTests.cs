@@ -1,5 +1,4 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SchiffeVersenken.Data.Model.StateMachine;
 
 namespace SchiffeVersenken.Data.Model.Tests
 {
