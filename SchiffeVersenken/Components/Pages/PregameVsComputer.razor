@@ -3,34 +3,27 @@
 @using SchiffeVersenken.Data.Controller;
 @inherits LayoutComponentBase
 
-<div class="container vertical" style="height:100%; width: 100%;">
-	<h1 class="container center">Pregame Vs Computer</h1>
+<MudStack style="@($"height:100%; width: 100%; background-image: {_bgUrl}; background-size: cover; background-position: center; background-repeat: no-repeat;")" Justify="Justify.SpaceEvenly" AlignItems="AlignItems.Center">
+	<MudText Align="Align.Center" Typo="Typo.h5" ><b>Game-Settings Vs. Computer</b></MudText>
+	
+	<MudStack Style="width: 50%;">
+		<MudText Align="Align.Center" Typo="Typo.h6"><b>Feldgrösse:  @_FieldSize x @_FieldSize</b></MudText>
+		<MudSlider Variant="Variant.Filled" TickMarks="true" TickMarkLabels="@labels" Step="1" Min="@_minFieldSize" Max="@_maxFieldSize" @bind-Value="@_FieldSize" Size="Size.Large" Style="align-self:center;"  />
+	</MudStack>
 
-	<div class="container vertical center">
+	<MudStack >
+		<MudText Align="Align.Center" Typo="Typo.h6"><b>Computer Difficulty</b></MudText>
+		<MudSelect T="ComputerDifficulty" AnchorOrigin="Origin.BottomCenter" @bind-value="@_Difficulty" Dense="true" Variant="Variant.Outlined" Style="background-color: white; border-radius:4px;">
+			@foreach (var difficulty in Enum.GetValues(typeof(ComputerDifficulty)).Cast<ComputerDifficulty>())
+			{
+				<MudSelectItem Value="@difficulty" Text="@difficulty.ToString()" />
+			}
+		</MudSelect>
+	</MudStack>
 
-		<label style="text-align:center">Feldgrösse:  @_FieldSize x @_FieldSize</label>
-		<div class="slider-container">
-			<label>@_minFieldSizeString</label>
-			<input type="range" min="@_minFieldSize" max="@_maxFieldSize" step="1" @bind-value="@_FieldSize" class="range-style" />
-			<label>@_maxFieldSizeString</label>
-		</div>
-
-		<div class="container center" style="padding-block:2vh 13vh;">
-			<label>Difficulty:</label>
-			<select @bind="@_Difficulty" style="font-size: 1rem">
-				@_Difficulty
-				@foreach (var difficulty in Enum.GetValues(typeof(ComputerDifficulty)))
-				{
-					<option value="@difficulty">@difficulty</option>
-				}
-			</select>
-		</div>
-	</div>
-
-	<div class="container center">
-		<button class="Btn-2D" role="button" @onclick="SendSettings">Start Placing Ships</button>
-	</div>
-</div> 
+	<MudButton OnClick="SendSettings" Variant="Variant.Filled" Style="background-color: white">Start Placing Ships</MudButton>
+	
+</MudStack>
 
 
 

@@ -74,7 +74,7 @@ namespace SchiffeVersenken.Components.Pages
 				return;
 			}
 
-
+			
 			int shipLength = _lastClickedShip.Size;
 			Orientation orientation = _lastClickedShip.Orientation;
 			_lastClickedShip.IsPlaced = true;
