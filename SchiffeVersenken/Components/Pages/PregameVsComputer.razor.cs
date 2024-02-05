@@ -15,10 +15,21 @@ namespace SchiffeVersenken.Components.Pages
         private string _minFieldSizeString = $"{_minFieldSize}x{_minFieldSize}";
         private string _maxFieldSizeString = $"{_maxFieldSize}x{_maxFieldSize}";
 
-        private int _FieldSize { get; set; } = _minFieldSize;
+        private string _bgUrl = "url('../images/backgroundsettings.png')";
+
+        string[] labels;
+
+		private int _FieldSize { get; set; } = _minFieldSize;
         private ComputerDifficulty _Difficulty { get; set; } = ComputerDifficulty.Dumm;
 
-        private void SendSettings()
+		protected override void OnInitialized()
+		{
+			base.OnInitialized();
+			labels = new string[] { _minFieldSizeString, "", "", "", "", "", _maxFieldSizeString };
+
+		}
+
+		private void SendSettings()
         {
             Game.StartPlacingShips(_FieldSize, _Difficulty);
             ChangePage();
