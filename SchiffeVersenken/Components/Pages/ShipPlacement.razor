@@ -1,17 +1,33 @@
 ﻿@page "/ShipPlacement"
 @inject Microsoft.AspNetCore.Components.NavigationManager NavigationManager;
+@inherits LayoutComponentBase
 @inject IDialogService DialogService;
 @using IImage = Microsoft.Maui.Graphics.IImage;
-@inherits LayoutComponentBase
 
-<div class="container vertical" style="height:100%; width: 100%;">
+
+<MudStack style="@($"height:100%; width: 100%; background-image: {_bgUrl}; background-size: cover; background-position: center; background-repeat: no-repeat;")" Justify="Justify.SpaceEvenly" AlignItems="AlignItems.Center">
+	<MudText Align="Align.Center" Typo="Typo.h5"><b>Ship Placement</b></MudText>
+
+	<MudStack Row="true">
+		@* TODO SVG's Platzierung *@
+		<BattleFieldComponent FieldType="@BattleFieldComponent.FieldTypes.PlacementField" Field="@_board" OnFieldClicked="@OnSquareClick" />
+	</MudStack>
+
+	
+	<MudButton OnClick="GoToNextPage" Variant="Variant.Filled" Style="background-color: white" Disabled=@(_shipsPlaced.Count() != _ships.Count())>Start the Battle!!</MudButton>
+</MudStack>
+
+
+
+
+@* <div class="container vertical" style="height:100%; width: 100%;">
 
 	<div class="container center" style="margin-top: 1vh;">
 		<h1>ShipPlacement</h1>
 	</div>
+	
 
 	<div class="container horizontal center">
-		@* Schiffeauswahl *@
 		<div class="container vertical" style="width: 40vw; align-items: center">
 			<div class="container fitspace" style="width: 100%; height:100%">	
 				
@@ -24,7 +40,6 @@
 
 			</div>
 			
-			@* NavigationsButtons *@
 			<div class="container horizontal" style="width:100%">
 				<button class="Btn-2D" role="button" @onclick="ChangeOrientation"> Drehen&ensp;<i class="fa fa-repeat" /></button>
 				<button class="Btn-2D" role="button" @onclick="OnClickResetLastShip">Reset Ship&ensp;<i class="fa fa-backward" /></button>
@@ -32,7 +47,6 @@
 			</div>
 		</div>
 
-		@* Feld *@
 		<div class="container vertical" style="width: fit-content; align-items: center; margin: 2vw; overflow: hidden;">
 			<div class="bg-img-ownfield">
 				<table class="battlefieldsize" style="margin-inline: auto;">
@@ -55,11 +69,8 @@
 		</div>
 	</div>
 
-
-
 	<div class="container horizontal" style="margin-inline:5vw; margin-bottom: 1vh;">
-		<button class="Btn-2D" role="button" @onclick="GoToPreviousPage" disabled>Go Back To Settings</button>
 		<button class="Btn-2D" role="button" @onclick="GoToNextPage" disabled=@(_shipsPlaced.Count() != _ships.Count())>Start the Battle!!</button>
 	</div>
 
-</div>
+</div> *@

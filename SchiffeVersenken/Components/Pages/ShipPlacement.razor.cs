@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Components;
 using SchiffeVersenken.Data;
 using SchiffeVersenken.Data.Model;
+using SchiffeVersenken.Data.Sea;
+using SchiffeVersenken.Data.View;
+using static MudBlazor.CategoryTypes;
 using Orientation = SchiffeVersenken.Data.Orientation;
 
 
@@ -18,12 +21,30 @@ namespace SchiffeVersenken.Components.Pages
 		private ShipDetails _lastClickedShip;
 
 		private bool[,] _fieldBoolArray;
-		
+		private Square[,] _board = null;
+		private string _bgUrl = "url('../images/backgroundshipplacement.png')";
+
 		protected override void OnInitialized()
 		{
 			StateHasChanged();
 			_fieldcnt = Game._Size;
 			setDefaultValues();
+			CreateField();
+
+		}
+
+
+		public void CreateField()
+		{
+			_board = new Square[_fieldcnt, _fieldcnt];
+			for (int i = 0; i < _fieldcnt; i++)
+			{
+				for (int j = 0; j < _fieldcnt; j++)
+				{
+					_board[i, j] = new Square();
+					_board[i, j].SetToEmptySquare();
+				}
+			}
 		}
 
 		private void setDefaultValues()
@@ -57,12 +78,16 @@ namespace SchiffeVersenken.Components.Pages
 			_lastClickedShip = ship;
 		}
 
-		private void OnSquareClick(int x, int y)
+		private void OnSquareClick(int[] coords)
 		{
+			int x = coords[0];
+			int y = coords[1];
+
 			if (_lastClickedShip == null)
 			{
 				return;
 			}
+
 			_shipsPlaced.Add(_lastClickedShip);
 			_lastClickedShip.PositionX = x;
 			_lastClickedShip.PositionY = y;
@@ -78,7 +103,15 @@ namespace SchiffeVersenken.Components.Pages
 			int shipLength = _lastClickedShip.Size;
 			Orientation orientation = _lastClickedShip.Orientation;
 			_lastClickedShip.IsPlaced = true;
+
+			
+			// TODO: Schiffe kreieren & setzen
+			//
+			//_board[(x + 1), y].SetToShipSquare(ship);
+
 			_lastClickedShip = null;
+
+
 
 			if (orientation == Orientation.Horizontal)
 			{
@@ -86,6 +119,7 @@ namespace SchiffeVersenken.Components.Pages
 				{
 					//Change Squares Horizontal
 					_fieldBoolArray[(x + i), y] = true;
+					
 				}
 			}
 			else
@@ -192,10 +226,10 @@ namespace SchiffeVersenken.Components.Pages
 			}
 		}
 
-		private void GoToPreviousPage()
-		{
-			NavigationManager.NavigateTo("/PregameVsComputer", true);
-		}
+		//private void GoToPreviousPage()
+		//{
+		//	NavigationManager.NavigateTo("/PregameVsComputer", true);
+		//}
 
 		private void GoToNextPage()
 		{
