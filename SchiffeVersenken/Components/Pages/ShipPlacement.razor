@@ -8,8 +8,13 @@
 <MudStack style="@($"height:100%; width: 100%; background-image: {_bgUrl}; background-size: cover; background-position: center; background-repeat: no-repeat;")" Justify="Justify.SpaceEvenly" AlignItems="AlignItems.Center">
 	<MudText Align="Align.Center" Typo="Typo.h5"><b>Ship Placement</b></MudText>
 
-	<MudStack Row="true">
+	<MudStack Row="true" Spacing="10">
 		@* TODO SVG's Platzierung *@
+		<MudContainer Style="height: 35vw; width: 35vw; border: 2px solid black;">
+			@foreach (var ship in _ships){
+				@* @PlaceShipSVG(ship) *@
+			}
+		</MudContainer>
 		<BattleFieldComponent FieldType="@BattleFieldComponent.FieldTypes.PlacementField" Field="@_board" OnFieldClicked="@OnSquareClick" />
 	</MudStack>
 

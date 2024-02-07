@@ -3,7 +3,6 @@ using SchiffeVersenken.Data;
 using SchiffeVersenken.Data.Model;
 using SchiffeVersenken.Data.Sea;
 using SchiffeVersenken.Data.View;
-using static MudBlazor.CategoryTypes;
 using Orientation = SchiffeVersenken.Data.Orientation;
 
 
@@ -20,7 +19,6 @@ namespace SchiffeVersenken.Components.Pages
 		private List<int> _shipSizes;
 		private ShipDetails _lastClickedShip;
 
-		private bool[,] _fieldBoolArray;
 		private Square[,] _board = null;
 		private string _bgUrl = "url('../images/backgroundshipplacement.png')";
 
@@ -51,7 +49,6 @@ namespace SchiffeVersenken.Components.Pages
 		{
 			_ships = shipsTemplate._Ships;
 			_shipSizes = shipsTemplate._ShipSizes;
-			_fieldBoolArray = new bool[_fieldcnt, _fieldcnt];
 			_lastClickedShip = null;
 			foreach (var ship in _ships)
 			{
@@ -62,6 +59,7 @@ namespace SchiffeVersenken.Components.Pages
 				ship.Orientation = Orientation.Horizontal;
 			}
 			_shipsPlaced.Clear();
+			CreateField();
 		}
 
 		private void ShipClicked(ShipDetails ship)
@@ -113,23 +111,23 @@ namespace SchiffeVersenken.Components.Pages
 
 
 
-			if (orientation == Orientation.Horizontal)
-			{
-				for (int i = 0; i < shipLength; i++)
-				{
-					//Change Squares Horizontal
-					_fieldBoolArray[(x + i), y] = true;
+			//if (orientation == Orientation.Horizontal)
+			//{
+			//	for (int i = 0; i < shipLength; i++)
+			//	{
+			//		//Change Squares Horizontal
+			//		_fieldBoolArray[(x + i), y] = true;
 					
-				}
-			}
-			else
-			{
-				for (int i = 0; i < shipLength; i++)
-				{
-					//Change Squares Vertical
-					_fieldBoolArray[x, (y + i)] = true;
-				}
-			}
+			//	}
+			//}
+			//else
+			//{
+			//	for (int i = 0; i < shipLength; i++)
+			//	{
+			//		//Change Squares Vertical
+			//		_fieldBoolArray[x, (y + i)] = true;
+			//	}
+			//}
 		}
 
 		private void ChangeOrientation()
@@ -150,39 +148,73 @@ namespace SchiffeVersenken.Components.Pages
 		}
 
 
-		RenderFragment BuildSvg(ShipDetails ship) => builder =>
+		RenderFragment PlaceShipSVG(ShipDetails ship) => builder =>
 		{
 			int size = ship.Size;
-			int squareSize = 30 / _fieldcnt;
 			int shipIndex = _ships.IndexOf(ship);
-			int width, height;
 
-			if(ship.Orientation == Orientation.Horizontal)
+
+			string imageUrl = "";
+
+			switch (size)
 			{
-				width = size * squareSize;
-				height = squareSize;
+				case 5:
+					imageUrl = "path/to/your/svg/for/size5.svg";
+					break;
+				case 4:
+					imageUrl = "path/to/your/svg/for/size4.svg";
+					break;
+				case 3:
+					imageUrl = "path/to/your/svg/for/size3.svg";
+					break;
+				case 2:
+					imageUrl = "path/to/your/svg/for/size2.svg";
+					break;
 			}
-			else
-			{
-				width = squareSize;
-				height = size * squareSize;
-			}	
+
+			builder.OpenElement(0, "img");
+			builder.AddAttribute(1, "src", imageUrl);
+			builder.AddAttribute(2, "alt", $"Ship size {size}");
+			builder.CloseElement();
+
+			//Place Ship SVGs depending Size
+			//Add Clickable
+			//Add Css Classes for state if clicked
+		};
+
+		//RenderFragment BuildSvg(ShipDetails ship) => builder =>
+		//{
+		//	int size = ship.Size;
+		//	int squareSize = 30 / _fieldcnt;
+		//	int shipIndex = _ships.IndexOf(ship);
+		//	int width, height;
+
+		//	if(ship.Orientation == Orientation.Horizontal)
+		//	{
+		//		width = size * squareSize;
+		//		height = squareSize;
+		//	}
+		//	else
+		//	{
+		//		width = squareSize;
+		//		height = size * squareSize;
+		//	}	
 	
 
-			builder.OpenElement(0, "svg");
-			builder.AddAttribute(1, "width", $"{width}vw");
-			builder.AddAttribute(2, "height", $"{height}vw");
+		//	builder.OpenElement(0, "svg");
+		//	builder.AddAttribute(1, "width", $"{width}vw");
+		//	builder.AddAttribute(2, "height", $"{height}vw");
 
-			builder.OpenElement(3, "rect");
-			builder.AddAttribute(4, "width", $"{width}vw");
-			builder.AddAttribute(5, "height", $"{height}vw");
-			builder.AddAttribute(6, "onclick", EventCallback.Factory.Create(this, () => ShipClicked(ship)));
-			builder.AddAttribute(7, "class", $"rectangle {(ship.IsClicked ? "clicked" : "")} {(ship.IsPlaced ? "placed" : "notPlaced")}");
-			builder.CloseElement();
+		//	builder.OpenElement(3, "rect");
+		//	builder.AddAttribute(4, "width", $"{width}vw");
+		//	builder.AddAttribute(5, "height", $"{height}vw");
+		//	builder.AddAttribute(6, "onclick", EventCallback.Factory.Create(this, () => ShipClicked(ship)));
+		//	builder.AddAttribute(7, "class", $"rectangle {(ship.IsClicked ? "clicked" : "")} {(ship.IsPlaced ? "placed" : "notPlaced")}");
+		//	builder.CloseElement();
 
 
-			builder.CloseElement();
-		};
+		//	builder.CloseElement();
+		//};
 
 
 		private void OnClickResetAll()
@@ -192,44 +224,40 @@ namespace SchiffeVersenken.Components.Pages
 
 		private void OnClickResetLastShip()
 		{
-			if(_shipsPlaced.Count > 0)
-			{
-				_lastClickedShip = null;
-				ShipDetails ship = _shipsPlaced[_shipsPlaced.Count - 1];
-				ship.IsClicked = false;
-				ship.IsPlaced = false;
+			//if(_shipsPlaced.Count > 0)
+			//{
+			//	_lastClickedShip = null;
+			//	ShipDetails ship = _shipsPlaced[_shipsPlaced.Count - 1];
+			//	ship.IsClicked = false;
+			//	ship.IsPlaced = false;
 				
 
-				Orientation orientation = ship.Orientation;
-				int shipLength = ship.Size;
-				int x = ship.PositionX;
-				int y = ship.PositionY;
+			//	Orientation orientation = ship.Orientation;
+			//	int shipLength = ship.Size;
+			//	int x = ship.PositionX;
+			//	int y = ship.PositionY;
 
-				if (orientation == Orientation.Horizontal)
-				{
-					for (int i = 0; i < shipLength; i++)
-					{
-						//Change Squares Horizontal
-						_fieldBoolArray[(x + i), y] = false;
-					}
-				}
-				else
-				{
-					for (int i = 0; i < shipLength; i++)
-					{
-						//Change Squares Vertical
-						_fieldBoolArray[x, (y + i)] = false;
-					}
-				}
+			//	if (orientation == Orientation.Horizontal)
+			//	{
+			//		for (int i = 0; i < shipLength; i++)
+			//		{
+			//			//Change Squares Horizontal
+			//			_fieldBoolArray[(x + i), y] = false;
+			//		}
+			//	}
+			//	else
+			//	{
+			//		for (int i = 0; i < shipLength; i++)
+			//		{
+			//			//Change Squares Vertical
+			//			_fieldBoolArray[x, (y + i)] = false;
+			//		}
+			//	}
 
-				_shipsPlaced.Remove(ship);
-			}
+			//	_shipsPlaced.Remove(ship);
+			//}
 		}
 
-		//private void GoToPreviousPage()
-		//{
-		//	NavigationManager.NavigateTo("/PregameVsComputer", true);
-		//}
 
 		private void GoToNextPage()
 		{
