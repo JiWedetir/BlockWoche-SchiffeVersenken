@@ -16,8 +16,7 @@
         /// <summary>
         /// Saves the given score for the given username
         /// </summary>
-        /// <param name="username">string username</param>
-        /// <param name="opponent">string opponent</param>
+        /// <param name="winner">string winner</param>
         /// <param name="score">int gamescore</param>
         /// <returns></returns>
         public async static Task<bool> SaveHighScore(string winner, int score)

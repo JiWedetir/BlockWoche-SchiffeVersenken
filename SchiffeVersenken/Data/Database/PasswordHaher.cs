@@ -8,7 +8,7 @@ namespace SchiffeVersenken.Data.Database
         public static string GenerateSalt()
         {
             byte[] saltBytes = new byte[16];
-            using (var rng = new RNGCryptoServiceProvider())
+            using (var rng = RandomNumberGenerator.Create())
             {
                 rng.GetBytes(saltBytes);
             }

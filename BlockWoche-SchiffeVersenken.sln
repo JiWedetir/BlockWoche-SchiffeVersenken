@@ -5,6 +5,8 @@ VisualStudioVersion = 17.8.34330.188
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SchiffeVersenken", "SchiffeVersenken\SchiffeVersenken.csproj", "{3269A91E-E557-453E-99A3-EE3B73C32D9C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SchiffeVersenkenTests", "SchiffeVersenkenTests\SchiffeVersenkenTests.csproj", "{F4FD077C-EBF8-4F1B-BE42-2B6F6DDCC873}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -17,6 +19,10 @@ Global
 		{3269A91E-E557-453E-99A3-EE3B73C32D9C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3269A91E-E557-453E-99A3-EE3B73C32D9C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3269A91E-E557-453E-99A3-EE3B73C32D9C}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{F4FD077C-EBF8-4F1B-BE42-2B6F6DDCC873}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F4FD077C-EBF8-4F1B-BE42-2B6F6DDCC873}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F4FD077C-EBF8-4F1B-BE42-2B6F6DDCC873}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F4FD077C-EBF8-4F1B-BE42-2B6F6DDCC873}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

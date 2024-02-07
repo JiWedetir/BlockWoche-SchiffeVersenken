@@ -22,37 +22,27 @@
 
 		private static ShipDetails CreateShip(int size)
 		{
+			var ship = new ShipDetails();
 			switch (size)
 			{
 				case 5:
-					return new ShipDetails
-					{
-						Name = "Carrier",
-						Size = 5
-					};
+					ship.Name = "Carrier";
+					ship.Size = 5;
 					break;
 				case 4:
-					return new ShipDetails
-					{
-						Name = "Battleship",
-						Size = 4
-					};
+					ship.Name = "Battleship";
+					ship.Size = 4;
 					break;
 				case 3:
-					return new ShipDetails
-					{
-						Name = "Cruiser",
-						Size = 3
-					};
+					ship.Name = "Cruiser";
+					ship.Size = 3;
 					break;
 				default:
-					return new ShipDetails
-					{
-						Name = "Destroyer",
-						Size = 2
-					};
+					ship.Name = "Destroyer";
+					ship.Size = 2;
 					break;
 			}
+			return ship;
 		}
 	}
 }
