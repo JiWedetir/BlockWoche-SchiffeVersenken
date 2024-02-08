@@ -10,10 +10,23 @@
 
 	<MudStack Row="true" Spacing="10">
 		@* TODO SVG's Platzierung *@
-		<MudContainer Style="height: 35vw; width: 35vw; border: 2px solid black;">
-			@foreach (var ship in _ships){
-				@* @PlaceShipSVG(ship) *@
-			}
+		<MudContainer style="height: 35vw; width: 35vw; border: 2px solid black;">
+			<svg style="flex: 1 1 auto; height:100px;">
+				<use href="./images/ships/carrier.svg#carrier">
+				</use>
+			</svg>
+			<svg style="flex: 1 1 auto; height:90px;">
+				<use href="./images/ships/battleship.svg#battleship">
+				</use>
+			</svg>
+			<svg style="flex: 1 1 auto; height:80px;">
+				<use href="./images/ships/cruiser.svg#cruiser">
+				</use>
+			</svg>
+			<svg style="flex: 1 1 auto; height:70px;">
+				<use href="./images/ships/destroyer.svg#destroyer">
+				</use>
+			</svg>
 		</MudContainer>
 		<BattleFieldComponent FieldType="@BattleFieldComponent.FieldTypes.PlacementField" Field="@_board" OnFieldClicked="@OnSquareClick" />
 	</MudStack>

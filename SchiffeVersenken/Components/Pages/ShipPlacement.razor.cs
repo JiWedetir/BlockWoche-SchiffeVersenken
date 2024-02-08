@@ -154,26 +154,26 @@ namespace SchiffeVersenken.Components.Pages
 			int shipIndex = _ships.IndexOf(ship);
 
 
-			string imageUrl = "";
+			string url = "";
 
 			switch (size)
 			{
 				case 5:
-					imageUrl = "path/to/your/svg/for/size5.svg";
+					url = "../images/ship-SVGs/ship1.svg";
 					break;
 				case 4:
-					imageUrl = "path/to/your/svg/for/size4.svg";
+					url = "../images/ship-SVGs/ship2.svg";
 					break;
 				case 3:
-					imageUrl = "path/to/your/svg/for/size3.svg";
+					url = "../images/ship-SVGs/ship3.svg";
 					break;
 				case 2:
-					imageUrl = "path/to/your/svg/for/size2.svg";
+					url = "../images/ship-SVGs/ship1.svg";
 					break;
 			}
 
 			builder.OpenElement(0, "img");
-			builder.AddAttribute(1, "src", imageUrl);
+			builder.AddAttribute(1, "src", url);
 			builder.AddAttribute(2, "alt", $"Ship size {size}");
 			builder.CloseElement();
 
