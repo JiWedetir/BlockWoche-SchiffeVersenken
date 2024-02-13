@@ -19,6 +19,8 @@ namespace SchiffeVersenken.Data.ComputerPlayer
         public async Task ShootCleverAsync()
         {
             _cleverFieldFound = false;
+            bool shipSunk = false;
+            int lengthSunkShip = 0;
             await Task.Run(() =>
             {
                 for (int i = _shootHistory.Count - 1; i >= 0; i--)
@@ -40,8 +42,14 @@ namespace SchiffeVersenken.Data.ComputerPlayer
                             MarkAdjacentSquares(x, y);
                             _shootHistory[i] = (_shootHistory[i].x, _shootHistory[i].y, _shootHistory[i].hit, true);
                             _cleverFieldFound = false;
+                            lengthSunkShip = _battlefield._Board[x, y]._Ship._Length;
+                            shipSunk = true;
                         }
                     }
+                }
+                if (shipSunk)
+                {
+                    RemoveShipFromShipToFind(lengthSunkShip);
                 }
             });
             if (!_cleverFieldFound)
@@ -74,8 +82,6 @@ namespace SchiffeVersenken.Data.ComputerPlayer
                     }
                 }
             }
-            int length = _battlefield._Board[x, y]._Ship._Length;
-            RemoveShipFromShipToFind(length);
         }
 
         /// <summary>
