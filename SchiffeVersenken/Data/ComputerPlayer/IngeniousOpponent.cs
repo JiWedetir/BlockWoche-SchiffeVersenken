@@ -31,8 +31,33 @@ namespace SchiffeVersenken.Data.ComputerPlayer
                 }
                 int[,] averageShipPlacement = GetAverageShipPlacement();
                 GetHighestAverage(averageShipPlacement);
+                WriteFieldsToFile();
             });
         }
+
+        //Debug
+        private void WriteFieldsToFile()
+        {
+            var time = DateTime.Now;
+            using (StreamWriter writer = new StreamWriter($"C:\\Git\\BlockWoche-SchiffeVersenken\\Test{time.ToString("HHmmss")}.txt"))
+            {
+                foreach (int[,] field in _possibleFields)
+                {
+                    for (int i = 0; i < _size; i++)
+                    {
+                        for (int j = 0; j < _size; j++)
+                        {
+                            writer.Write(field[j, i]);
+                        }
+                        writer.WriteLine();
+                    }
+                    writer.WriteLine();
+                }
+                writer.WriteLine("\n\n new shoot!!\n\n");
+                writer.Close();
+            }
+        }
+        
 
         private void CreatePossibleFields()
         {
@@ -42,17 +67,17 @@ namespace SchiffeVersenken.Data.ComputerPlayer
             {
                 for (int j = 0; j < _size; j++)
                 {
-                    if (_battlefield._Board[i, j]._State == SquareState.Empty || _battlefield._Board[i, j]._State == SquareState.Ship)
+                    if (_battlefield._Board[j, i]._State == SquareState.Empty || _battlefield._Board[j, i]._State == SquareState.Ship)
                     {
-                        tryField[i, j] = 0;
+                        tryField[j, i] = 0;
                     }
                     else
                     {
-                        tryField[i, j] = 1;
+                        tryField[j, i] = 1;
                     }
                 }
             }
-            int maxTries = 1;
+            int maxTries = 2;
             int[] shipLengths = _shipsToFinde;
             bool success = PlaceShips(shipLengths, 0, maxTries, placedShips, tryField);
             if (success)
@@ -71,9 +96,9 @@ namespace SchiffeVersenken.Data.ComputerPlayer
                 {
                     for (int j = 0; j < _size; j++)
                     {
-                        if (field[i, j] == 2)
+                        if (field[j, i] == 2)
                         {
-                            averageShipPlacement[i, j] += 1;
+                            averageShipPlacement[j, i] += 1;
                         }
                     }
                 }
@@ -91,19 +116,19 @@ namespace SchiffeVersenken.Data.ComputerPlayer
             {
                 for (int j = 0; j < _size; j++)
                 {
-                    if (averageShipPlacement[i, j] > maxValue)
+                    if (averageShipPlacement[j, i] > maxValue)
                     {
-                        maxValue = averageShipPlacement[i, j];
+                        maxValue = averageShipPlacement[j, i];
                         maxI = i;
                         maxJ = j;
                     }
                 }
             }
 
-            if (_battlefield._Board[maxI, maxJ]._State == SquareState.Empty || _battlefield._Board[maxI, maxJ]._State == SquareState.Ship)
+            if (_battlefield._Board[maxJ, maxI]._State == SquareState.Empty || _battlefield._Board[maxJ, maxI]._State == SquareState.Ship)
             {
-                _x = maxI;
-                _y = maxJ;
+                _x = maxJ;
+                _y = maxI;
             }
             else
             {
@@ -114,14 +139,14 @@ namespace SchiffeVersenken.Data.ComputerPlayer
                     {
                         for (int j = 0; j < _size; j++)
                         {
-                            if (averageShipPlacement[i, j] == maxValue)
+                            if (averageShipPlacement[j, i] == maxValue)
                             {
                                 maxI = i;
                                 maxJ = j;
-                                if (_battlefield._Board[maxI, maxJ]._State == SquareState.Empty || _battlefield._Board[maxI, maxJ]._State == SquareState.Ship)
+                                if (_battlefield._Board[maxJ, maxI]._State == SquareState.Empty || _battlefield._Board[maxJ, maxI]._State == SquareState.Ship)
                                 {
-                                    _x = maxI;
-                                    _y = maxJ;
+                                    _x = maxJ;
+                                    _y = maxI;
                                     return;
                                 }
                             }
@@ -130,8 +155,8 @@ namespace SchiffeVersenken.Data.ComputerPlayer
                     tries++;
                     maxValue --;
                 } while (tries < 8);
-                _x = maxI;
-                _y = maxJ;
+                _x = maxJ;
+                _y = maxI;
             }
 
         }
@@ -230,18 +255,19 @@ namespace SchiffeVersenken.Data.ComputerPlayer
             {
                 return false;
             }
-            bool horizontal = ship.Orientation == Orientation.Horizontal;
 
-            int startX = Math.Max(0, ship.PositionX - 1);
-            int startY = Math.Max(0, ship.PositionY - 1);
-            int endX = Math.Min(_size - 1, horizontal ? ship.PositionX + ship.Size : ship.PositionX + 1);
-            int endY = Math.Min(_size - 1, horizontal ? ship.PositionY + 1 : ship.PositionY + ship.Size);
-
-            for (int posX = startX; posX <= endX; posX++)
+            for (int i = 0; i < ship.Size; i++)
             {
-                for (int posY = startY; posY <= endY; posY++)
+                if (ship.Orientation == Orientation.Horizontal)
                 {
-                    if (tryField[posX, posY] != 0)
+                    if (tryField[ship.PositionX + i, ship.PositionY] != 0)
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    if (tryField[ship.PositionX, ship.PositionY + i] != 0)
                     {
                         return false;
                     }
