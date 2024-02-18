@@ -6,89 +6,29 @@
 
 
 <MudStack style="@($"height:100%; width: 100%; background-image: {_bgUrl}; background-size: cover; background-position: center; background-repeat: no-repeat;")" Justify="Justify.SpaceEvenly" AlignItems="AlignItems.Center">
-	<MudText Align="Align.Center" Typo="Typo.h5"><b>Ship Placement</b></MudText>
+    <MudText Align="Align.Center" Typo="Typo.h5"><b>Ship Placement</b></MudText>
 
-	<MudStack Row="true" Spacing="10">
-		@* TODO SVG's Platzierung *@
-		<MudContainer style="height: 35vw; width: 35vw; border: 2px solid black;">
-			<svg style="flex: 1 1 auto; height:100px;">
-				<use href="./images/ships/carrier.svg#carrier">
-				</use>
-			</svg>
-			<svg style="flex: 1 1 auto; height:90px;">
-				<use href="./images/ships/battleship.svg#battleship">
-				</use>
-			</svg>
-			<svg style="flex: 1 1 auto; height:80px;">
-				<use href="./images/ships/cruiser.svg#cruiser">
-				</use>
-			</svg>
-			<svg style="flex: 1 1 auto; height:70px;">
-				<use href="./images/ships/destroyer.svg#destroyer">
-				</use>
-			</svg>
-		</MudContainer>
-		<BattleFieldComponent FieldType="@BattleFieldComponent.FieldTypes.PlacementField" Field="@_board" OnFieldClicked="@OnSquareClick" />
-	</MudStack>
+    <MudStack Row="true" Spacing="10">
+        <!-- SVG-Platzierung -->
+        <MudStack Class="align-center" Style="border: 1px solid black; width: 35vw; height: 35vw;">
+            <MudContainer Class="d-flex flex-wrap justify-space-evenly" Style="width: 100%; padding: 0; margin: 0;">
+                @foreach (var ship in _ships)
+                {
+                    <div style="width: 8.5vw; height: 8.5vw; display: flex; justify-content: center; align-items: center;">
+                        @PlaceShipSVG(ship)
+                    </div>
+                }
+            </MudContainer>
+            <MudButtonGroup Variant="Variant.Filled" Style="margin-top: auto; background-color: white">
+                <MudButton @onclick="ChangeOrientation" EndIcon="@Icons.Material.Filled.Rotate90DegreesCw"> Drehen</MudButton>
+                <MudButton @onclick="OnClickResetLastShip" EndIcon="@Icons.Material.Filled.ArrowBack">Reset Ship</MudButton>
+                <MudButton @onclick="OnClickResetAll" EndIcon="@Icons.Material.Filled.SettingsBackupRestore">Reset All</MudButton>
+            </MudButtonGroup>
+        </MudStack>
 
+        <BattleFieldComponent FieldType="@BattleFieldComponent.FieldTypes.PlacementField" Field="@_board" OnFieldClicked="@OnSquareClick" />
+    </MudStack>
 	
 	<MudButton OnClick="GoToNextPage" Variant="Variant.Filled" Style="background-color: white" Disabled=@(_shipsPlaced.Count() != _ships.Count())>Start the Battle!!</MudButton>
 </MudStack>
 
-
-
-
-@* <div class="container vertical" style="height:100%; width: 100%;">
-
-	<div class="container center" style="margin-top: 1vh;">
-		<h1>ShipPlacement</h1>
-	</div>
-	
-
-	<div class="container horizontal center">
-		<div class="container vertical" style="width: 40vw; align-items: center">
-			<div class="container fitspace" style="width: 100%; height:100%">	
-				
-				@foreach (var ship in _ships)
-				{
-					<div class="rechteck">
-						@BuildSvg(ship)
-					</div>
-				}	
-
-			</div>
-			
-			<div class="container horizontal" style="width:100%">
-				<button class="Btn-2D" role="button" @onclick="ChangeOrientation"> Drehen&ensp;<i class="fa fa-repeat" /></button>
-				<button class="Btn-2D" role="button" @onclick="OnClickResetLastShip">Reset Ship&ensp;<i class="fa fa-backward" /></button>
-				<button class="Btn-2D" role="button" @onclick="OnClickResetAll">Reset All&ensp;<i class="fa fa-undo" /></button>
-			</div>
-		</div>
-
-		<div class="container vertical" style="width: fit-content; align-items: center; margin: 2vw; overflow: hidden;">
-			<div class="bg-img-ownfield">
-				<table class="battlefieldsize" style="margin-inline: auto;">
-					@for (int y = 0; y < @_fieldcnt; y++)
-					{
-						<tr>
-							@for (int x = 0; x < @_fieldcnt; x++)
-							{
-								int col = x;
-								int row = y;
-
-								<td class="square @(_fieldBoolArray[col, row] ? "active" : "")" @onclick="() => OnSquareClick(col, row)">
-								</td>
-							}
-						</tr>
-					}
-				</table>
-			</div>
-			
-		</div>
-	</div>
-
-	<div class="container horizontal" style="margin-inline:5vw; margin-bottom: 1vh;">
-		<button class="Btn-2D" role="button" @onclick="GoToNextPage" disabled=@(_shipsPlaced.Count() != _ships.Count())>Start the Battle!!</button>
-	</div>
-
-</div> *@
