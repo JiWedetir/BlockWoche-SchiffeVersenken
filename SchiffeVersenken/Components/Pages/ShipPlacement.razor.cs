@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Components;
 using SchiffeVersenken.Data;
 using SchiffeVersenken.Data.Model;
+using SchiffeVersenken.Data.Sea;
+using SchiffeVersenken.Data.View;
 using Orientation = SchiffeVersenken.Data.Orientation;
 
 
@@ -17,20 +19,36 @@ namespace SchiffeVersenken.Components.Pages
 		private List<int> _shipSizes;
 		private ShipDetails _lastClickedShip;
 
-		private bool[,] _fieldBoolArray;
-		
+		private Square[,] _board = null;
+		private string _bgUrl = "url('../images/backgroundshipplacement.png')";
+
 		protected override void OnInitialized()
 		{
 			StateHasChanged();
 			_fieldcnt = Game._Size;
 			setDefaultValues();
+			CreateField();
+
+		}
+
+
+		public void CreateField()
+		{
+			_board = new Square[_fieldcnt, _fieldcnt];
+			for (int i = 0; i < _fieldcnt; i++)
+			{
+				for (int j = 0; j < _fieldcnt; j++)
+				{
+					_board[i, j] = new Square();
+					_board[i, j].SetToEmptySquare();
+				}
+			}
 		}
 
 		private void setDefaultValues()
 		{
 			_ships = shipsTemplate._Ships;
 			_shipSizes = shipsTemplate._ShipSizes;
-			_fieldBoolArray = new bool[_fieldcnt, _fieldcnt];
 			_lastClickedShip = null;
 			foreach (var ship in _ships)
 			{
@@ -38,9 +56,10 @@ namespace SchiffeVersenken.Components.Pages
 				ship.IsPlaced = false;
 				ship.PositionX = 0;
 				ship.PositionY = 0;
-				ship.Orientation = Orientation.Horizontal;
+				ship.Orientation = Orientation.Vertical;
 			}
 			_shipsPlaced.Clear();
+			CreateField();
 		}
 
 		private void ShipClicked(ShipDetails ship)
@@ -57,12 +76,16 @@ namespace SchiffeVersenken.Components.Pages
 			_lastClickedShip = ship;
 		}
 
-		private void OnSquareClick(int x, int y)
+		private void OnSquareClick(int[] coords)
 		{
+			int x = coords[0];
+			int y = coords[1];
+
 			if (_lastClickedShip == null)
 			{
 				return;
 			}
+
 			_shipsPlaced.Add(_lastClickedShip);
 			_lastClickedShip.PositionX = x;
 			_lastClickedShip.PositionY = y;
@@ -78,14 +101,15 @@ namespace SchiffeVersenken.Components.Pages
 			int shipLength = _lastClickedShip.Size;
 			Orientation orientation = _lastClickedShip.Orientation;
 			_lastClickedShip.IsPlaced = true;
-			_lastClickedShip = null;
+			_lastClickedShip.IsClicked = false;
 
 			if (orientation == Orientation.Horizontal)
 			{
 				for (int i = 0; i < shipLength; i++)
 				{
 					//Change Squares Horizontal
-					_fieldBoolArray[(x + i), y] = true;
+					_board[(x + i), y]._State = SquareState.Ship;
+
 				}
 			}
 			else
@@ -93,9 +117,11 @@ namespace SchiffeVersenken.Components.Pages
 				for (int i = 0; i < shipLength; i++)
 				{
 					//Change Squares Vertical
-					_fieldBoolArray[x, (y + i)] = true;
+					_board[x, (y + i)]._State = SquareState.Ship;
 				}
 			}
+
+			_lastClickedShip = null;
 		}
 
 		private void ChangeOrientation()
@@ -116,40 +142,48 @@ namespace SchiffeVersenken.Components.Pages
 		}
 
 
-		RenderFragment BuildSvg(ShipDetails ship) => builder =>
+		RenderFragment PlaceShipSVG(ShipDetails ship) => builder =>
 		{
 			int size = ship.Size;
-			int squareSize = 30 / _fieldcnt;
 			int shipIndex = _ships.IndexOf(ship);
-			int width, height;
+			Orientation orientation = ship.Orientation;
 
-			if(ship.Orientation == Orientation.Horizontal)
+			string href = string.Empty;
+			string height = string.Empty;
+
+			switch (size)
 			{
-				width = size * squareSize;
-				height = squareSize;
+				case 5:
+					href = "./images/ships/carrier.svg#carrier";
+					height = "100%";
+					break;
+				case 4:
+					href = "./images/ships/battleship.svg#battleship";
+					height = "90%";
+					break;
+				case 3:
+					href = "./images/ships/cruiser.svg#cruiser";
+					height = "80%";
+					break;
+				case 2:
+					href = "./images/ships/destroyer.svg#destroyer";
+					height = "70%";
+					break;
 			}
-			else
-			{
-				width = squareSize;
-				height = size * squareSize;
-			}	
-	
+
+			string transformStyle = orientation == Orientation.Horizontal ? "transform: rotate(90deg);" : string.Empty;
+
+			string style = $"flex: 1 1 auto; height:{height}; {transformStyle}";
 
 			builder.OpenElement(0, "svg");
-			builder.AddAttribute(1, "width", $"{width}vw");
-			builder.AddAttribute(2, "height", $"{height}vw");
-
-			builder.OpenElement(3, "rect");
-			builder.AddAttribute(4, "width", $"{width}vw");
-			builder.AddAttribute(5, "height", $"{height}vw");
-			builder.AddAttribute(6, "onclick", EventCallback.Factory.Create(this, () => ShipClicked(ship)));
-			builder.AddAttribute(7, "class", $"rectangle {(ship.IsClicked ? "clicked" : "")} {(ship.IsPlaced ? "placed" : "notPlaced")}");
+			builder.AddAttribute(1, "style", style);
+			builder.AddAttribute(2, "onclick", EventCallback.Factory.Create(this, () => ShipClicked(ship)));
+			builder.AddAttribute(3, "class", $"ship {(ship.IsClicked ? "clicked" : "")} {(ship.IsPlaced ? "placed" : "notPlaced")}");
+			builder.OpenElement(4, "use");
+			builder.AddAttribute(5, "href", href);
 			builder.CloseElement();
-
-
 			builder.CloseElement();
 		};
-
 
 		private void OnClickResetAll()
 		{
@@ -176,7 +210,7 @@ namespace SchiffeVersenken.Components.Pages
 					for (int i = 0; i < shipLength; i++)
 					{
 						//Change Squares Horizontal
-						_fieldBoolArray[(x + i), y] = false;
+						_board[(x + i), y]._State = SquareState.Empty;
 					}
 				}
 				else
@@ -184,7 +218,7 @@ namespace SchiffeVersenken.Components.Pages
 					for (int i = 0; i < shipLength; i++)
 					{
 						//Change Squares Vertical
-						_fieldBoolArray[x, (y + i)] = false;
+						_board[x, (y + i)]._State = SquareState.Empty;
 					}
 				}
 
@@ -192,10 +226,6 @@ namespace SchiffeVersenken.Components.Pages
 			}
 		}
 
-		private void GoToPreviousPage()
-		{
-			NavigationManager.NavigateTo("/PregameVsComputer", true);
-		}
 
 		private void GoToNextPage()
 		{

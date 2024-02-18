@@ -38,18 +38,7 @@
                         int col = x;
                         int row = y;
                         <!-- Square -->
-                        if (FieldType == FieldTypes.EnemyField)
-                        {
-                            string cssClassEnemy = Field[col, row]._State switch{
-                                SquareState.Ship => "ship-placed",
-                                SquareState.Hit => "ship-hit",
-                                SquareState.Miss => "ship-missed",
-                                SquareState.Sunk => "ship-sunk",
-                                _ => ""
-                            };
-                            <td class="cell square-enemy @cssClassEnemy" @onclick="() => FieldClicked(col, row)"></td>
-                        }
-                        else
+						if (FieldType == FieldTypes.OwnField)
                         {
                             string cssClassOwn = Field[col, row]._State switch{
                                 SquareState.Ship => "ship-placed",
@@ -59,7 +48,19 @@
                                 _ => ""
                             };
                             <td class="cell @cssClassOwn"></td>
-                        }                        
+                        }
+                        else
+                        {
+                            string cssClassEnemy = Field[col, row]._State switch
+                            {
+                                SquareState.Ship => "ship-placed",
+                                SquareState.Hit => "ship-hit",
+                                SquareState.Miss => "ship-missed",
+                                SquareState.Sunk => "ship-sunk",
+                                _ => ""
+                            };
+                            <td class="cell square-enemy @cssClassEnemy" @onclick="() => FieldClicked(col, row)"></td>
+                        }
                     }
                 }
 			}

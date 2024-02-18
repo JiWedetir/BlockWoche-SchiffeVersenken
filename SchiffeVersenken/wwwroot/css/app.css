@@ -46,36 +46,35 @@ h3 {
     font-size: 1.2em;
 }
 
-
-.container {
-    border: 1px solid rgb(0,0,0, 0.25);
-    display: flex;
-}
-
-.center {
-    align-self: center;
-}
-
-.container.fitspace {
-    flex-wrap: wrap;
-    justify-content: space-evenly;
-}
-
-.horizontal {
-    flex-direction: row;
-    justify-content: space-evenly;
-}
-
-.vertical {
-    flex-direction: column;
-    justify-content: space-between;
-}
-
 label {
     font-size: 1.25rem;
     font-weight: bold;
     margin: 0 0.5rem;
 }
+
+
+svg.ship {
+    color: black;
+}
+
+svg.placed {
+    color: rgba(0, 0, 0, 0.1);
+    pointer-events: none;
+}
+
+svg.notPlaced {
+    color: rgba(0, 0, 0, 1);
+    pointer-events: all;
+}
+
+svg.clicked {
+    color: rgba(255, 0, 0, 1);
+}
+
+svg:hover {
+    cursor: pointer;
+}
+
 
 .reset-styles {
     display: initial; /* Setzt die Anzeige auf den Standardwert zurück */
@@ -84,27 +83,9 @@ label {
     align-self: auto; /* Setzt die Selbstausrichtung auf den Standardwert zurück */
 }
 
-.bg-img-shipplacement2 {
-    background-image: url('../../Resources/Images/backgroudbattlefieldtwo.png');
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    background-size: cover;
-}
-
-
-
-.Container {
-    width: max-content;
-    display: flex;
-    border: 2px solid black;
-}
-
 #reset-element {
     all: unset;
 }
-
-
-
 
 /*Error Handling CSS*/
 .valid.modified:not([type=checkbox]) {
