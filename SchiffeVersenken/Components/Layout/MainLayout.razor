@@ -2,10 +2,10 @@
 <MudThemeProvider />
 <MudDialogProvider />
 <MudSnackbarProvider />
-@inject GameLogic Game;
+@inject GameLogicService GameService;
 
 <div class="page">
-    <CascadingValue Value="Game">
+    <CascadingValue Value="GameService">
         @Body
     </CascadingValue>
 </div>

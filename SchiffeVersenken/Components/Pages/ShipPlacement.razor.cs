@@ -2,16 +2,17 @@
 using SchiffeVersenken.Data;
 using SchiffeVersenken.Data.Model;
 using SchiffeVersenken.Data.Sea;
-using SchiffeVersenken.Data.View;
 using Orientation = SchiffeVersenken.Data.Orientation;
+using SchiffeVersenken.Components.Shared;
+using MudBlazor;
 
 
 namespace SchiffeVersenken.Components.Pages
 {
-	public partial class ShipPlacement
+    public partial class ShipPlacement
     {
 		[CascadingParameter]
-		public GameLogic Game { get; set; }
+		public GameLogicService GameService { get; set; }
 
 		private int _fieldcnt;
 		private List<ShipDetails> _shipsPlaced = new List<ShipDetails>();
@@ -25,7 +26,7 @@ namespace SchiffeVersenken.Components.Pages
 		protected override void OnInitialized()
 		{
 			StateHasChanged();
-			_fieldcnt = Game._Size;
+			_fieldcnt = GameService.Game._Size;
 			setDefaultValues();
 			CreateField();
 
@@ -90,10 +91,10 @@ namespace SchiffeVersenken.Components.Pages
 			_lastClickedShip.PositionX = x;
 			_lastClickedShip.PositionY = y;
 
-			if (!Game._Player.CheckShips(_shipsPlaced))
+			if (!GameService.Game._Player.CheckShips(_shipsPlaced))
 			{
 				_shipsPlaced.Remove(_lastClickedShip);
-				DialogService.ShowPopup("Ship can't be placed there");
+				OpenDialog("Ship can't be placed there");
 				return;
 			}
 
@@ -229,26 +230,19 @@ namespace SchiffeVersenken.Components.Pages
 
 		private void GoToNextPage()
 		{
-			if (!Game._Player.SetShips(_shipsPlaced))
+			if (!GameService.Game._Player.SetShips(_shipsPlaced))
 			{
-				DialogService.ShowPopup("Error in ship Placement");
+				OpenDialog("Error in ship Placement");
 				return;
 			}
 
 			NavigationManager.NavigateTo("/Game", true);
 		}
-	}
 
-	public interface IDialogService
-	{
-		Task ShowPopup(string message);
-	}
-
-	public class DialogService : IDialogService
-	{
-		public async Task ShowPopup(string message)
+		private void OpenDialog(string message)
 		{
-			await Application.Current.MainPage.DisplayAlert("Alert", message, "OK");
+			DialogParameters parameters = new DialogParameters { { "ContentText", message } };
+			DialogService.Show<ShipPlacementDialog>("", parameters);
 		}
 	}
 }
