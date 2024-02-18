@@ -1,5 +1,18 @@
 ﻿@page "/"
+@inject Microsoft.AspNetCore.Components.NavigationManager NavigationManager;
 
-<h1>HomeScreen</h1>
 
-<a href="Lobby">Go to Lobby</a>
+
+<MudContainer Style="@($"height:100%; width: 100%; background-image: {_bgUrl}; background-size: cover; background-position: center; background-repeat: no-repeat;")" Class="d-flex justify-center flex-column">
+	<MudStack AlignItems="AlignItems.Center" Spacing="5">
+		<MudText Align="Align.Center" Typo="Typo.h5"><b>User Login</b></MudText>
+		<MudAutocomplete T="string" Label="Username" @bind-Value="_username" SearchFunc="@SearchUsers" Variant="Variant.Filled" Style="background-color: white;" />
+		<MudTextField @bind-Value="_password" Label="Password" Variant="Variant.Filled" InputType="@PasswordInput" Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon" OnAdornmentClick="ButtonSeeClicked" Style="background-color: white;" />
+		<MudStack Row="true">
+			<MudButton OnClick="GoToLobbyPage" Variant="Variant.Filled" Style="background-color: white" Disabled=@(!_loginIsValid)>Login</MudButton>
+			<MudButton OnClick="OpenRegisterPopUp" Variant="Variant.Filled" Style="background-color: white">Register</MudButton>
+			<a href="Lobby">Go to Lobby</a>
+		</MudStack>
+	</MudStack>
+</MudContainer>
+
