@@ -1,9 +1,5 @@
 ﻿using MudBlazor;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using SchiffeVersenken.Data.Database;
 
 namespace SchiffeVersenken.Components.Pages
 {
@@ -19,23 +15,37 @@ namespace SchiffeVersenken.Components.Pages
 		string PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
 
 		private List<string> _usernames = new List<string>();
+		private List<User> _users = new List<User>();
 
-		protected override void OnInitialized()
+		private string _errorMessage = string.Empty;
+		private bool _isRegisterOpen = false;
+
+		protected override async void OnInitialized()
 		{
 			//Get Usernames from DB
+			_users = await UserManagement.GetUserNamesAsyync();
+			foreach (User user in _users)
+			{
+				_usernames.Add(user.Name);
+			}
 		}
 
-		private void GoToLobbyPage()
+		private async void GoToLobbyPage()
 		{
-			//Only if login is valid
-			NavigationManager.NavigateTo("/Game", true);
+			if(await UserManagement.LoginUser(_username, _password))
+			{
+				NavigationManager.NavigateTo("/Game", true);
+			}
+			else
+			{
+				_errorMessage = "Wrong Username or Passworr";
+			}
 		}
 
-		private void OpenRegisterPopUp()
+		private void ToggleRegisterPopOver()
 		{
 			//Open Register PopUp
-
-			StateHasChanged();
+			_isRegisterOpen = !_isRegisterOpen;
 		}
 
 		private async Task<IEnumerable<string>> SearchUsers(string value)

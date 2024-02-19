@@ -9,10 +9,17 @@
 		<MudTextField @bind-Value="_password" Label="Password" Variant="Variant.Filled" InputType="@PasswordInput" Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon" OnAdornmentClick="ButtonSeeClicked" Style="background-color: white;" />
 		<MudStack Row="true">
 			<MudButton OnClick="GoToLobbyPage" Variant="Variant.Filled" Style="background-color: white" Disabled=@(!_loginIsValid)>Login</MudButton>
-			<MudButton OnClick="OpenRegisterPopUp" Variant="Variant.Filled" Style="background-color: white">Register</MudButton>
+			<MudButton OnClick="ToggleRegisterPopOver" Variant="Variant.Filled" Style="background-color: white">Register</MudButton>
 			<a href="Lobby">Go to Lobby</a>
 		</MudStack>
 	</MudStack>
 </MudContainer>
 
+
+<MudPopover Open="@_isRegisterOpen" Fixed="true" Class="px-4 py-4" Style="width: 50%; height: 50%" AnchorOrigin="Origin.CenterCenter" TransformOrigin="Origin.CenterCenter">
+	<MudStack AlignItems="AlignItems.Center">
+		<MudIconButton Icon="@Icons.Material.Filled.Close" Color="Color.Dark" OnClick="@ToggleRegisterPopOver" />
+		<MudText>Content of the popover can be anything.</MudText>
+	</MudStack>
+</MudPopover>
 
