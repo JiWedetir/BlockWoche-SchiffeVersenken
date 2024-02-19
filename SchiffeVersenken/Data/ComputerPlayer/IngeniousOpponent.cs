@@ -31,34 +31,9 @@ namespace SchiffeVersenken.Data.ComputerPlayer
                 }
                 int[,] averageShipPlacement = GetAverageShipPlacement();
                 GetHighestAverage(averageShipPlacement);
-                WriteFieldsToFile();
             });
         }
-
-        //Debug
-        private void WriteFieldsToFile()
-        {
-            var time = DateTime.Now;
-            using (StreamWriter writer = new StreamWriter($"C:\\Git\\BlockWoche-SchiffeVersenken\\Test{time.ToString("HHmmss")}.txt"))
-            {
-                foreach (int[,] field in _possibleFields)
-                {
-                    for (int i = 0; i < _size; i++)
-                    {
-                        for (int j = 0; j < _size; j++)
-                        {
-                            writer.Write(field[j, i]);
-                        }
-                        writer.WriteLine();
-                    }
-                    writer.WriteLine();
-                }
-                writer.WriteLine("\n\n new shoot!!\n\n");
-                writer.Close();
-            }
-        }
         
-
         private void CreatePossibleFields()
         {
             List<ShipDetails> placedShips = new List<ShipDetails>();
