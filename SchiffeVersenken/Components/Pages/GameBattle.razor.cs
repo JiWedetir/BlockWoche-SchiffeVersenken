@@ -1,50 +1,53 @@
-﻿using SchiffeVersenken.Data.Sea;
+﻿using Microsoft.AspNetCore.Components;
+using MudBlazor;
+using SchiffeVersenken.Components.Shared;
+using SchiffeVersenken.Data;
 using SchiffeVersenken.Data.Model;
-using SchiffeVersenken.Data.View;
-using Microsoft.AspNetCore.Components;
-using SchiffeVersenken.Data.Model.StateMachine;
+using SchiffeVersenken.Data.Sea;
 
 namespace SchiffeVersenken.Components.Pages
 {
-    public partial class GameBattle : IDisposable
+	public partial class GameBattle : IDisposable
     {
-		[CascadingParameter] public GameLogic Game { get; set; }
+		[CascadingParameter]
+        public GameLogicService GameService { get; set; }
 
-		private char[] _alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToCharArray();
+        private char[] _alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToCharArray();
         private Square[,] _ownfield = null;
         private Square[,] _enemyfield = null;
         private bool _playerTurn;
         private int _currentXCord;
         private int _currentYCord;
-        private SquareState _state;
         private int _score;
-        private string _winner;
+        private SquareState _state;
+		private string _bgUrl = "url('../images/backgroundgame.png')";
 
-        protected override void OnInitialized()
+		protected override void OnInitialized()
         {
-            _ownfield = Game._BattlefieldPlayer._Board;
-            _enemyfield = Game._BattlefieldOpponent._Board;
-            _playerTurn = Game._Player._YourTurn;
-            _score = Game._PlayerScore;
+            _ownfield = GameService.Game._BattlefieldPlayer._Board;
+            _enemyfield = GameService.Game._BattlefieldOpponent._Board;
+            _playerTurn = GameService.Game._Player._YourTurn;
+            _score = GameService.Game._PlayerScore;
             //Add Service
-            Game._BattlefieldPlayer.OnPlayerAction += UpdateBoards;
-            Game._BattlefieldOpponent.OnPlayerAction += UpdateBoards;
-            Game.OnGameOver += GameOver;
+            GameService.Game._BattlefieldPlayer.OnPlayerAction += UpdateBoards;
+            GameService.Game._BattlefieldOpponent.OnPlayerAction += UpdateBoards;
+            GameService.Game.OnGameOver += GameOver;
             StateHasChanged();
         }
 
         public void UpdateBoards(SquareState state) 
         {
             _state = state;
-			_score = Game._PlayerScore;
+			_score = GameService.Game._PlayerScore;
 			StateHasChanged();
         }
 
-        public void GameOver(string winner)
+        public async void GameOver(string winner)
         {
 			//Show Game Winner
-			_winner = winner;
+			await OpenDialog(winner);
 			StateHasChanged();
+			NavigationManager.NavigateTo("/Lobby", true);
 		}
 
         public void HandeFieldClicked(int[] coords)
@@ -55,16 +58,43 @@ namespace SchiffeVersenken.Components.Pages
 
         public void OnPlayerShoot()
         {
-            Game._Player.Shoot(_currentXCord, _currentYCord);
-        }
+            SquareState squareState = _enemyfield[_currentXCord, _currentYCord]._State;
+
+			if (squareState == SquareState.Miss ||
+				squareState == SquareState.Hit ||
+				squareState == SquareState.Sunk)
+            {
+                OpenAlreadyShotDialog();
+			}
+            else
+            {
+				GameService.Game._Player.Shoot(_currentXCord, _currentYCord);
+			}
+		}
 
         public void Dispose()
         {
             //Dispose of Service
-            Game._BattlefieldPlayer.OnPlayerAction -= UpdateBoards;
-            Game._BattlefieldOpponent.OnPlayerAction -= UpdateBoards;
-			Game.OnGameOver -= GameOver;
+            GameService.Game._BattlefieldPlayer.OnPlayerAction -= UpdateBoards;
+            GameService.Game._BattlefieldOpponent.OnPlayerAction -= UpdateBoards;
+            GameService.Game.OnGameOver -= GameOver;
 		}
 
+        private async Task OpenDialog(string winner)
+        {
+			DialogParameters parameters = new DialogParameters
+			{
+				["winner"] = winner,
+				["score"] = _score.ToString()
+			};
+			var dialog = DialogService.Show<GameEndDialog>("Game Over", parameters);
+			var result = await dialog.Result;
+		}
+
+        private void OpenAlreadyShotDialog()
+        {
+			DialogParameters parameters = new DialogParameters { { "ContentText", "Field can't be Shoot Again!" } };
+			DialogService.Show<ShipPlacementDialog>("", parameters);
+		}
 	}
 }

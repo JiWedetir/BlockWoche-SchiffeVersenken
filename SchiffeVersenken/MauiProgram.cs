@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using MudBlazor.Services;
-using SchiffeVersenken.Components.Pages;
-using SchiffeVersenken.Data.Model;
+using SchiffeVersenken.Data;
 
 namespace SchiffeVersenken
 {
@@ -21,8 +20,7 @@ namespace SchiffeVersenken
 
             builder.Services.AddMauiBlazorWebView();
             builder.Services.AddMudServices();
-            builder.Services.AddSingleton<IDialogService, DialogService>();
-			builder.Services.AddSingleton<GameLogic>();
+			builder.Services.AddSingleton<GameLogicService>();
 
 #if DEBUG
 			builder.Services.AddBlazorWebViewDeveloperTools();

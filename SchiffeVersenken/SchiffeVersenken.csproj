@@ -56,6 +56,11 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Compile Remove="Data\GameLogicService.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Include="Data\Model\GameLogicService.cs" />
       <None Include="wwwroot\font-awesome-4.7.0\css\font-awesome.css" />
       <None Include="wwwroot\font-awesome-4.7.0\css\font-awesome.min.css" />
       <None Include="wwwroot\font-awesome-4.7.0\fonts\fontawesome-webfont.eot" />

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
+using SchiffeVersenken.Data;
 using SchiffeVersenken.Data.Controller;
 using SchiffeVersenken.Data.Model;
 
@@ -9,7 +10,8 @@ namespace SchiffeVersenken.Components.Pages
 	public partial class PregameVsComputer
     {
         [CascadingParameter]
-        public GameLogic Game { get; set; }
+        public GameLogicService GameService { get; set; }
+
         private const int _minFieldSize = 9;
         private const int _maxFieldSize = 15;
         private string _minFieldSizeString = $"{_minFieldSize}x{_minFieldSize}";
@@ -25,13 +27,15 @@ namespace SchiffeVersenken.Components.Pages
 		protected override void OnInitialized()
 		{
 			base.OnInitialized();
+            GameService.CreateNewGame();
+            
 			labels = new string[] { _minFieldSizeString, "", "", "", "", "", _maxFieldSizeString };
 
 		}
 
 		private void SendSettings()
         {
-            Game.StartPlacingShips(_FieldSize, _Difficulty);
+            GameService.Game.StartPlacingShips(_FieldSize, _Difficulty);
             ChangePage();
         }
 
