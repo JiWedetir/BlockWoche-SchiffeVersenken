@@ -1,6 +1,49 @@
 ﻿@page "/"
+@inject Microsoft.AspNetCore.Components.NavigationManager NavigationManager;
 
-<h1>HomeScreen</h1>
 
-<a href="Lobby">Go to Lobby</a>
+<MudContainer Style="@($"height:100%; width: 100%; background-image: {_bgUrl}; background-size: cover; background-position: center; background-repeat: no-repeat;")" Class="d-flex justify-center flex-column">
+	<MudStack AlignItems="AlignItems.Center" Spacing="5">
+		<MudText Align="Align.Center" Typo="Typo.h5"><b>User Login</b></MudText>
+		<MudAutocomplete T="string" Label="Username" @bind-Value="_username" SearchFunc="@SearchUsers" Variant="Variant.Filled" Style="background-color: white;" />
+		<MudTextField @bind-Value="_password" Label="Password" Variant="Variant.Filled" Immediate="true" InputType="@PasswordInput" Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon" OnAdornmentClick="ButtonSeeClicked" Style="background-color: white;" />
+		<MudStack Row="true" AlignItems="AlignItems.Center">
+			<MudButton OnClick="GoToLobbyPage" Variant="Variant.Filled" Style="background-color: white" Disabled=@(string.IsNullOrEmpty(_username) || string.IsNullOrEmpty(_password) || _loginLoading)>Login</MudButton>
+			<MudButton OnClick="ToggleRegisterPopOver" Variant="Variant.Filled" Style="background-color: white" Disabled=@(_loginLoading) >Register</MudButton>
+			@if (_loginLoading)
+			{
+				<MudProgressCircular Color="Color.Info" Size="Size.Small" Indeterminate=@(_loginLoading) />
+			}
+		</MudStack>
+		@if (!string.IsNullOrEmpty(_errorMessage)){
+			<MudText Color="Color.Error">@_errorMessage</MudText>
+		}
+	</MudStack>
+</MudContainer>
 
+
+<MudPopover Open="@_isRegisterOpen" Fixed="true" Class="px-4 py-4" Style="width: 50%; " AnchorOrigin="Origin.CenterCenter" TransformOrigin="Origin.CenterCenter">
+	<MudStack AlignItems="AlignItems.Stretch" Class="ma-4">
+		<MudStack Row="true" Style="width: 100%" AlignItems="AlignItems.Center">
+			<MudText Typo="Typo.h5" Class="ml-2"><b>Register New User</b></MudText>
+			<MudSpacer />
+			<MudIconButton Icon="@Icons.Material.Filled.Close" Color="Color.Dark" OnClick="@ToggleRegisterPopOver" />
+		</MudStack>
+		<MudTextField @bind-Value="_registerUsername" T="string" MaxLength="20" Immediate="true" Label="Username" Variant="Variant.Text" Counter="20" Validation="@(new Func<string, IEnumerable<string>>(MaxCharacters))" Margin="Margin.Dense"/>
+		<MudTextField @bind-Value="_registerPasswordFirst" Label="Password" Immediate="true" Variant="Variant.Text" InputType="@PasswordInput" Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon" OnAdornmentClick="ButtonSeeClicked" Style="background-color: white;" />
+		<MudTextField @bind-Value="_registerPasswordSecond" Label="Password Again" Immediate="true" Variant="Variant.Text" InputType="@PasswordInput" Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon" OnAdornmentClick="ButtonSeeClicked" Style="background-color: white;" />
+		<MudStack Row="true" AlignItems="AlignItems.Center">
+			<MudButton OnClick="CheckRegistration" Variant="Variant.Filled" Class="mt-4" Style="background-color: white" Disabled=@(string.IsNullOrEmpty(_registerUsername) || string.IsNullOrEmpty(_registerPasswordFirst) || string.IsNullOrEmpty(_registerPasswordSecond) || _registrationLoading)>Login</MudButton>
+			@if (_registrationLoading)
+			{
+				<MudProgressCircular Color="Color.Info" Size="Size.Small" Indeterminate=@(_registrationLoading) />
+			}
+			
+		</MudStack>
+		
+		@if (!string.IsNullOrEmpty(_registationErrorMessage))
+		{
+			<MudText Color="Color.Error">@_registationErrorMessage</MudText>
+		}
+	</MudStack>
+</MudPopover>
