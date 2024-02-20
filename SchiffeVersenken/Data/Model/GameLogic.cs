@@ -40,7 +40,10 @@ namespace SchiffeVersenken.Data.Model
             {
                 _Opponent = new NetworkOpponent(this);
             }
-            _ = UserManagement.SetDefaultPlayer();
+            if(UserManagement._Player == null)
+            {
+                _ = UserManagement.SetDefaultPlayer();
+            }
         }
 
         /// <summary>

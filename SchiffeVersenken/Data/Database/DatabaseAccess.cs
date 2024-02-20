@@ -36,7 +36,7 @@ namespace SchiffeVersenken.Data.Database
         internal async Task<List<User>> GetUserNamesAsync()
         {
             await Init();
-            List<User> users = await Database.QueryAsync<User>("SELECT Name FROM User");
+            List<User> users = await Database.QueryAsync<User>("SELECT Name FROM User WHERE Name NOT IN ('Player', 'Dummer_Computer', 'Kluger_Computer', 'Genialer_Computer')");
             return users;
         }
         internal async Task<User> GetUserAsync(int id)
