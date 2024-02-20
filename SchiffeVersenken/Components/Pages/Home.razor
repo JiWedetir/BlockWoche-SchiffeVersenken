@@ -6,6 +6,7 @@
 	<MudStack AlignItems="AlignItems.Center" Spacing="5">
 		<MudText Align="Align.Center" Typo="Typo.h5"><b>User Login</b></MudText>
 		<MudAutocomplete T="string" Label="Username" @bind-Value="_username" SearchFunc="@SearchUsers" Variant="Variant.Filled" Style="background-color: white;" />
+<<<<<<< HEAD
 		<MudTextField @bind-Value="_password" Label="Password" Variant="Variant.Filled" Immediate="true" InputType="@PasswordInput" Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon" OnAdornmentClick="ButtonSeeClicked" Style="background-color: white;" />
 		<MudStack Row="true" AlignItems="AlignItems.Center">
 			<MudButton OnClick="GoToLobbyPage" Variant="Variant.Filled" Style="background-color: white" Disabled=@(string.IsNullOrEmpty(_username) || string.IsNullOrEmpty(_password) || _loginLoading)>Login</MudButton>
@@ -14,6 +15,13 @@
 			{
 				<MudProgressCircular Color="Color.Info" Size="Size.Small" Indeterminate=@(_loginLoading) />
 			}
+=======
+		<MudTextField @bind-Value="_password" Label="Password" Variant="Variant.Filled" InputType="@PasswordInput" Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon" OnAdornmentClick="ButtonSeeClicked" Style="background-color: white;" />
+		<MudStack Row="true">
+			<MudButton OnClick="GoToLobbyPage" Variant="Variant.Filled" Style="background-color: white" Disabled=@(!_loginIsValid)>Login</MudButton>
+			<MudButton OnClick="ToggleRegisterPopOver" Variant="Variant.Filled" Style="background-color: white">Register</MudButton>
+			<a href="Lobby">Go to Lobby</a>
+>>>>>>> 3b271ac (Rebased from master and started PopOver for Register of User)
 		</MudStack>
 		@if (!string.IsNullOrEmpty(_errorMessage)){
 			<MudText Color="Color.Error">@_errorMessage</MudText>
@@ -23,6 +31,7 @@
 </MudContainer>
 
 
+<<<<<<< HEAD
 <MudPopover Open="@_isRegisterOpen" Fixed="true" Class="px-4 py-4" Style="width: 50%; " AnchorOrigin="Origin.CenterCenter" TransformOrigin="Origin.CenterCenter">
 	<MudStack AlignItems="AlignItems.Stretch" Class="ma-4">
 		<MudStack Row="true" Style="width: 100%" AlignItems="AlignItems.Center">
@@ -55,3 +64,12 @@ Errors:
 - Möglciher Fehler nach Registration, dass Frontend Error erschein und Frontend neu laden braucht, nicht neu builden
 - Registration dauert lange
 *@
+=======
+<MudPopover Open="@_isRegisterOpen" Fixed="true" Class="px-4 py-4" Style="width: 50%; height: 50%" AnchorOrigin="Origin.CenterCenter" TransformOrigin="Origin.CenterCenter">
+	<MudStack AlignItems="AlignItems.Center">
+		<MudIconButton Icon="@Icons.Material.Filled.Close" Color="Color.Dark" OnClick="@ToggleRegisterPopOver" />
+		<MudText>Content of the popover can be anything.</MudText>
+	</MudStack>
+</MudPopover>
+
+>>>>>>> 3b271ac (Rebased from master and started PopOver for Register of User)
