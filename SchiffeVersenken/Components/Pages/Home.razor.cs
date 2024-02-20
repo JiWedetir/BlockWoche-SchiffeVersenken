@@ -108,6 +108,7 @@ namespace SchiffeVersenken.Components.Pages
 				if (await UserManagement.RegisterUser(_registerUsername, _registerPasswordFirst))
 				{
 					_newUserRegistered = true;
+					_registrationLoading = false;
 					ToggleRegisterPopOver();
 				}
 				else
@@ -120,6 +121,7 @@ namespace SchiffeVersenken.Components.Pages
 			{
 				_registationErrorMessage = "Passwords do not match!";
 			}
+			StateHasChanged();
 		}
 
 	}
