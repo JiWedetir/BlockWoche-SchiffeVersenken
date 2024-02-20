@@ -38,10 +38,12 @@ namespace SchiffeVersenken.Components.Pages
 		private async Task GetUsernameFromDB()
 		{
 			_users = await UserManagement.GetUserNamesAsyync();
+			_usernames.Clear();
 			foreach (User user in _users)
 			{
 				_usernames.Add(user.Name);
 			}
+			StateHasChanged();
 		}
 
 		private async void GoToLobbyPage()
