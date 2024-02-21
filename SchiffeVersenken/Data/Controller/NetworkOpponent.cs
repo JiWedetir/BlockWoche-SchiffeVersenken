@@ -13,6 +13,11 @@ namespace SchiffeVersenken.Data.Controller
         {
             _game = game;
         }
+        /// <summary>
+        /// Sets the ships on the opponent's battlefield based on the provided board configuration.
+        /// </summary>
+        /// <param name="board">The board configuration representing the ship positions.</param>
+        /// <returns>A task representing the asynchronous operation. The task result is a boolean value indicating whether the ships were successfully set.</returns>
         public async Task<bool> SetShipAsync(int[, ] board)
         {
             _board = _game._BattlefieldOpponent._Board;
@@ -45,6 +50,11 @@ namespace SchiffeVersenken.Data.Controller
             }
         }
 
+        /// <summary>
+        /// Finds and returns a list of ShipDetails objects based on the provided board.
+        /// </summary>
+        /// <param name="board">The 2D array representing the game board.</param>
+        /// <returns>A list of ShipDetails objects if all 10 ships are found, otherwise null.</returns>
         private List<ShipDetails> FindShips(int[, ] board)
         {
             List<ShipDetails> ships = new List<ShipDetails>();
@@ -106,11 +116,17 @@ namespace SchiffeVersenken.Data.Controller
             }
         }
 
+        /// <summary>
+        /// Sets the ship asynchronously.
+        /// </summary>
         public Task SetShipAsync()
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Represents an asynchronous operation that shoots at the opponent.
+        /// </summary>
         public Task ShootAsync()
         {
             throw new NotImplementedException();

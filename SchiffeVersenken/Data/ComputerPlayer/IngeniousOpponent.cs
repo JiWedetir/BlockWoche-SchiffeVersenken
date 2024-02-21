@@ -11,6 +11,9 @@ namespace SchiffeVersenken.Data.ComputerPlayer
             _size = _battlefield._Size;
         }
 
+        /// <summary>
+        /// Asynchronously shoots in an ingenious manner.
+        /// </summary>
         public async Task ShootIngeniousAsync()
         {
             await ShootCleverAsync();
@@ -20,6 +23,9 @@ namespace SchiffeVersenken.Data.ComputerPlayer
             }
         }
 
+        /// <summary>
+        /// Asynchronously creates possible positions for the computer player to find the best possible position to shoot.
+        /// </summary>
         public async Task CreatePossiblePossitions()
         {
             await Task.Run(() =>
@@ -34,6 +40,9 @@ namespace SchiffeVersenken.Data.ComputerPlayer
             });
         }
         
+        /// <summary>
+        /// Creates possible fields for ship placement.
+        /// </summary>
         private void CreatePossibleFields()
         {
             List<ShipDetails> placedShips = new List<ShipDetails>();
@@ -61,6 +70,9 @@ namespace SchiffeVersenken.Data.ComputerPlayer
             }
         }
 
+        /// <summary>
+        /// Calculates the average ship placement based on the possible fields.
+        /// </summary>
         private int[,] GetAverageShipPlacement()
         {
             int[,] averageShipPlacement = new int[_size, _size];
@@ -81,6 +93,10 @@ namespace SchiffeVersenken.Data.ComputerPlayer
             return averageShipPlacement;
         }
 
+        /// <summary>
+        /// Finds the highest average value in the given 2D array and sets the coordinates (_x, _y) accordingly.
+        /// </summary>
+        /// <param name="averageShipPlacement">The 2D array representing the average ship placement values.</param>
         private void GetHighestAverage(int[, ] averageShipPlacement)
         {
             int maxValue = 0;
@@ -136,6 +152,15 @@ namespace SchiffeVersenken.Data.ComputerPlayer
 
         }
 
+        /// <summary>
+        /// Places the ships on the game board recursively.
+        /// </summary>
+        /// <param name="shipLengths">An array of ship lengths.</param>
+        /// <param name="index">The index of the current ship length.</param>
+        /// <param name="maxTries">The maximum number of tries to place a ship.</param>
+        /// <param name="placedShips">A list of already placed ships.</param>
+        /// <param name="tryField">The game board representation.</param>
+        /// <returns>True if all ships are successfully placed, false otherwise.</returns>
         private bool PlaceShips(int[] shipLengths, int index, int maxTries, List<ShipDetails> placedShips, int[, ] tryField)
         {
             if (index == shipLengths.Length)
@@ -161,6 +186,13 @@ namespace SchiffeVersenken.Data.ComputerPlayer
             return false;
         }
 
+        /// <summary>
+        /// Tries to place a ship of the specified length on the game field.
+        /// </summary>
+        /// <param name="length">The length of the ship to be placed.</param>
+        /// <param name="placedShips">The list of already placed ships.</param>
+        /// <param name="tryField">The game field to try placing the ship on.</param>
+        /// <returns>True if the ship was successfully placed, false otherwise.</returns>
         private bool TryPlaceShip(int length, List<ShipDetails> placedShips, int[, ] tryField)
         {
             List<ShipDetails> validStartPoints = new List<ShipDetails>();
@@ -224,6 +256,12 @@ namespace SchiffeVersenken.Data.ComputerPlayer
             return false;
         }
 
+        /// <summary>
+        /// Checks if a ship can be placed on the game field.
+        /// </summary>
+        /// <param name="ship">The ship details.</param>
+        /// <param name="tryField">The game field.</param>
+        /// <returns>True if the ship can be placed, otherwise false.</returns>
         private bool CanPlaceShip(ShipDetails ship, int[, ] tryField)
         {
             if ((ship.Orientation == Orientation.Horizontal && ship.PositionX + ship.Size > _size) || (ship.Orientation == Orientation.Vertical && ship.PositionY + ship.Size > _size))
@@ -252,6 +290,11 @@ namespace SchiffeVersenken.Data.ComputerPlayer
             return true;
         }
 
+        /// <summary>
+        /// Removes the last placed ship from the list of placed ships and updates the tryField accordingly.
+        /// </summary>
+        /// <param name="placedShips">The list of placed ships.</param>
+        /// <param name="tryField">The tryField representing the game board.</param>
         private void RemoveLastShip(List<ShipDetails> placedShips, int[, ] tryField)
         {
             if (placedShips.Count == 0)
@@ -273,6 +316,11 @@ namespace SchiffeVersenken.Data.ComputerPlayer
             }
         }
 
+        /// <summary>
+        /// Shuffles the elements in a list using the Fisher-Yates algorithm.
+        /// </summary>
+        /// <typeparam name="T">The type of elements in the list.</typeparam>
+        /// <param name="list">The list to be shuffled.</param>
         private static void Shuffle<T>(List<T> list)
         {
             Random random = new Random();
