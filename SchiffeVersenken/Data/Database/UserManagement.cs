@@ -58,6 +58,10 @@ namespace SchiffeVersenken.Data.Database
             return await db.GetUserNamesAsync();
         }
 
+        /// <summary>
+        /// Sets the opponent for the current user.
+        /// </summary>
+        /// <param name="userName">The name of the opponent.</param>
         public static void SetOpponent(string userName)
         {
             User user = new User();
@@ -65,12 +69,21 @@ namespace SchiffeVersenken.Data.Database
             _Opponent = user;
         }
 
+        /// <summary>
+        /// Sets the default player asynchronously.
+        /// </summary>
+        /// <returns>A task representing the asynchronous operation.</returns>
         public static async Task SetDefaultPlayer()
         {
             DatabaseAccess db = new DatabaseAccess();
             _Player = await db.GetUserAsync("Player");
         }
 
+        /// <summary>
+        /// Sets the computer opponent based on the specified difficulty level.
+        /// </summary>
+        /// <param name="opponent">The difficulty level of the computer opponent.</param>
+        /// <returns>A task representing the asynchronous operation.</returns>
         public static async Task SetComputerOpponent(ComputerDifficulty opponent)
         {
             if(opponent == ComputerDifficulty.Dumm)

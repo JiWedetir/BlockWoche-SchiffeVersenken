@@ -7,6 +7,9 @@ namespace SchiffeVersenken.Data.Database
     {
         SQLiteAsyncConnection Database;
 
+        /// <summary>
+        /// Initializes the database connection and creates necessary tables if they don't exist.
+        /// </summary>
         async Task Init()
         {
             try
@@ -27,6 +30,10 @@ namespace SchiffeVersenken.Data.Database
                 Debug.WriteLine(ex.Message);
             }
         }
+
+        /// <summary>
+        /// Creates the default users if they don't exist.
+        /// </summary>
         internal async Task CreateDefaultUsers()
         {
             try
@@ -47,6 +54,11 @@ namespace SchiffeVersenken.Data.Database
                 Debug.WriteLine(ex.Message);
             }
         }
+
+        /// <summary>
+        /// Retrieves a list of user names from the database.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous operation. The task result contains the list of user names.</returns>
         internal async Task<List<User>> GetUserNamesAsync()
         {
             try
@@ -61,6 +73,12 @@ namespace SchiffeVersenken.Data.Database
                 return null;
             }
         }
+
+        /// <summary>
+        /// Retrieves a user from the database asynchronously.
+        /// </summary>
+        /// <param name="id">The ID of the user to retrieve.</param>
+        /// <returns>The user object if found, or null if an error occurs.</returns>
         internal async Task<User> GetUserAsync(int id)
         {
             try
@@ -74,6 +92,12 @@ namespace SchiffeVersenken.Data.Database
                 return null;
             }
         }
+
+        /// <summary>
+        /// Retrieves a user from the database based on their name.
+        /// </summary>
+        /// <param name="name">The name of the user to retrieve.</param>
+        /// <returns>The user object if found, otherwise null.</returns>
         internal async Task<User> GetUserAsync(string name)
         {
             try
@@ -87,6 +111,12 @@ namespace SchiffeVersenken.Data.Database
                 return null;
             }
         }
+
+        /// <summary>
+        /// Saves a user asynchronously.
+        /// </summary>
+        /// <param name="user">The user to save.</param>
+        /// <returns>The number of rows affected in the database.</returns>
         internal async Task<int> SaveUserAsync(User user)
         {
             try
@@ -107,6 +137,12 @@ namespace SchiffeVersenken.Data.Database
                 return 0;
             }
         }
+
+        /// <summary>
+        /// Deletes a user from the database asynchronously.
+        /// </summary>
+        /// <param name="user">The user to be deleted.</param>
+        /// <returns>The number of rows affected in the database.</returns>
         internal async Task<int> DeleteUserAsync(User user)
         {
             try
@@ -120,6 +156,12 @@ namespace SchiffeVersenken.Data.Database
                 return 0;
             }
         }
+
+        /// <summary>
+        /// Retrieves the user scores for a given username.
+        /// </summary>
+        /// <param name="username">The username to retrieve scores for.</param>
+        /// <returns>A list of UserScore objects representing the user scores.</returns>
         internal async Task<List<UserScore>> GetUserScoreAsync(string username)
         {
             try
@@ -135,6 +177,12 @@ namespace SchiffeVersenken.Data.Database
                 return null;
             }
         }
+
+        /// <summary>
+        /// Updates the scores in the database with the provided highscore.
+        /// </summary>
+        /// <param name="highscore">The highscore to be updated.</param>
+        /// <returns>The number of rows affected in the database.</returns>
         internal async Task<int> UpdateScoresAsync(Highscore highscore)
         {
             try

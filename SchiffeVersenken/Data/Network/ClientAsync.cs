@@ -11,6 +11,12 @@ namespace SchiffeVersenken.Data.Network
         private NetworkStream _stream;
         private CancellationTokenSource _cancellationTokenSource;
         public bool _IsClientConnected => _client.Connected;
+
+        /// <summary>
+        /// Asynchronously connects to a specified IP address and port.
+        /// </summary>
+        /// <param name="ip">The IP address to connect to.</param>
+        /// <param name="port">The port number to connect to.</param>
         public async Task ConnectAsync(string ip, int port)
         {
             try
@@ -28,6 +34,10 @@ namespace SchiffeVersenken.Data.Network
             }
         }
 
+        /// <summary>
+        /// Listens for incoming messages from the network and processes them asynchronously.
+        /// </summary>
+        /// <param name="cancellationToken">The cancellation token to stop listening for messages.</param>
         private async Task ListenForMessage(CancellationToken cancellationToken)
         {
             try
@@ -54,6 +64,10 @@ namespace SchiffeVersenken.Data.Network
             }
         }
 
+        /// <summary>
+        /// Sends a message asynchronously.
+        /// </summary>
+        /// <param name="message">The message to send.</param>
         public async Task SendMessageAsync(string message)
         {
             try
@@ -67,6 +81,9 @@ namespace SchiffeVersenken.Data.Network
             }
         }
 
+        /// <summary>
+        /// Disconnects the client from the server.
+        /// </summary>
         public void Disconnect()
         {
             _cancellationTokenSource.Cancel();
