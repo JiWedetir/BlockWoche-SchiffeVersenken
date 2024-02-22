@@ -1,17 +1,20 @@
 ﻿@page "/PregameVsComputer"
 @inject Microsoft.AspNetCore.Components.NavigationManager NavigationManager;
-@using SchiffeVersenken.Data.Controller;
 @inherits LayoutComponentBase
 
-
+<!-- Background setup for pre-game configuration against the computer -->
 <MudStack style="@($"height:100%; width: 100%; background-image: {_bgUrl}; background-size: cover; background-position: center; background-repeat: no-repeat;")" Justify="Justify.SpaceEvenly" AlignItems="AlignItems.Center">
+
+	<!-- Title indicating the page's purpose -->
 	<MudText Align="Align.Center" Typo="Typo.h5" ><b>Game-Settings Vs. Computer</b></MudText>
 	
+	<!-- Field size configuration section -->
 	<MudStack Style="width: 50%;">
 		<MudText Align="Align.Center" Typo="Typo.h6"><b>Feldgrösse:  @_FieldSize x @_FieldSize</b></MudText>
-		<MudSlider Variant="Variant.Filled" TickMarks="true" TickMarkLabels="@labels" Step="1" Min="@_minFieldSize" Max="@_maxFieldSize" @bind-Value="@_FieldSize" Size="Size.Large" Style="align-self:center;" />
+		<MudSlider Variant="Variant.Filled" TickMarks="true" TickMarkLabels="@labels" Step="1" Min="@minFieldSize" Max="@maxFieldSize" @bind-Value="@_FieldSize" Size="Size.Large" Style="align-self:center;" />
 	</MudStack>
 
+	<!-- Computer difficulty selection section -->
 	<MudStack >
 		<MudText Align="Align.Center" Typo="Typo.h6"><b>Computer Difficulty</b></MudText>
 		<MudSelect T="ComputerDifficulty" AnchorOrigin="Origin.BottomCenter" @bind-value="@_Difficulty" Dense="true" Variant="Variant.Outlined" Style="background-color: white; border-radius:4px;">
@@ -22,12 +25,7 @@
 		</MudSelect>
 	</MudStack>
 
+	<!-- Button to confirm settings and proceed to ship placement -->
 	<MudButton OnClick="SendSettings" Variant="Variant.Filled" Style="background-color: white">Start Placing Ships</MudButton>
 	
 </MudStack>
-
-
-
-
-
-

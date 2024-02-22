@@ -1,51 +1,51 @@
 ﻿using Microsoft.AspNetCore.Components;
+using MudBlazor;
+using SchiffeVersenken.Components.Shared;
 using SchiffeVersenken.Data;
-using SchiffeVersenken.Data.Model;
 using SchiffeVersenken.Data.Sea;
 using Orientation = SchiffeVersenken.Data.Orientation;
-using SchiffeVersenken.Components.Shared;
-using MudBlazor;
 
 
 namespace SchiffeVersenken.Components.Pages
 {
-    public partial class ShipPlacement
+	public partial class ShipPlacement
     {
+		// Gets the game logic service instance, cascaded from a parent component
 		[CascadingParameter]
 		public GameLogicService GameService { get; set; }
 
-		private int _fieldcnt;
+		// Background image URL for the ship placement page
+		private string bgUrl = "url('../images/backgroundshipplacement.png')";
+
+		// List of ship sizes used for generating ship placement options
+		private List<int> _shipSizes = new List<int>();
+		// List of ship details including size to be placed
+		private List<ShipDetails> _ships = new List<ShipDetails>();
+
+		// List of placed ships
 		private List<ShipDetails> _shipsPlaced = new List<ShipDetails>();
-		private List<ShipDetails> _ships;
-		private List<int> _shipSizes;
+		// The last ship selected by the user
 		private ShipDetails _lastClickedShip;
+		// The size of the game field
+		private int _fieldcnt;
 
+		// Instance of board for BattleFieldComponent
 		private Square[,] _board = null;
-		private string _bgUrl = "url('../images/backgroundshipplacement.png')";
 
+		/// <summary>
+		/// Initializes the component by setting up the game field and default ship placements
+		/// </summary>
 		protected override void OnInitialized()
 		{
 			StateHasChanged();
 			_fieldcnt = GameService.Game._Size;
 			setDefaultValues();
 			CreateField();
-
 		}
 
-
-		public void CreateField()
-		{
-			_board = new Square[_fieldcnt, _fieldcnt];
-			for (int i = 0; i < _fieldcnt; i++)
-			{
-				for (int j = 0; j < _fieldcnt; j++)
-				{
-					_board[i, j] = new Square();
-					_board[i, j].SetToEmptySquare();
-				}
-			}
-		}
-
+		/// <summary>
+		/// Resets the ships to their default values and prepares the game board
+		/// </summary>
 		private void setDefaultValues()
 		{
 			_ships = shipsTemplate._Ships;
@@ -63,11 +63,35 @@ namespace SchiffeVersenken.Components.Pages
 			CreateField();
 		}
 
+		/// <summary>
+		/// Generates the game board based on the specified field count
+		/// </summary>
+		public void CreateField()
+		{
+			_board = new Square[_fieldcnt, _fieldcnt];
+			for (int i = 0; i < _fieldcnt; i++)
+			{
+				for (int j = 0; j < _fieldcnt; j++)
+				{
+					_board[i, j] = new Square();
+					_board[i, j].SetToEmptySquare();
+				}
+			}
+		}
+
+		/// <summary>
+		/// Toggles the selection status of a ship when clicked.
+		/// </summary>
+		/// <param name="ship">The ship that was clicked.</param>
 		private void ShipClicked(ShipDetails ship)
 		{
-			if (_lastClickedShip == null || _lastClickedShip == ship)
+			if (_lastClickedShip == null)
 			{
 				ship.IsClicked = !ship.IsClicked;
+			}
+			else if (_lastClickedShip == ship)
+			{
+				ChangeOrientation();
 			}
 			else
 			{
@@ -77,6 +101,10 @@ namespace SchiffeVersenken.Components.Pages
 			_lastClickedShip = ship;
 		}
 
+		/// <summary>
+		/// Handles the placement of a ship on the game board.
+		/// </summary>
+		/// <param name="coords">The coordinates where the ship is to be placed.</param>
 		private void OnSquareClick(int[] coords)
 		{
 			int x = coords[0];
@@ -125,9 +153,12 @@ namespace SchiffeVersenken.Components.Pages
 			_lastClickedShip = null;
 		}
 
+		/// <summary>
+		/// Changes the orientation of the currently selected ship.
+		/// </summary>
 		private void ChangeOrientation()
 		{
-			if(_lastClickedShip == null)
+			if (_lastClickedShip == null)
 			{
 				return;
 			}
@@ -142,7 +173,82 @@ namespace SchiffeVersenken.Components.Pages
 			}
 		}
 
+		/// <summary>
+		/// Resets all ships to their default placement values.
+		/// </summary>
+		private void OnClickResetAll()
+		{
+			setDefaultValues();
+		}
 
+		/// <summary>
+		/// Removes the last placed ship from the board.
+		/// </summary>
+		private void OnClickResetLastShip()
+		{
+			if(_shipsPlaced.Count > 0)
+			{
+				_lastClickedShip = null;
+				ShipDetails ship = _shipsPlaced[_shipsPlaced.Count - 1];
+				ship.IsClicked = false;
+				ship.IsPlaced = false;
+				
+
+				Orientation orientation = ship.Orientation;
+				int shipLength = ship.Size;
+				int x = ship.PositionX;
+				int y = ship.PositionY;
+
+				if (orientation == Orientation.Horizontal)
+				{
+					for (int i = 0; i < shipLength; i++)
+					{
+						//Change Squares Horizontal
+						_board[(x + i), y]._State = SquareState.Empty;
+					}
+				}
+				else
+				{
+					for (int i = 0; i < shipLength; i++)
+					{
+						//Change Squares Vertical
+						_board[x, (y + i)]._State = SquareState.Empty;
+					}
+				}
+
+				_shipsPlaced.Remove(ship);
+			}
+		}
+
+		/// <summary>
+		/// Finalizes the ship placement and navigates to the game page.
+		/// </summary>
+		private void GoToNextPage()
+		{
+			if (!GameService.Game._Player.SetShips(_shipsPlaced))
+			{
+				OpenDialog("Error in ship Placement");
+				return;
+			}
+
+			NavigationManager.NavigateTo("/Game", true);
+		}
+
+		/// <summary>
+		/// Opens a PopUp with a specific message.
+		/// </summary>
+		/// <param name="message">The message to display in the PopUp.</param>
+		private void OpenDialog(string message)
+		{
+			DialogParameters parameters = new DialogParameters { { "ContentText", message } };
+			DialogService.Show<ShipPlacementDialog>("", parameters);
+		}
+
+		/// <summary>
+		/// Generates a RenderFragment for displaying an SVG representation of a ship.
+		/// </summary>
+		/// <param name="ship">The ship details.</param>
+		/// <returns>A RenderFragment for the ship's SVG.</returns>
 		RenderFragment PlaceShipSVG(ShipDetails ship) => builder =>
 		{
 			int size = ship.Size;
@@ -185,64 +291,5 @@ namespace SchiffeVersenken.Components.Pages
 			builder.CloseElement();
 			builder.CloseElement();
 		};
-
-		private void OnClickResetAll()
-		{
-			setDefaultValues();
-		}
-
-		private void OnClickResetLastShip()
-		{
-			if(_shipsPlaced.Count > 0)
-			{
-				_lastClickedShip = null;
-				ShipDetails ship = _shipsPlaced[_shipsPlaced.Count - 1];
-				ship.IsClicked = false;
-				ship.IsPlaced = false;
-				
-
-				Orientation orientation = ship.Orientation;
-				int shipLength = ship.Size;
-				int x = ship.PositionX;
-				int y = ship.PositionY;
-
-				if (orientation == Orientation.Horizontal)
-				{
-					for (int i = 0; i < shipLength; i++)
-					{
-						//Change Squares Horizontal
-						_board[(x + i), y]._State = SquareState.Empty;
-					}
-				}
-				else
-				{
-					for (int i = 0; i < shipLength; i++)
-					{
-						//Change Squares Vertical
-						_board[x, (y + i)]._State = SquareState.Empty;
-					}
-				}
-
-				_shipsPlaced.Remove(ship);
-			}
-		}
-
-
-		private void GoToNextPage()
-		{
-			if (!GameService.Game._Player.SetShips(_shipsPlaced))
-			{
-				OpenDialog("Error in ship Placement");
-				return;
-			}
-
-			NavigationManager.NavigateTo("/Game", true);
-		}
-
-		private void OpenDialog(string message)
-		{
-			DialogParameters parameters = new DialogParameters { { "ContentText", message } };
-			DialogService.Show<ShipPlacementDialog>("", parameters);
-		}
 	}
 }

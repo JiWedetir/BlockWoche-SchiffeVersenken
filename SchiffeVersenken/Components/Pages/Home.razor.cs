@@ -5,38 +5,52 @@ namespace SchiffeVersenken.Components.Pages
 {
 	public partial class Home
 	{
-		private string _bgUrl = "url('../images/backgroundlogin.png')";
+		// Path to the background image
+		private string bgUrl = "url('../images/backgroundlogin.png')";
 
+		// Used for toggling the visibility of the password input field
+		private InputType passwordInput = InputType.Password;
+		private string passwordInputIcon = Icons.Material.Filled.VisibilityOff;
+		private bool passwordIsShow = false;
+
+		// Controls the display of loaders and forms on the UI
+		private bool loginLoading = false;
+		private bool isRegisterOpen = false;
+		private bool registrationLoading = false;
+
+		// Holds the list of users and usernames for login functionality
+		private List<User> _users = new List<User>();
+		private List<string> _usernames = new List<string>();
 		private string _username = string.Empty;
 		private string _password = string.Empty;
-		private bool isShow = false;
-		private InputType PasswordInput = InputType.Password;
-		private string PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
-		private bool _loginLoading = false;
 
-		private List<string> _usernames = new List<string>();
-		private List<User> _users = new List<User>();
-
-		private string _errorMessage = string.Empty;
-		private bool _isRegisterOpen = false;
-
-		//For Registration
+		// Holds the registration input data
 		private string _registerUsername = string.Empty;
 		private string _registerPasswordFirst = string.Empty;
 		private string _registerPasswordSecond = string.Empty;
-		private string _registationErrorMessage = string.Empty;
 		private bool _newUserRegistered = false;
-		private bool _registrationLoading = false;
 
+		// Stores error messages for UI display
+		private string _errorMessageLogin = string.Empty;
+		private string _errorMessageRegistration = string.Empty;
+
+
+		/// <summary>
+		/// Initializes component state and fetches usernames from the database
+		/// </summary>
 		protected override async void OnInitialized()
 		{
-			//Get Usernames from DB
 			await GetUsernameFromDB();
 		}
 
+		/// <summary>
+		/// Fetches usernames from the database and updates the UI accordingly.
+		/// </summary>
+		/// <returns>A task that represents the asynchronous operation.</returns>
 		private async Task GetUsernameFromDB()
 		{
 			_users = await UserManagement.GetUserNamesAsyync();
+
 			_usernames.Clear();
 			foreach (User user in _users)
 			{
@@ -45,85 +59,107 @@ namespace SchiffeVersenken.Components.Pages
 			StateHasChanged();
 		}
 
+		/// <summary>
+		/// Validates and processes the registration of a new user.
+		/// </summary>
+		private async void CheckRegistration()
+		{
+			if (_registerPasswordFirst.Equals(_registerPasswordSecond))
+			{
+				registrationLoading = true;
+				StateHasChanged();
+				if (await UserManagement.RegisterUser(_registerUsername, _registerPasswordFirst))
+				{
+					_newUserRegistered = true;
+					registrationLoading = false;
+					ToggleRegisterPopOver();
+				}
+				else
+				{
+					_errorMessageRegistration = "Username already exists!";
+				}
+				registrationLoading = false;
+			}
+			else
+			{
+				_errorMessageRegistration = "Passwords do not match!";
+			}
+			StateHasChanged();
+		}
+
+		/// <summary>
+		/// Validates the user's credentials and navigates to the lobby page upon successful login.
+		/// </summary>
 		private async void GoToLobbyPage()
 		{
-			_loginLoading = true;
+
+			loginLoading = true;
 			StateHasChanged();
 			if (await UserManagement.LoginUser(_username, _password))
 			{
-				_loginLoading = false;
+				loginLoading = false;
 				NavigationManager.NavigateTo("/Lobby", true);
 			}
 			else
 			{
-				_errorMessage = "Wrong Username or Passworr";
+				_errorMessageLogin = "Wrong Username or Passworr";
 			}
-			_loginLoading = false;
+			loginLoading = false;
+			StateHasChanged();
 		}
 
+		/// <summary>
+		/// Toggles the visibility of the registration popover.
+		/// </summary>
 		private async void ToggleRegisterPopOver()
 		{
-			//Open Register PopUp
-			_isRegisterOpen = !_isRegisterOpen;
+			isRegisterOpen = !isRegisterOpen;
 			if (_newUserRegistered)
 			{
 				await GetUsernameFromDB();
 			}
 		}
 
+		/// <summary>
+		/// Toggles the visibility of the password input field.
+		/// </summary>
+		private void TogglePasswordVisibility()
+		{
+			if (passwordIsShow)
+			{
+				passwordIsShow = false;
+				passwordInputIcon = Icons.Material.Filled.VisibilityOff;
+				passwordInput = InputType.Password;
+			}
+			else
+			{
+				passwordIsShow = true;
+				passwordInputIcon = Icons.Material.Filled.Visibility;
+				passwordInput = InputType.Text;
+			}
+		}
+
+		/// <summary>
+		/// Searches for users based on a given value.
+		/// </summary>
+		/// <param name="value">The value to search for.</param>
+		/// <returns>A filtered list of usernames.</returns>
 		private async Task<IEnumerable<string>> SearchUsers(string value)
 		{
-			// if text is null or empty, show complete list
 			if (string.IsNullOrEmpty(value))
 				return _usernames;
 			return _usernames.Where(x => x.Contains(value, StringComparison.InvariantCultureIgnoreCase));
 		}
+
+		/// <summary>
+		/// Validates the maximum character length of a given string.
+		/// </summary>
+		/// <param name="ch">The string to validate.</param>
+		/// <returns>An enumeration of validation messages.</returns>
 		private IEnumerable<string> MaxCharacters(string ch)
 		{
 			if (!string.IsNullOrEmpty(ch) && 25 < ch?.Length)
 				yield return "Max 25 characters";
 		}
-
-		void ButtonSeeClicked()
-		{
-			if (isShow)
-			{
-				isShow = false;
-				PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
-				PasswordInput = InputType.Password;
-			}
-			else
-			{
-				isShow = true;
-				PasswordInputIcon = Icons.Material.Filled.Visibility;
-				PasswordInput = InputType.Text;
-			}
-		}
-
-		private async void CheckRegistration()
-		{
-			if (_registerPasswordFirst.Equals(_registerPasswordSecond))
-			{
-				_registrationLoading = true;
-				StateHasChanged();
-				if (await UserManagement.RegisterUser(_registerUsername, _registerPasswordFirst))
-				{
-					_newUserRegistered = true;
-					_registrationLoading = false;
-					ToggleRegisterPopOver();
-				}
-				else
-				{
-					_registationErrorMessage = "Username already exists!";
-				}
-				_registrationLoading = false;
-			}
-			else
-			{
-				_registationErrorMessage = "Passwords do not match!";
-			}
-			StateHasChanged();
-		}
-
 	}
 }

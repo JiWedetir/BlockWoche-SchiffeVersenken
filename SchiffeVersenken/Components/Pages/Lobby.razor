@@ -1,19 +1,27 @@
 ﻿@page "/Lobby"
 @inject Microsoft.AspNetCore.Components.NavigationManager NavigationManager;
 
-<MudContainer Style="@($"height:100%; width: 100%; background-image: {_bgUrl}; background-size: cover; background-position: center; background-repeat: no-repeat;")">
+<!-- Container for the entire Lobby page, sets the background -->
+<MudContainer Style="@($"height:100%; width: 100%; background-image: {bgUrl}; background-size: cover; background-position: center; background-repeat: no-repeat;")">
+
+    <!-- Grid layout to divide the page into two equal sections -->
     <MudGrid Style="height: 100%;">
+
+        <!-- Left section for displaying high scores -->
         <MudItem xs="6" Style="height: 100%;">
-            <MudSimpleTable Hover="true" Bordered="true" Style="overflow-x: auto;">
+            <!-- Simple table to display high scores with horizontal scrolling enabled -->
+            <MudSimpleTable Hover="true" Style="overflow-x: auto;" Class="mt-6">
                 <thead>
+                    <!-- Dynamically generate table headings -->
                     <tr>
-                        @foreach (string head in _tableHeadings)
+                        @foreach (string head in tableHeadings)
                         {
-                            <th>@head</th>
+                            <th><b>@head</b></th>
                         }
                     </tr>
                 </thead>
                 <tbody>
+                    <!-- Dynamically generate table rows for each high score entry -->
                     @foreach (var row in _highscores)
                     {
                         <tr>
@@ -26,12 +34,23 @@
                 </tbody>
             </MudSimpleTable>
 	    </MudItem>
+
+        <!-- Right section for game mode selection -->
         <MudItem xs="6" Style="height: 100%;">
+            <!-- Title for the Lobby section -->
             <MudText Align="Align.Center" Typo="Typo.h5" Class="mt-4"><b>Lobby</b></MudText>
+            
+            <!-- Stack for arranging the game mode buttons and multiplayer notice -->
             <MudStack Spacing="5" Class="d-flex justify-center mx-4" Style="height: 80%;">
+                <!-- Button to start a local game -->
 		        <MudButton OnClick="StartVsComputer" Variant="Variant.Filled" Style="background-color: white" >Local</MudButton>
+
+                <!-- Placeholder button and text for multiplayer mode, currently disabled -->
 		        <MudButton OnClick="StartVsPlayer" Variant="Variant.Filled" Style="background-color: white" Disabled="true" >Multiplayer</MudButton>
+                <MudText Align="Align.Center" >Multiplayer coming soon!</MudText>
+
             </MudStack>
 	    </MudItem>
+
     </MudGrid>
 </MudContainer>
