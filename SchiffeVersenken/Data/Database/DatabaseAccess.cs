@@ -167,7 +167,7 @@ namespace SchiffeVersenken.Data.Database
             try
             {
                 await Init();
-                var query = "SELECT users.name, highscores.score FROM users JOIN highscores ON users.id = highscores.user_id WHERE users.name = ? ORDER BY highscores.score DESC LIMIT 10";
+                var query = "SELECT User.Name, Highscore.Score, Highscore.Opponent, Highscore.Won FROM User JOIN Highscore ON User.Id = Highscore.User_Id WHERE User.Name = ? ORDER BY Highscore.Score DESC LIMIT 10";
                 List<UserScore> userScores = await Database.QueryAsync<UserScore>(query, username);
                 return userScores;
             }
