@@ -9,8 +9,8 @@ namespace SchiffeVersenken.Data.Network
     internal class ServerAsync
     {
         public bool _IsServerConnected => _client.Connected;
-        private TcpClient _client;
-        private TcpListener _listener;
+        private TcpClient? _client;
+        private TcpListener? _listener;
         public void StartServerAsync(int port)
         {
             _listener = new TcpListener(IPAddress.Any, port);

@@ -9,23 +9,23 @@ namespace SchiffeVersenken.Data.Model
 {
     public class GameLogic
     {
-		public event Action<string> OnGameOver;
+		public event Action<string>? OnGameOver;
 
-		private IBattleShipsGameState _currentState;
-        public IBattleShipsGameState CurrentState => this._currentState;
-        public Player _Player { get; set; }
-        public IOpponent _Opponent { get; set; }
-        public Battlefield _BattlefieldPlayer { get; set; }
-        public Battlefield _BattlefieldOpponent { get; set; }
-        public Player1TurnState _Player1TurnState { get; set; }
-        public Player2TurnState _Player2TurnState { get; set; }
-        public string _Winner { get; private set; }
-        public string _Looser { get; private set; }
-        public IngeniousOpponent _ComputerOpponent { get; set; }
-        public ComputerDifficulty _ComputerDifficulty { get; private set; }
-        public int _Size { get; private set; }
-        public bool _OpponentShipsSet { get; set; }
-        public bool _GameOver { get; set; }
+		private IBattleShipsGameState? _currentState;
+        public IBattleShipsGameState? CurrentState => this._currentState;
+        public Player? _Player { get; set; }
+        public IOpponent? _Opponent { get; set; }
+        public Battlefield? _BattlefieldPlayer { get; set; }
+        public Battlefield? _BattlefieldOpponent { get; set; }
+        public Player1TurnState? _Player1TurnState { get; set; }
+        public Player2TurnState? _Player2TurnState { get; set; }
+        public string _Winner { get; private set; } = string.Empty;
+        public string _Looser { get; private set; } = string.Empty;
+        public IngeniousOpponent? _ComputerOpponent { get; set; }
+        public ComputerDifficulty _ComputerDifficulty { get; private set; } = ComputerDifficulty.Klug;
+        public int _Size { get; private set; } = 10;
+        public bool _OpponentShipsSet { get; set; } = false;
+        public bool _GameOver { get; set; } = false;
         public int _PlayerScore { get; set; } = 0;
         public bool _LocalGame { get; private set; } = true;
 
@@ -66,7 +66,7 @@ namespace SchiffeVersenken.Data.Model
         /// <param name="y">Y coordinate</param>
         public void HandlePlayerInput(int x, int y)
         {
-            this._currentState.HandleInput(this, x, y);
+            this._currentState?.HandleInput(this, x, y);
         }
 
         /// <summary>
@@ -78,14 +78,6 @@ namespace SchiffeVersenken.Data.Model
         {
             this._Size = size;
             this._ComputerDifficulty = difficulty;
-            if(_Size == null)
-            {
-                _Size = 10;
-            }
-            if(_ComputerDifficulty == null)
-            {
-                _ComputerDifficulty = ComputerDifficulty.Klug;
-            }
             _ = UserManagement.SetComputerOpponent(_ComputerDifficulty);
             TransistionToState(new PreGameState());
         }
@@ -120,11 +112,11 @@ namespace SchiffeVersenken.Data.Model
                 bool first = rnd.Next(2) == 0;
                 if(first)
                 {
-                    nextState = _Player1TurnState;
+                    nextState = _Player1TurnState ?? throw new ArgumentNullException(nameof(_Player1TurnState));
                 }
                 else
                 {
-                    nextState = _Player2TurnState;
+                    nextState = _Player2TurnState ?? throw new ArgumentNullException(nameof(_Player2TurnState));
                 }
             }
             else if(gameOver)
@@ -146,20 +138,20 @@ namespace SchiffeVersenken.Data.Model
             {
                 if(_currentState is Player1TurnState)
                 {
-                    nextState = _Player1TurnState;
+                    nextState = _Player1TurnState ?? throw new ArgumentNullException(nameof(_Player1TurnState));
                 }
                 else
                 {
-                    nextState = _Player2TurnState;
+                    nextState = _Player2TurnState ?? throw new ArgumentNullException(nameof(_Player2TurnState));
                 }
             }
             else if(_currentState is Player1TurnState)
             {
-                nextState = _Player2TurnState;
+                nextState = _Player2TurnState ?? throw new ArgumentNullException(nameof(_Player2TurnState));
             }
             else
             {
-                nextState = _Player1TurnState;
+                nextState = _Player1TurnState ?? throw new ArgumentNullException(nameof(_Player1TurnState));
             }
             TransistionToState(nextState);
         }
