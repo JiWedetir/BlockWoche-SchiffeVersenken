@@ -2,15 +2,19 @@
 @inject Microsoft.AspNetCore.Components.NavigationManager NavigationManager;
 @inherits LayoutComponentBase
 @inject IDialogService DialogService;
-@using IImage = Microsoft.Maui.Graphics.IImage;
 
 
-<MudStack style="@($"height:100%; width: 100%; background-image: {_bgUrl}; background-size: cover; background-position: center; background-repeat: no-repeat;")" Justify="Justify.SpaceEvenly" AlignItems="AlignItems.Center">
+<MudStack style="@($"height:100%; width: 100%; background-image: {bgUrl}; background-size: cover; background-position: center; background-repeat: no-repeat;")" Justify="Justify.SpaceEvenly" AlignItems="AlignItems.Center">
+
+    <!-- Title for the Ship Placement page -->
     <MudText Align="Align.Center" Typo="Typo.h5"><b>Ship Placement</b></MudText>
 
+    <!-- Layout for ship placement and battlefield visualization -->
     <MudStack Row="true" Spacing="10">
-        <!-- SVG-Platzierung -->
+        <!-- Container for displaying SVGs of ships available for placement -->
         <MudStack Class="align-center" Style="border: 1px solid black; width: 35vw; height: 35vw;">
+
+            <!-- Flex container to wrap ship SVGs for dynamic layout -->
             <MudContainer Class="d-flex flex-wrap justify-space-evenly" Style="width: 100%; padding: 0; margin: 0;">
                 @foreach (var ship in _ships)
                 {
@@ -19,6 +23,8 @@
                     </div>
                 }
             </MudContainer>
+
+            <!-- Button group for ship manipulation actions -->
             <MudButtonGroup Variant="Variant.Filled" Style="margin-top: auto; background-color: white">
                 <MudButton @onclick="ChangeOrientation" EndIcon="@Icons.Material.Filled.Rotate90DegreesCw"> Drehen</MudButton>
                 <MudButton @onclick="OnClickResetLastShip" EndIcon="@Icons.Material.Filled.ArrowBack">Reset Ship</MudButton>
@@ -26,9 +32,12 @@
             </MudButtonGroup>
         </MudStack>
 
+        <!-- Battlefield component where users can click to place ships -->
         <BattleFieldComponent FieldType="@BattleFieldComponent.FieldTypes.PlacementField" Field="@_board" OnFieldClicked="@OnSquareClick" />
     </MudStack>
 	
+    <!-- Button to proceed to the next stage of the game, disabled until all ships are placed -->
 	<MudButton OnClick="GoToNextPage" Variant="Variant.Filled" Style="background-color: white" Disabled=@(_shipsPlaced.Count() != _ships.Count())>Start the Battle!!</MudButton>
+
 </MudStack>
 
