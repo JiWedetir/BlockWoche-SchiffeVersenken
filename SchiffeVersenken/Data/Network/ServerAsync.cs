@@ -8,9 +8,14 @@ namespace SchiffeVersenken.Data.Network
 {
     internal class ServerAsync
     {
-        public bool _IsServerConnected => _client?.Connected ?? false;
-        private TcpClient? _client = null;
-        private TcpListener? _listener;
+        public bool _IsServerConnected => _client.Connected;
+        private TcpClient _client;
+        private TcpListener _listener;
+
+        /// <summary>
+        /// Starts the server asynchronously on the specified port.
+        /// </summary>
+        /// <param name="port">The port number to listen on.</param>
         public void StartServerAsync(int port)
         {
             _listener = new TcpListener(IPAddress.Any, port);
@@ -37,6 +42,9 @@ namespace SchiffeVersenken.Data.Network
         }
 
 
+        /// <summary>
+        /// Handles the client connection asynchronously.
+        /// </summary>
         private async Task HandleClientAsync()
         {
             var stream = _client.GetStream();
@@ -72,6 +80,10 @@ namespace SchiffeVersenken.Data.Network
             }
         }
 
+        /// <summary>
+        /// Sends a message asynchronously to the client.
+        /// </summary>
+        /// <param name="message">The message to send.</param>
         public async Task SendMessageAsync(string message)
         {
             var stream = _client.GetStream();

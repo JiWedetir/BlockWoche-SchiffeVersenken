@@ -20,6 +20,9 @@
 		public static List<int> _ShipSizes { get; } = new List<int> { 5, 4, 4, 3, 3, 3, 2, 2, 2, 2 };
 		public static List<ShipDetails> _Ships { get; set; } = _ShipSizes.Select(size => CreateShip(size)).ToList();
 
+		/// <summary>
+		/// Creates a new ship with the given size.
+		/// </summary>
 		private static ShipDetails CreateShip(int size)
 		{
 			var ship = new ShipDetails();

@@ -1,5 +1,37 @@
 ﻿@page "/Lobby"
+@inject Microsoft.AspNetCore.Components.NavigationManager NavigationManager;
 
-<h3>Lobby</h3>
-
-<a href="PregameVsComputer">Start Game</a>
+<MudContainer Style="@($"height:100%; width: 100%; background-image: {_bgUrl}; background-size: cover; background-position: center; background-repeat: no-repeat;")">
+    <MudGrid Style="height: 100%;">
+        <MudItem xs="6" Style="height: 100%;">
+            <MudSimpleTable Hover="true" Bordered="true" Style="overflow-x: auto;">
+                <thead>
+                    <tr>
+                        @foreach (string head in _tableHeadings)
+                        {
+                            <th>@head</th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var row in _highscores)
+                    {
+                        <tr>
+                            @foreach (var x in row)
+                            {
+                                <td>@x</td>
+                            }
+                        </tr> 
+                    }
+                </tbody>
+            </MudSimpleTable>
+	    </MudItem>
+        <MudItem xs="6" Style="height: 100%;">
+            <MudText Align="Align.Center" Typo="Typo.h5" Class="mt-4"><b>Lobby</b></MudText>
+            <MudStack Spacing="5" Class="d-flex justify-center mx-4" Style="height: 80%;">
+		        <MudButton OnClick="StartVsComputer" Variant="Variant.Filled" Style="background-color: white" >Local</MudButton>
+		        <MudButton OnClick="StartVsPlayer" Variant="Variant.Filled" Style="background-color: white" Disabled="true" >Multiplayer</MudButton>
+            </MudStack>
+	    </MudItem>
+    </MudGrid>
+</MudContainer>

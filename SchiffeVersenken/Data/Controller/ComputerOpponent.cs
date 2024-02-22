@@ -22,6 +22,9 @@ namespace SchiffeVersenken.Data.Controller
             _game = game;
         }
 
+        /// <summary>
+        /// Asynchronously sets the ship on the opponent's battlefield.
+        /// </summary>
         public async Task SetShipAsync()
         {
             await Task.Run(() =>
@@ -44,6 +47,14 @@ namespace SchiffeVersenken.Data.Controller
             });
         }
 
+        /// <summary>
+        /// Places ships on the game board based on the given ship lengths.
+        /// </summary>
+        /// <param name="shipLengths">An array of ship lengths.</param>
+        /// <param name="index">The index of the current ship length being placed.</param>
+        /// <param name="maxTries">The maximum number of tries to place a ship.</param>
+        /// <param name="placedShips">A list of already placed ships.</param>
+        /// <returns>True if all ships are successfully placed, false otherwise.</returns>
         private bool PlaceShips(int[] shipLengths, int index, int maxTries, List<ShipDetails> placedShips)
         {
             if (index == shipLengths.Length)
@@ -88,6 +99,12 @@ namespace SchiffeVersenken.Data.Controller
             return false;
         }
 
+        /// <summary>
+        /// Tries to place a ship of the specified length on the game board.
+        /// </summary>
+        /// <param name="length">The length of the ship to be placed.</param>
+        /// <param name="placedShips">The list of already placed ships.</param>
+        /// <returns>True if the ship was successfully placed, false otherwise.</returns>
         private bool TryPlaceShip(int length, List<ShipDetails> placedShips)
         {
             List<ShipDetails> validStartPoints = new List<ShipDetails>();
@@ -154,7 +171,11 @@ namespace SchiffeVersenken.Data.Controller
             return false;
         }
 
-
+        /// <summary>
+        /// Determines whether a ship can be placed on the game board.
+        /// </summary>
+        /// <param name="ship">The ship details.</param>
+        /// <returns><c>true</c> if the ship can be placed, otherwise <c>false</c>.</returns>
         private bool CanPlaceShip(ShipDetails ship)
         {
             if ((ship.Orientation == Orientation.Horizontal && ship.PositionX + ship.Size > _size) || (ship.Orientation == Orientation.Vertical && ship.PositionY + ship.Size > _size))
@@ -182,6 +203,10 @@ namespace SchiffeVersenken.Data.Controller
             return true;
         }
 
+        /// <summary>
+        /// Removes the last ship from the list of placed ships and updates the try board accordingly.
+        /// </summary>
+        /// <param name="placedShips">The list of placed ships.</param>
         private void RemoveLastShip(List<ShipDetails> placedShips)
         {
             if (placedShips.Count == 0)
@@ -203,6 +228,10 @@ namespace SchiffeVersenken.Data.Controller
             }
         }
 
+        /// <summary>
+        /// Shuffles the elements in the specified list using the Fisher-Yates algorithm.
+        /// </summary>
+        /// <param name="list">The list to be shuffled.</param>
         private static void Shuffle<T>(List<T> list)
         {
             Random random = new Random();
@@ -216,6 +245,9 @@ namespace SchiffeVersenken.Data.Controller
             }
         }
 
+        /// <summary>
+        /// Asynchronously performs the shooting action with the respective difficulty.
+        /// </summary>
         public async Task ShootAsync()
         {
             if(_YourTurn)
@@ -238,6 +270,11 @@ namespace SchiffeVersenken.Data.Controller
             }
         }
 
+        /// <summary>
+        /// Sets a ship on the board asynchronously.
+        /// </summary>
+        /// <param name="board">The board representing the game state.</param>
+        /// <returns>A task representing the asynchronous operation. The task result indicates whether the ship was successfully set.</returns>
         public Task<bool> SetShipAsync(int[,] board)
         {
             throw new NotImplementedException();

@@ -22,6 +22,9 @@ namespace SchiffeVersenken.Data.ComputerPlayer
             _computer = (ComputerOpponent)game._Opponent ?? throw new ArgumentNullException(nameof(_computer));
         }
 
+        /// <summary>
+        /// Asynchronously performs a stupid shoot action.
+        /// </summary>
         public async Task ShootStupidAsync()
         {
             await Task.Run(() =>

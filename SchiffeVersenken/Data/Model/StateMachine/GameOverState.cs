@@ -8,6 +8,10 @@ namespace SchiffeVersenken.Data.Model.StateMachine
         {
         }
 
+        /// <summary>
+        /// Enters the game over state and saves the high score.
+        /// </summary>
+        /// <param name="game">The game logic instance.</param>
         public void EnterState(GameLogic game)
         {
             _ = HighScores.SaveHighScore(game._Winner, game._PlayerScore);

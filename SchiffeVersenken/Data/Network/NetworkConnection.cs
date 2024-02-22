@@ -17,21 +17,37 @@ namespace SchiffeVersenken.Data.Network
         private static List<(string message, string time)> _sentMessages = new List<(string message, string time)>();
         private static List<(string message, string time)> _receivedMessages = new List<(string message, string time)>();
 
+        /// <summary>
+        /// Starts the network connection by creating a new server instance and starting it asynchronously.
+        /// </summary>
         public static void StartNetwork()
         {
             _server.StartServerAsync(_port);
         }
 
+        /// <summary>
+        /// Sets the game logic instance for the network connection.
+        /// </summary>
+        /// <param name="gameLogic">The game logic instance to set.</param>
         public static void GameLogicConnectedtoNetwork(GameLogic gameLogic)
         {
             _game = gameLogic;
         }
 
+        /// <summary>
+        /// Sets the server flag to indicate that the server is connected to a client.
+        /// </summary>
         public static void ServerConnectedtoClient()
         {
             _isServer = true;
         }
 
+        /// <summary>
+        /// Connects to the server with the specified IP address and board size.
+        /// </summary>
+        /// <param name="ip">The IP address of the server.</param>
+        /// <param name="boardSize">The size of the game board.</param>
+        /// <returns>A task representing the asynchronous operation. The task result is a boolean indicating whether the connection was successful.</returns>
         public static async Task<bool> ConnectToServer(string ip, int boardSize)
         {
             _client = new ClientAsync();
@@ -41,6 +57,10 @@ namespace SchiffeVersenken.Data.Network
             return _client._IsClientConnected;
         }
 
+        /// <summary>
+        /// Sends a message asynchronously.
+        /// </summary>
+        /// <param name="message">The message to send.</param>
         public static async Task SendMessageAsync(string message)
         {
             if (_isServer)
@@ -53,6 +73,11 @@ namespace SchiffeVersenken.Data.Network
             }
         }
 
+        /// <summary>
+        /// Receives a message asynchronously and processes it based on its type.
+        /// </summary>
+        /// <param name="message">The message to be received and processed.</param>
+        /// <returns>A boolean value indicating whether the message was valid and processed successfully.</returns>
         public static async Task<bool> ReceiveMessageAsync(string message)
         {
             bool valid = false;
@@ -95,7 +120,12 @@ namespace SchiffeVersenken.Data.Network
             return valid;
         }
 
-        private static bool ReciveInitMessage(JObject message)
+        /// <summary>
+        /// Receives and processes the initialization message from the network.
+        /// </summary>
+        /// <param name="message">The initialization message received from the network.</param>
+        /// <returns>A task representing the asynchronous operation. The task result is a boolean value indicating whether the initialization message was successfully processed.</returns>
+        private static async Task<bool> ReciveInitMessage(JObject message)
         {
             try
             {
@@ -113,6 +143,11 @@ namespace SchiffeVersenken.Data.Network
             }
         }
 
+        /// <summary>
+        /// Receives a board message and sets the ship positions on the opponent's board.
+        /// </summary>
+        /// <param name="message">The board message received.</param>
+        /// <returns>A task representing the asynchronous operation. The task result is a boolean indicating whether the ship positions were set successfully.</returns>
         private static async Task<bool> ReciveBoardMessage(JObject message)
         {
             try
@@ -138,6 +173,11 @@ namespace SchiffeVersenken.Data.Network
             }
         }
 
+        /// <summary>
+        /// Receives a shot-at message from the opponent and handles the player input.
+        /// </summary>
+        /// <param name="message">The shot-at message received from the opponent.</param>
+        /// <returns>A task representing the asynchronous operation. The task result is a boolean indicating whether the shot-at message was successfully processed.</returns>
         private static async Task<bool> ReciveShotAtMessage(JObject message)
         {
             if(_game._Opponent._YourTurn)
@@ -162,12 +202,17 @@ namespace SchiffeVersenken.Data.Network
             return false;
         }
 
-        private static bool ReciveTextMessage(JObject message)
+        /// <summary>
+        /// Receives a text message from the network and displays it in the frontend.
+        /// </summary>
+        /// <param name="message">The message received from the network.</param>
+        /// <returns>True if the message was successfully received and displayed, false otherwise.</returns>
+        private static async Task<bool> ReciveTextMessage(JObject message)
         {
             try
             {
-                var messageText = message["Message"]?.ToString();
-                // nachricht anzeigen im frontend
+                var messageText = message["Message"].ToString();
+                // show message in frontend
                 return true;
             }
             catch (Exception e)
@@ -177,6 +222,11 @@ namespace SchiffeVersenken.Data.Network
             }
         }
 
+        /// <summary>
+        /// Receives and handles error messages from the server.
+        /// </summary>
+        /// <param name="message">The error message received from the server.</param>
+        /// <returns>A task representing the asynchronous operation. The task result is a boolean indicating whether the error message was successfully handled.</returns>
         private static async Task<bool> ReciveErrorMessage(JObject message)
         {
             try
@@ -203,6 +253,12 @@ namespace SchiffeVersenken.Data.Network
             }
         }
 
+        /// <summary>
+        /// Sends an initialization message to the server with the specified user name and board size.
+        /// </summary>
+        /// <param name="userName">The user name to send.</param>
+        /// <param name="boardSize">The board size to send.</param>
+        /// <returns>A task representing the asynchronous operation. The task result is a boolean indicating whether the message was sent successfully.</returns>
         private async static Task<bool> SendInitMessage(string userName, int boardSize)
         {
             try
@@ -223,6 +279,11 @@ namespace SchiffeVersenken.Data.Network
             }
         }
 
+        /// <summary>
+        /// Sends the game board as a message to the network.
+        /// </summary>
+        /// <param name="board">The game board represented as a 2D array.</param>
+        /// <returns>A task representing the asynchronous operation. Returns true if the message was sent successfully, false otherwise.</returns>
         public async static Task<bool> SendBoardMessage(int[,] board)
         {
             try
@@ -250,6 +311,12 @@ namespace SchiffeVersenken.Data.Network
             }
         }
 
+        /// <summary>
+        /// Sends a shot at message to the network with the specified coordinates.
+        /// </summary>
+        /// <param name="x">The x-coordinate of the shot.</param>
+        /// <param name="y">The y-coordinate of the shot.</param>
+        /// <returns>A task representing the asynchronous operation. The task result is true if the message was sent successfully; otherwise, false.</returns>
         public async static Task<bool> SendShotAtMessage(int x, int y)
         {
             try
@@ -274,6 +341,11 @@ namespace SchiffeVersenken.Data.Network
             }
         }
 
+        /// <summary>
+        /// Sends a text message over the network connection.
+        /// </summary>
+        /// <param name="messageText">The text of the message to send.</param>
+        /// <returns>A task representing the asynchronous operation. The task result is true if the message was sent successfully; otherwise, false.</returns>
         public async static Task<bool> SendTextMessage(string messageText)
         {
             try
@@ -293,6 +365,11 @@ namespace SchiffeVersenken.Data.Network
             }
         }
 
+        /// <summary>
+        /// Sends an error message to the network connection.
+        /// </summary>
+        /// <param name="error">The error message to send.</param>
+        /// <returns>A task representing the asynchronous operation. Returns true if the error message was sent successfully; otherwise, false.</returns>
         public async static Task<bool> SendErrorMessage(string error)
         {
             try

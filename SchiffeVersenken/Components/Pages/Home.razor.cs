@@ -6,7 +6,6 @@ namespace SchiffeVersenken.Components.Pages
 	public partial class Home
 	{
 		private string _bgUrl = "url('../images/backgroundlogin.png')";
-		private bool _loginIsValid = false;
 
 		private string _username = string.Empty;
 		private string _password = string.Empty;
