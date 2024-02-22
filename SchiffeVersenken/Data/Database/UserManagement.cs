@@ -4,8 +4,8 @@ namespace SchiffeVersenken.Data.Database
 {
     public class UserManagement
     {
-        public static User _Player { get; private set; }
-        public static User _Opponent { get; private set; }
+        public static User _Player { get; private set; } = new User();
+        public static User _Opponent { get; private set; } = new User();
 
         /// <summary>
         /// Register a new user with the given name and password

@@ -5,7 +5,7 @@ namespace SchiffeVersenken.Data.ComputerPlayer
 {
     public class IngeniousOpponent: CleverOpponent
     {
-        private List<int[,]>? _possibleFields;
+        private List<int[,]> _possibleFields = new List<int[,]>();
         public IngeniousOpponent(GameLogic game) : base(game)
         {
             _size = _battlefield._Size;

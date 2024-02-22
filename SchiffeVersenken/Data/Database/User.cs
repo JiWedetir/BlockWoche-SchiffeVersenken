@@ -8,12 +8,12 @@ namespace SchiffeVersenken.Data.Database
         public int Id { get; set; }
 
         [NotNull, Unique]
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
 
         [NotNull]
-        public string PasswordHash { get; set; }
+        public string PasswordHash { get; set; } = string.Empty;
 
         [NotNull]
-        public string Salt { get; set; }
+        public string Salt { get; set; } = string.Empty;
     }
 }

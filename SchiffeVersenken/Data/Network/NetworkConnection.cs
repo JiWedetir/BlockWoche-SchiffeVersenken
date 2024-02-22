@@ -9,17 +9,16 @@ namespace SchiffeVersenken.Data.Network
     internal static class NetworkConnection
     {
         public static bool _IsRunning { get; private set; } 
-        private static ServerAsync? _server;
-        private static ClientAsync? _client;
+        private static ServerAsync _server = new ServerAsync();
+        private static ClientAsync _client = new ClientAsync();
         private static int _port = 5000; // muss noch geändert werden
         private static bool _isServer;
-        private static GameLogic _game;
+        private static GameLogic _game = new GameLogic();
         private static List<(string message, string time)> _sentMessages = new List<(string message, string time)>();
         private static List<(string message, string time)> _receivedMessages = new List<(string message, string time)>();
 
         public static void StartNetwork()
         {
-            _server = new ServerAsync();
             _server.StartServerAsync(_port);
         }
 
@@ -65,7 +64,7 @@ namespace SchiffeVersenken.Data.Network
                 switch (type)
                 {
                     case "App":
-                        valid = await ReciveInitMessage(jObjectMessage);
+                        valid = ReciveInitMessage(jObjectMessage);
                         break;
                     case "Board":
                         valid = await ReciveBoardMessage(jObjectMessage);
@@ -74,7 +73,7 @@ namespace SchiffeVersenken.Data.Network
                         valid = await ReciveShotAtMessage(jObjectMessage);
                         break;
                     case "Message":
-                        valid = await ReciveTextMessage(jObjectMessage);
+                        valid = ReciveTextMessage(jObjectMessage);
                         break;
                     case "Error":
                         valid = await ReciveErrorMessage(jObjectMessage);
@@ -96,14 +95,14 @@ namespace SchiffeVersenken.Data.Network
             return valid;
         }
 
-        private static async Task<bool> ReciveInitMessage(JObject message)
+        private static bool ReciveInitMessage(JObject message)
         {
             try
             {
-                var app = message["App"].ToString();
-                int.TryParse(message["Version"].ToString(), out int version);
-                int.TryParse(message["BoardSize"].ToString(), out int boardSize);
-                var userName = message["UserName"].ToString();
+                var app = message["App"]?.ToString();
+                int.TryParse(message["Version"]?.ToString(), out int version);
+                int.TryParse(message["BoardSize"]?.ToString(), out int boardSize);
+                var userName = message["UserName"]?.ToString();
                 // fragen ob gegen diesen spieler gespielt werden soll
                 return true;
             }
@@ -146,8 +145,8 @@ namespace SchiffeVersenken.Data.Network
                 try
                 {
                     JObject shotAtObject = (JObject)message["ShotAt"];
-                    int.TryParse(shotAtObject["X"].ToString(), out int x);
-                    int.TryParse(shotAtObject["Y"].ToString(), out int y);
+                    int.TryParse(shotAtObject["X"]?.ToString(), out int x);
+                    int.TryParse(shotAtObject["Y"]?.ToString(), out int y);
                     _game.HandlePlayerInput(x, y);
                     return true;
                 }
@@ -163,11 +162,11 @@ namespace SchiffeVersenken.Data.Network
             return false;
         }
 
-        private static async Task<bool> ReciveTextMessage(JObject message)
+        private static bool ReciveTextMessage(JObject message)
         {
             try
             {
-                var messageText = message["Message"].ToString();
+                var messageText = message["Message"]?.ToString();
                 // nachricht anzeigen im frontend
                 return true;
             }
@@ -182,7 +181,7 @@ namespace SchiffeVersenken.Data.Network
         {
             try
             {
-                switch (message["Error"].ToString())
+                switch (message["Error"]?.ToString())
                 {
                     case "Message not valide":
                         string repetedMessage = _sentMessages[_sentMessages.Count - 1].message;

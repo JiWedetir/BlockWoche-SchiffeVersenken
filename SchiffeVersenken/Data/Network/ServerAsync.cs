@@ -8,8 +8,8 @@ namespace SchiffeVersenken.Data.Network
 {
     internal class ServerAsync
     {
-        public bool _IsServerConnected => _client.Connected;
-        private TcpClient? _client;
+        public bool _IsServerConnected => _client?.Connected ?? false;
+        private TcpClient? _client = null;
         private TcpListener? _listener;
         public void StartServerAsync(int port)
         {
@@ -55,7 +55,7 @@ namespace SchiffeVersenken.Data.Network
                     bool success = await NetworkConnection.ReceiveMessageAsync(message);
                     if (!success)
                     {
-                        JObject error = new JObject { { "Error", 1 } };
+                        JObject? error = new JObject { { "Error", 1 } };
                         await SendMessageAsync(error.ToString());
                     }
                     

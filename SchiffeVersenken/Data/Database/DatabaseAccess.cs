@@ -58,7 +58,7 @@ namespace SchiffeVersenken.Data.Database
             catch (Exception ex)
             {
                 Debug.WriteLine(ex.Message);
-                return null;
+                return new List<User>();
             }
         }
         internal async Task<User> GetUserAsync(int id)
@@ -71,7 +71,7 @@ namespace SchiffeVersenken.Data.Database
             catch (Exception ex)
             {
                 Debug.WriteLine(ex.Message);
-                return null;
+                return new User();
             }
         }
         internal async Task<User> GetUserAsync(string name)
@@ -84,7 +84,7 @@ namespace SchiffeVersenken.Data.Database
             catch (Exception ex)
             {
                 Debug.WriteLine(ex.Message);
-                return null;
+                return new User();
             }
         }
         internal async Task<int> SaveUserAsync(User user)
@@ -132,7 +132,7 @@ namespace SchiffeVersenken.Data.Database
             catch (Exception ex)
             {
                 Debug.WriteLine(ex.Message);
-                return null;
+                return new List<UserScore>();
             }
         }
         internal async Task<int> UpdateScoresAsync(Highscore highscore)
