@@ -1,46 +1,45 @@
 ﻿using Microsoft.AspNetCore.Components;
 using SchiffeVersenken.Data;
 using SchiffeVersenken.Data.Controller;
-using SchiffeVersenken.Data.Model;
-
 
 
 namespace SchiffeVersenken.Components.Pages
 {
-	public partial class PregameVsComputer
+    public partial class PregameVsComputer
     {
+        // Gets the game logic service instance, cascaded from a parent component
         [CascadingParameter]
         public GameLogicService GameService { get; set; }
 
-        private const int _minFieldSize = 9;
-        private const int _maxFieldSize = 15;
-        private string _minFieldSizeString = $"{_minFieldSize}x{_minFieldSize}";
-        private string _maxFieldSizeString = $"{_maxFieldSize}x{_maxFieldSize}";
-
+        // Path to the background image
         private string _bgUrl = "url('../images/backgroundsettings.png')";
 
-        string[] labels;
+        // UI-Display values for fieldsize choosing
+        private const int minFieldSize = 9;
+        private const int maxFieldSize = 15;
+        private string[] labels =  new string[] { $"{minFieldSize}x{minFieldSize}", "", "", "", "", "", $"{ maxFieldSize }x{ maxFieldSize }" };
 
-		private int _FieldSize { get; set; } = _minFieldSize;
+        // Selected field size for the game
+        private int _FieldSize { get; set; } = minFieldSize;
+
+        // Selected computer difficulty level
         private ComputerDifficulty _Difficulty { get; set; } = ComputerDifficulty.Dumm;
 
+
+        /// <summary>
+        /// Initializes the component and starts a new game instance.
+        /// </summary>
 		protected override void OnInitialized()
 		{
-			base.OnInitialized();
             GameService.CreateNewGame();
-            
-			labels = new string[] { _minFieldSizeString, "", "", "", "", "", _maxFieldSizeString };
-
 		}
 
+        /// <summary>
+        /// Sends the selected game settings and navigates to the ship placement page
+        /// </summary>
 		private void SendSettings()
         {
             GameService.Game.StartPlacingShips(_FieldSize, _Difficulty);
-            ChangePage();
-        }
-
-        private void ChangePage()
-        {
             NavigationManager.NavigateTo("/ShipPlacement", true);
         }
     }
