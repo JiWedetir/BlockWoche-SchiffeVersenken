@@ -125,7 +125,7 @@ namespace SchiffeVersenken.Data.Network
         /// </summary>
         /// <param name="message">The initialization message received from the network.</param>
         /// <returns>A task representing the asynchronous operation. The task result is a boolean value indicating whether the initialization message was successfully processed.</returns>
-        private static async Task<bool> ReciveInitMessage(JObject message)
+        private static bool ReciveInitMessage(JObject message)
         {
             try
             {
@@ -207,11 +207,11 @@ namespace SchiffeVersenken.Data.Network
         /// </summary>
         /// <param name="message">The message received from the network.</param>
         /// <returns>True if the message was successfully received and displayed, false otherwise.</returns>
-        private static async Task<bool> ReciveTextMessage(JObject message)
+        private static bool ReciveTextMessage(JObject message)
         {
             try
             {
-                var messageText = message["Message"].ToString();
+                var messageText = message["Message"]?.ToString();
                 // show message in frontend
                 return true;
             }
