@@ -5,12 +5,12 @@ namespace SchiffeVersenken.Data.View
 {
     public class Battlefield
     {
-        public event Action<SquareState> OnPlayerAction;
-		public event Action<string> OnGameOver;
+        public event Action<SquareState>? OnPlayerAction;
+		public event Action<string>? OnGameOver;
 
-		protected int _size;
-        protected Square[,] _board;
-        public Square[,] _Board { get { return _board; } }
+        protected int _size = 10;
+        protected Square[,]? _board;
+        public Square[,] _Board { get { return _board ?? throw new ArgumentNullException(nameof(_board)); } }
         public int _Size { get { return _size; } }
         public Battlefield(GameLogic game)
         {

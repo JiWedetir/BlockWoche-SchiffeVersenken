@@ -63,7 +63,7 @@ namespace SchiffeVersenken.Data.Network
                     bool success = await NetworkConnection.ReceiveMessageAsync(message);
                     if (!success)
                     {
-                        JObject error = new JObject { { "Error", 1 } };
+                        JObject? error = new JObject { { "Error", 1 } };
                         await SendMessageAsync(error.ToString());
                     }
                     

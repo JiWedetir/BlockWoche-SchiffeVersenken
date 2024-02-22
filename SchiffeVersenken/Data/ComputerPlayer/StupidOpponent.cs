@@ -18,8 +18,8 @@ namespace SchiffeVersenken.Data.ComputerPlayer
         public int _Y { get { return _y; } }
         public StupidOpponent(GameLogic game)
         {
-            _battlefield = game._BattlefieldPlayer;
-            _computer = (ComputerOpponent)game._Opponent;
+            _battlefield = game._BattlefieldPlayer ?? throw new ArgumentNullException(nameof(_battlefield));
+            _computer = (ComputerOpponent)game._Opponent ?? throw new ArgumentNullException(nameof(_computer));
         }
 
         /// <summary>
@@ -33,7 +33,7 @@ namespace SchiffeVersenken.Data.ComputerPlayer
                 int y = _random.Next(_battlefield._Size);
                 if (_battlefield._Board[x, y]._State == SquareState.Hit || _battlefield._Board[x, y]._State == SquareState.Miss || _battlefield._Board[x, y]._State == SquareState.Sunk || _battlefield._Board[x, y]._State == SquareState.Blocked)
                 {
-                    ShootStupidAsync();
+                    _ = ShootStupidAsync();
                 }
                 else
                 {

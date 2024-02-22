@@ -70,7 +70,7 @@ namespace SchiffeVersenken.Data.Database
             catch (Exception ex)
             {
                 Debug.WriteLine(ex.Message);
-                return null;
+                return new List<User>();
             }
         }
 
@@ -89,7 +89,7 @@ namespace SchiffeVersenken.Data.Database
             catch (Exception ex)
             {
                 Debug.WriteLine(ex.Message);
-                return null;
+                return new User();
             }
         }
 
@@ -108,7 +108,7 @@ namespace SchiffeVersenken.Data.Database
             catch (Exception ex)
             {
                 Debug.WriteLine(ex.Message);
-                return null;
+                return new User();
             }
         }
 
@@ -174,7 +174,7 @@ namespace SchiffeVersenken.Data.Database
             catch (Exception ex)
             {
                 Debug.WriteLine(ex.Message);
-                return null;
+                return new List<UserScore>();
             }
         }
 
