@@ -2,23 +2,24 @@
 title: BlockWoche-SchiffeVersenken
 ---
 classDiagram
+namespace Model {
     class GameLogic {
-        -IBattleShipsGameState _currentState
-        -Player _Player
-        -IOpponent _Opponent
-        -Battlefield _BattlefieldPlayer
-        -Battlefield _BattlefieldOpponent
-        -Player1TurnState _Player1TurnState
-        -Player2TurnState _Player2TurnState
-        -string _Winner
-        -string _Looser
-        -IngeniousOpponent _ComputerOpponent
-        -ComputerDifficulty _ComputerDifficulty
-        -int _Size
-        -bool _OpponentShipsSet
-        -bool _GameOver
-        -int _PlayerScore
-        -bool _LocalGame
+        -_currentState: IBattleShipsGameState
+        -_Player: Player 
+        -_Opponent: IOpponent 
+        -_BattlefieldPlayer: Battlefield
+        -_BattlefieldOpponent: Battlefield 
+        -_Player1TurnState: Player1TurnState 
+        -_Player2TurnState: Player2TurnState 
+        -_Winner: string 
+        -_Looser: string 
+        -_ComputerOpponent: IngeniousOpponent 
+        -_ComputerDifficulty: ComputerDifficulty 
+        -_Size: int 
+        -_OpponentShipsSet: bool 
+        -_GameOver: bool 
+        -_PlayerScore: int 
+        -_LocalGame: bool 
         +GameLogic()
         +void TransistionToState(IBattleShipsGameState newState)
         +void HandlePlayerInput(int x, int y)
@@ -27,7 +28,7 @@ classDiagram
         +void SelectPlayer(bool hit, bool gameOver)
     }
     class GameLogicService {
-        -GameLogic Game
+        -Game: GameLogic
         +void CreateNewGame()
     }
     class IBattleShipsGameState {
@@ -61,23 +62,25 @@ classDiagram
         +void ExitState(GameLogic game)
         +Task HandleInput(GameLogic game, int x, int y)
     }
+}
+namespace ComputerPlayer {
     class StupidOpponent {
-        -Battlefield _battlefield
-        -ComputerOpponent _computer
-        -Random _random
-        -int _x
-        -int _y
-        -int[] _shipsToFinde
-        +List~(int x, int y, bool hit, bool sunk)~ _shootHistory
-        +int _X
-        +int _Y
+        -_battlefield: Battlefield 
+        -_computer: ComputerOpponent 
+        -_random: Random 
+        -_x: int 
+        -_y: int 
+        -_shipsToFinde: int[] 
+        +_shootHistory: List~(int x, int y, bool hit, bool sunk)~ 
+        +_X: int 
+        +_Y: int 
         +StupidOpponent(GameLogic game)
         +async Task ShootStupidAsync()
     }
 
     class CleverOpponent {
-        -bool _cleverFieldFound
-        -int _size
+        -_cleverFieldFound: bool 
+        -_size: int 
         +CleverOpponent(GameLogic game)
         +async Task ShootCleverAsync()
         -void MarkAdjacentSquares(int x, int y)
@@ -90,7 +93,7 @@ classDiagram
     }
 
     class IngeniousOpponent {
-        -List~int[,]~ _possibleFields
+        -_possibleFields: List~int[,]~ 
         +IngeniousOpponent(GameLogic game)
         +async Task ShootIngeniousAsync()
         +async Task CreatePossiblePossitions()
@@ -103,13 +106,16 @@ classDiagram
         -void RemoveLastShip(List~ShipDetails~ placedShips, int[,] tryField)
         +static void Shuffle~T~(List~T~ list)
     }
+
+}
+namespace Controller {
     class ComputerOpponent {
-        -int _size
-        -Square[,] _board
-        -GameLogic _game
-        -int[,] _tryBoard
-        -int[] shipLengths
-        +bool _YourTurn
+        -_size: int 
+        -_board: Square[,]
+        -_game: GameLogic 
+        -_tryBoard: int[,]
+        -shipLengths: int[] 
+        +_YourTurn: bool
         +ComputerOpponent(GameLogic game)
         +async Task SetShipAsync()
         +async Task ShootAsync()
@@ -120,16 +126,22 @@ classDiagram
         -void RemoveLastShip(List~ShipDetails~ placedShips)
         +static void Shuffle~T~(List~T~ list)
     }
+    class ComputerDifficulty{
+        <<enum>>
+        Dumm
+        Klug
+        Genie
+    }
     class IOpponent {
-        +bool _YourTurn
+        +_YourTurn: bool 
         +Task SetShipAsync()
         +Task~bool~ SetShipAsync(int[,] board)
         +Task ShootAsync()
     }
     class NetworkOpponent {
-        -GameLogic _game
-        -Square[,] _board
-        +bool _YourTurn
+        -_game: GameLogic 
+        -_board: Square[,] 
+        +_YourTurn: bool 
         +NetworkOpponent(GameLogic game)
         +async Task~bool~ SetShipAsync(int[,] board)
         +Task SetShipAsync()
@@ -137,16 +149,18 @@ classDiagram
         -List~ShipDetails~ FindShips(int[,] board)
     }
     class Player {
-        -int _size
-        -List~Ship~ placedShips
-        -GameLogic _game
-        +bool _YourTurn
+        -_size: int 
+        -placedShips: List~Ship~ 
+        -_game: GameLogic
+        +_YourTurn: bool 
         +Player(GameLogic game)
         +bool CheckShips(List~ShipDetails~ shipsToCheck)
         +bool SetShips(List~ShipDetails~ shipsToSet)
         +bool CheckIfAllShipsSet()
         +void Shoot(int x, int y)
     }
+}
+namespace Database {
     class Constants {
         <<static>>
         -const string DatabaseFilename : "BattleShipSQLite.db3"
@@ -154,7 +168,7 @@ classDiagram
         -string DatabasePath
     }
     class DatabaseAccess {
-        -SQLiteAsyncConnection Database
+        -Database: SQLiteAsyncConnection 
         +async Task Init()
         +async Task CreateDefaultUsers()
         +async Task~List~User~ GetUserNamesAsync()
@@ -165,17 +179,12 @@ classDiagram
         +async Task~List~UserScore~ GetUserScoreAsync(string username)
         +async Task~int~ UpdateScoresAsync(Highscore highscore)
     }
-    class DatabaseAccess {
-        -SQLiteAsyncConnection Database
-        +async Task Init()
-        +async Task CreateDefaultUsers()
-        +async Task~List~User~ GetUserNamesAsync()
-        +async Task~User~ GetUserAsync(int id)
-        +async Task~User~ GetUserAsync(string name)
-        +async Task~int~ SaveUserAsync(User user)
-        +async Task~int~ DeleteUserAsync(User user)
-        +async Task~List~UserScore~ GetUserScoreAsync(string username)
-        +async Task~int~ UpdateScoresAsync(Highscore highscore)
+    class Highscore {
+        +Id: int 
+        +Score: int 
+        +Opponent: string 
+        +Won: bool 
+        +User_Id: int 
     }
     class HighScores {
         +async static Task~List~UserScore~ GetHighScores(string username)
@@ -193,8 +202,8 @@ classDiagram
         +string Salt
     }
     class UserManagement {
-        -static User _Player
-        -static User _Opponent
+        -_Player: static User 
+        -_Opponent: static User 
         +static async Task~bool~ RegisterUser(string name, string password)
         +static async Task~bool~ LoginUser(string name, string password)
         +static async Task~List~User~ GetUserNamesAsync()
@@ -203,23 +212,18 @@ classDiagram
         +static async Task SetComputerOpponent(ComputerDifficulty opponent)
     }
     class UserScore {
-        +string Name
-        +int Score
-        +string Opponent
-        +bool Won
+        +Name: string 
+        +Score: int 
+        +Opponent: string 
+        +Won: bool 
     }
-    class Highscore {
-        +int Id
-        +int Score
-        +string Opponent
-        +bool Won
-        +int User_Id
-    }
+}
+namespace Network {
     class ClientAsync {
-        -TcpClient _client
-        -NetworkStream _stream
-        -CancellationTokenSource _cancellationTokenSource
-        +bool _IsClientConnected
+        -_client: TcpClient 
+        -_stream: NetworkStream 
+        -_cancellationTokenSource: CancellationTokenSource 
+        +_IsClientConnected: bool 
         +async Task ConnectAsync(string ip, int port)
         +async Task SendMessageAsync(string message)
         +void Disconnect()
@@ -227,14 +231,14 @@ classDiagram
     }
     class NetworkConnection {
         <<static>>
-        -ServerAsync _server
-        -ClientAsync _client
-        -int _port
-        -bool _isServer
-        -GameLogic _game
-        -List~(string message, string time)~ _sentMessages
-        -List~(string message, string time)~ _receivedMessages
-        +bool _IsRunning
+        -_server: ServerAsync 
+        -_client: ClientAsync 
+        -_port: int 
+        -_isServer: bool 
+        -_game: GameLogic
+        -_sentMessages: List~(string message, string time)~ 
+        -_receivedMessages: List~(string message, string time)~ 
+        +_IsRunning: bool 
         +void StartNetwork()
         +void GameLogicConnectedtoNetwork(GameLogic gameLogic)
         +void ServerConnectedtoClient()
@@ -253,43 +257,64 @@ classDiagram
         +async Task~bool~ SendErrorMessage(string error)
     }
     class ServerAsync {
-        -TcpClient _client
-        -TcpListener _listener
-        +bool _IsServerConnected
+        -_client: TcpClient 
+        -_listener: TcpListener 
+        +_IsServerConnected: bool 
         +void StartServerAsync(int port)
         +async Task SendMessageAsync(string message)
         +void StopServer()
         -async Task HandleClientAsync()
     }
+}
+namespace Sea {
     class Ship {
-        -LinkedList~Square~ _shipSquares
-        +int _Length
+        -_shipSquares: LinkedList~Square~ 
+        +_Length: int 
         +Ship()
         +void SetShip(Square square)
         +void Delete()
         +void ShipUpdate()
     }
     class ShipDetails {
-        +string Name
-        +int PositionX
-        +int PositionY
-        +int Size
-        +bool IsClicked
-        +bool IsPlaced
-        +Orientation Orientation
+        +Name: string 
+        +PositionX: int 
+        +PositionY: int 
+        +Size: int 
+        +IsClicked: bool 
+        +IsPlaced: bool 
+        +Orientation: Orientation 
+    }
+    class shipsTemplate{
+        -static ShipDetails CreateShip()
     }
     class Square {
-        +SquareState _State
-        +Ship ?_Ship
+        +_State: SquareState 
+        +?_Ship: Ship 
         +async Task ShootOnSquareAsync()
         +void SetToEmptySquare()
         +void SetToShipSquare(Ship ship)
     }
+    class Orientation{
+        <<enum>>
+        Vertical
+        Horizontal
+    }
+    class SquareState{
+        <<enum>>
+        Empty
+        Miss
+        Ship
+        Hit
+        Sunk
+        Blocked
+    }
+}
+namespace View {
     class Battlefield {
-        -int _size
-        -Square[,] _board
-        +Square[,] _Board
-        +int _Size
+        -_size: int 
+        -_board: Square[,] 
+        +_Board: Square[,]
+        +_Size: int 
         +Battlefield(GameLogic game)
         +void CreateField()
         +async Task~bool~ ShootAsync(int x, int y)
@@ -297,70 +322,198 @@ classDiagram
         +Action~SquareState~? OnPlayerAction
 		+Action~string~? OnGameOver
     }
+}
 
     
 
-
+    GameLogic --> IBattleShipsGameState : Current State
+    GameLogic --> Player1TurnState : contains
+    GameLogic --> Player2TurnState : contains
+    GameLogic --> Player : updates
+    GameLogic --> Battlefield : Update
+    GameLogic --> IngeniousOpponent : Initializes
+    GameLogic <-- Player : controller
+    GameLogicService --> GameLogic : creates
+    PreGameState --> GameLogic : modifies
+    Player1TurnState --> GameLogic : modifies
+    Player2TurnState --> GameLogic : modifies
+    GameOverState --> GameLogic : modifies
+    GameOverState --> HighScores : Saves Score
     StupidOpponent <|-- CleverOpponent : Inherits
     CleverOpponent <|-- IngeniousOpponent : Inherits
-    IOpponent <|.. ComputerOpponent
-    IOpponent <|.. NetworkOpponent
-    GameLogic -- Player : contains
+    IOpponent <|.. ComputerOpponent: Implements
+    IOpponent <|.. NetworkOpponent: Implements
+    IOpponent --> GameLogic : controller
     Player -- Ship : places > 
     Player -- ShipDetails : checks >
-    ShipDetails -- Orientation : uses
-    Ship -- Square : interacts >
-    DatabaseAccess -- User
-    DatabaseAccess -- Highscore
-    DatabaseAccess -- UserScore
-    DatabaseAccess -- Highscore : uses >
-    DatabaseAccess -- User : uses >
+    ComputerOpponent --> ComputerDifficulty
+    DatabaseAccess -- User: read/write
+    DatabaseAccess -- Highscore: read/write
+    DatabaseAccess -- UserScore: create view
     Highscore -- User : "Foreign Key"
     HighScores --> DatabaseAccess : accesses
-    DatabaseAccess --> Highscore : updates
     HighScores --> UserManagement : checks
     UserManagement --> DatabaseAccess : accesses
     UserManagement --> PasswordHasher : uses
     UserManagement --> User : manages
-    UserManagement --> ComputerDifficulty : uses
-    GameLogic --> IBattleShipsGameState : "Current State"
-    GameLogic --> Player : contains
-    GameLogic --> IOpponent : contains
-    GameLogic --> Battlefield : "Player & Opponent"
-    GameLogic --> Player1TurnState : contains
-    GameLogic --> Player2TurnState : contains
-    GameLogic --> IngeniousOpponent : contains
-    GameLogicService --> GameLogic : creates
-    GameOverState --> GameLogic : uses
-    GameOverState --> HighScores : "Saves Score"
     IBattleShipsGameState <|.. GameOverState
     IBattleShipsGameState <|.. Player1TurnState
     IBattleShipsGameState <|.. Player2TurnState
     IBattleShipsGameState <|.. PreGameState
-    Player1TurnState --> GameLogic : modifies~
-    GameLogic --> Player : "Turn control"
-    GameLogic --> Battlefield : "Shoot & Check game over"
-    Player2TurnState --> GameLogic : modifies~
-    GameLogic --> IOpponent : "Turn control"
-    GameLogic --> IngeniousOpponent : updates history
-    GameLogic --> Battlefield : "Shoot & Check game over"
-    PreGameState --> GameLogic : modifies~
-    GameLogic --> Battlefield : "Initializes"
-    GameLogic --> IOpponent : "Sets Ships"
-    GameLogic --> IngeniousOpponent : "Initializes"
-    ClientAsync --> NetworkConnection : "Receives Messages"
-    NetworkConnection --> ServerAsync : "Uses"
-    NetworkConnection --> ClientAsync : "Uses"
-    NetworkConnection --> GameLogic : "Connects"
-    NetworkConnection --> UserManagement : "Checks Player"
-    ServerAsync --> NetworkConnection : "Notifies & Receives Messages"
-    Ship --> Square : "Composes"
-    Square --> Ship : "References"
-    Square --> SquareState : "Uses"
-    shipsTemplate --> ShipDetails : "Creates"
-    ShipDetails --> Orientation : "Uses"
-    Square --> SquareState : "Has state"
-    Square --> Ship : "Optionally contains"
-    Battlefield --> GameLogic : "Uses"
-    Battlefield --> Square : "Contains"
-    Square --> Ship : "Optionally contains"
+    NetworkConnection --> ServerAsync : Uses
+    NetworkConnection --> ClientAsync : Uses
+    NetworkConnection --> GameLogic : Connects
+    NetworkConnection --> UserManagement : Checks Player
+    ClientAsync --> NetworkConnection : Receives Messages
+    ServerAsync --> NetworkConnection : Notifies & Receives Messages
+    Square --> SquareState : Uses
+    shipsTemplate --> ShipDetails : Creates
+    ShipDetails --> Orientation : Uses
+    ShipDetails -- Orientation : uses
+    Ship <--> Square : interacts >
+    Battlefield --> GameLogic : Uses
+    Battlefield --> Square : Contains
+
+
+Übersicht
+
+---
+title: BlockWoche-SchiffeVersenken
+---
+classDiagram
+namespace Model {
+    class GameLogic {
+    }
+    class GameLogicService {
+    }
+    class IBattleShipsGameState {
+        <<interface>>
+    }
+    class PreGameState {
+    }
+    class Player1TurnState {
+    }
+    class Player2TurnState {
+    }
+    class GameOverState {
+    }
+}
+namespace ComputerPlayer {
+    class StupidOpponent {
+    }
+
+    class CleverOpponent {
+    }
+
+    class IngeniousOpponent {
+    }
+
+}
+namespace Controller {
+    class ComputerOpponent {
+    }
+    class ComputerDifficulty{
+        <<enum>>
+    }
+    class IOpponent {
+        <<interface>>
+    }
+    class NetworkOpponent {
+    }
+    class Player {
+    }
+}
+namespace Database {
+    class Constants {
+    }
+    class DatabaseAccess {
+    }
+    class Highscore {
+    }
+    class HighScores {
+    }
+    class PasswordHasher {
+    }
+    class User {
+    }
+    class UserManagement {
+    }
+    class UserScore {
+    }
+}
+namespace Network {
+    class ClientAsync {
+    }
+    class NetworkConnection {
+    }
+    class ServerAsync {
+    }
+}
+namespace Sea {
+    class Ship {
+    }
+    class ShipDetails {
+    }
+    class shipsTemplate{
+    }
+    class Square {
+    }
+    class Orientation{
+        <<enum>>
+    }
+    class SquareState{
+        <<enum>>
+    }
+}
+namespace View {
+    class Battlefield {
+    }
+}
+
+    GameLogic --> IBattleShipsGameState : Current State
+    GameLogic --> Player1TurnState : contains
+    GameLogic --> Player2TurnState : contains
+    GameLogic --> Player : updates
+    GameLogic --> Battlefield : Update
+    GameLogic --> IngeniousOpponent : Initializes
+    GameLogic <-- Player : controller
+    GameLogicService --> GameLogic : creates
+    PreGameState --> GameLogic : modifies
+    Player1TurnState --> GameLogic : modifies
+    Player2TurnState --> GameLogic : modifies
+    GameOverState --> GameLogic : modifies
+    GameOverState --> HighScores : Saves Score
+    StupidOpponent <|-- CleverOpponent : Inherits
+    CleverOpponent <|-- IngeniousOpponent : Inherits
+    IOpponent <|.. ComputerOpponent: Implements
+    IOpponent <|.. NetworkOpponent: Implements
+    IOpponent --> GameLogic : controller
+    Player -- Ship : places > 
+    Player -- ShipDetails : checks >
+    ComputerOpponent --> ComputerDifficulty
+    DatabaseAccess -- User: read/write
+    DatabaseAccess -- Highscore: read/write
+    DatabaseAccess -- UserScore: create view
+    Highscore -- User : "Foreign Key"
+    HighScores --> DatabaseAccess : accesses
+    HighScores --> UserManagement : checks
+    UserManagement --> DatabaseAccess : accesses
+    UserManagement --> PasswordHasher : uses
+    UserManagement --> User : manages
+    IBattleShipsGameState <|.. GameOverState
+    IBattleShipsGameState <|.. Player1TurnState
+    IBattleShipsGameState <|.. Player2TurnState
+    IBattleShipsGameState <|.. PreGameState
+    NetworkConnection --> ServerAsync : Uses
+    NetworkConnection --> ClientAsync : Uses
+    NetworkConnection --> GameLogic : Connects
+    NetworkConnection --> UserManagement : Checks Player
+    ClientAsync --> NetworkConnection : Receives Messages
+    ServerAsync --> NetworkConnection : Notifies & Receives Messages
+    Square --> SquareState : Uses
+    shipsTemplate --> ShipDetails : Creates
+    ShipDetails --> Orientation : Uses
+    ShipDetails -- Orientation : uses
+    Ship <--> Square : interacts >
+    Battlefield --> GameLogic : Uses
+    Battlefield --> Square : Contains
