@@ -1,9 +1,12 @@
 ﻿<MudDialog>
+    @* Dynamic Game Ending Dialog content *@
     <DialogContent>
 		<MudText>
 			The Winner is <b>@winner</b> with score <b>@score</b>
         </MudText>
     </DialogContent>
+
+    @* Submit Button *@
     <DialogActions>
         <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="Submit">Go To Lobby</MudButton>
     </DialogActions>
@@ -11,10 +14,13 @@
 
 
 @code {
+    // Instance of opened Dialog
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
 
+    // Game Stats of winner
 	[Parameter] public string winner { get; set; }
 	[Parameter] public string score { get; set; }
 
+    // Function to Close Dialog
     void Submit() => MudDialog.Close(DialogResult.Ok(true));
 }

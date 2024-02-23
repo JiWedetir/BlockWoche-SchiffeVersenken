@@ -1,17 +1,23 @@
 ﻿<MudDialog>
+    @* Dynamic Content of Dialog *@
     <DialogContent>
         <MudText>@ContentText</MudText>
     </DialogContent>
+
+    @* Submit Button *@
     <DialogActions>
         <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="Submit">Ok</MudButton>
     </DialogActions>
 </MudDialog>
 
 
-    @code {
+@code {
+    // Instance of opened Dialog
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
 
+    // Dialog content
     [Parameter] public string ContentText { get; set; }
 
+    // Function to Close Dialog
     void Submit() => MudDialog.Close(DialogResult.Ok(true));
 }
