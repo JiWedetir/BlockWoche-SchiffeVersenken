@@ -1,14 +1,15 @@
 ﻿@using SchiffeVersenken.Data.Sea;
 
+<!-- Dynamic table for displaying game fields with background images -->
 <table style="background-image: @_bgUrl">
 	@for (int y = -1; y <= _fieldSize; y++)
 	{
 		<tr>
 			@for (int x = -1; x <= _fieldSize; x++)
 			{
+                <!-- Display column headers with alphabet letters -->
                 if (y == -1)
                 {
-                    <!-- Header -->
                     if (x == -1 || x == _fieldSize)
                     {
                         <td class="border"></td>
@@ -18,27 +19,44 @@
                         <td class="border">@_alphabet[x]</td>
                     }
                 }
+
+                <!-- Display empty footer row -->
                 else if (y == _fieldSize)
                 {
-                    <!-- Footer -->
                     <td></td>
                 }
+
                 else
                 {
+                    <!-- Display row numbers on the left side -->
                     if (x == -1)
                     {
                         <td class="border">@(y + 1)</td>
                     }
+
+                    <!-- Display empty last column -->
                     else if (x == _fieldSize)
                     {
                         <td class="border"></td>
                     }
+
+                    <!-- Main game field squares -->
                     else
                     {
                         int col = x;
                         int row = y;
-                        <!-- Square -->
-						if (FieldType == FieldTypes.OwnField)
+
+                        <!-- Conditionally render square styles based on their state and field type -->
+                        if (FieldType == FieldTypes.PlacementField)
+                        {
+                            string cssClassEnemy = Field[col, row]._State switch
+                            {
+                                SquareState.Ship => "ship-placed",
+                                _ => ""
+                            };
+                            <td class="cell square-enemy @cssClassEnemy" @onclick="() => FieldClicked(col, row)"></td>
+                        }
+                        else if (FieldType == FieldTypes.OwnField)
                         {
                             string cssClassOwn = Field[col, row]._State switch{
                                 SquareState.Ship => "ship-placed",
@@ -49,11 +67,11 @@
                             };
                             <td class="cell @cssClassOwn"></td>
                         }
-                        else
+                        else if (FieldType == FieldTypes.EnemyField)
                         {
                             string cssClassEnemy = Field[col, row]._State switch
                             {
-                                SquareState.Ship => "ship-placed",
+                                @* SquareState.Ship => "ship-placed", *@
                                 SquareState.Hit => "ship-hit",
                                 SquareState.Miss => "ship-missed",
                                 SquareState.Sunk => "ship-sunk",
@@ -68,7 +86,7 @@
 	}
 </table>
 
-
+<!-- Style for dynamically adjusting cell sizes based on the field size -->
 <style>
     :root {
         --field-count: calc(@_fieldSize + 2);
@@ -79,6 +97,7 @@
 
 
 @code {
+    // For UI Displayment
     private char[] _alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToCharArray();
     private int _fieldSize;
     private string _bgUrl;
@@ -90,23 +109,31 @@
         EnemyField
     }
 
+    // The game field matrix
     [Parameter]
     public Square[,] Field { get; set; }
 
+    // Type of the game field
     [Parameter]
     public FieldTypes FieldType { get; set; }
 
-    // EventCallback-Delegat, der die Funktion in der Parent Page aufruft
+    // Event callback delegate that calls a function on the parent page when a field is clicked
     [Parameter] public EventCallback<int[]> OnFieldClicked { get; set; }
 
-    // Funktion, die vom Button aufgerufen wird
+    /// <summary>
+    /// Handles field clicks and invokes the parent page function via the EventCallback.
+    /// </summary>
+    /// <param name="x">X coordinate of the clicked field.</param>
+    /// <param name="y">Y coordinate of the clicked field.</param>
     private async Task FieldClicked(int x, int y)
     {
-        // Aufruf der Funktion in der Parent Page über den EventCallback
         int[] coords = new int[] { x, y };
         await OnFieldClicked.InvokeAsync(coords);
     }
 
+    /// <summary>
+    /// Sets the fieldsize and bgUrl
+    /// </summary>
     protected override void OnInitialized()
     {
         _fieldSize = Field.GetLength(0);

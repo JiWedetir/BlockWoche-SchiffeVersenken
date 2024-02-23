@@ -10,6 +10,8 @@ namespace SchiffeVersenken.Components.Pages
 
 		// Holds the Headers for UI Table Head
 		private List<string> tableHeadings = new List<string>() { "Ranking", "Name", "Score", "Opponent", "Result"};
+		// To Display Empty Table Message in UI
+		private bool emptyHighScoreTable = true;
 
 		// Holds user data
 		private List<string[]> _highscores = new List<string[]>();
@@ -25,11 +27,12 @@ namespace SchiffeVersenken.Components.Pages
 			List<UserScore>highscores = await HighScores.GetHighScores(_username);
 
             int ranking = 1;
-			if (highscores != null)
+			if (highscores != null && highscores.Count() > 0)
 			{
-				foreach (UserScore score in highscores)
+                foreach (UserScore score in highscores)
 				{
-					string[] scorearray = { ranking++.ToString(), score.Name, score.Score.ToString(), score.Opponent, score.Won ? "Won" : "Lost" };
+                    emptyHighScoreTable = false;
+                    string[] scorearray = { ranking++.ToString(), score.Name, score.Score.ToString(), score.Opponent, score.Won ? "Won" : "Lost" };
 					_highscores.Add(scorearray);
 				}
 			}

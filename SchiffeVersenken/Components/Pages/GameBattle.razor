@@ -1,13 +1,17 @@
 ﻿@page "/Game"
-
 @inject Microsoft.AspNetCore.Components.NavigationManager NavigationManager;
 @inherits LayoutComponentBase
 @inject IDialogService DialogService;
 
-<MudContainer style="@($"height:100%; width: 100%; background-image: {_bgUrl}; background-size: cover; background-position: center; background-repeat: no-repeat;")">
+<!-- Main container for the game page with a background image -->
+<MudContainer style="@($"height:100%; width: 100%; background-image: {bgUrl}; background-size: cover; background-position: center; background-repeat: no-repeat;")">
+
+	<!-- Grid layout for the game interface -->
 	<MudGrid style="height:100%; width: 100%;" Justify="Justify.Center">
+
+		<!-- Display the current turn information -->
 		<MudItem xs="12" Class="mt-2" >
-			@if (_playerTurn)
+			@if (playerTurn)
 			{
 				<MudText Align="Align.Center" Typo="Typo.h5" ><b>It's Our Turn Captain!</b></MudText>
 			}
@@ -17,6 +21,7 @@
 			}
 		</MudItem>
 
+		<!-- Display the player's own field with Game Score-->
 		<MudItem xs="6" >
 			<MudStack AlignItems="AlignItems.Center">
 				<MudText Typo="Typo.h5" ><b>Our Field</b></MudText>
@@ -25,14 +30,15 @@
 			</MudStack>
 		</MudItem>
 
+		<!-- Display the enemy's field with Shoot Button-->
 		<MudItem xs="6">
 			<MudStack AlignItems="AlignItems.Center">
 				<MudText Typo="Typo.h5"><b>Enemy Field</b></MudText>
 				<BattleFieldComponent FieldType="@BattleFieldComponent.FieldTypes.EnemyField" Field="@_enemyfield" OnFieldClicked="@HandeFieldClicked" />
-				<MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.SavedSearch" Color="Color.Success" OnClick="@OnPlayerShoot" Disabled="@(!_playerTurn)">Shoot @(_alphabet[_currentXCord]) | @(_currentYCord + 1)</MudButton>
+				<MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.SavedSearch" Color="Color.Success" OnClick="@OnPlayerShoot" Disabled="@(!playerTurn)">Shoot @(alphabet[_currentXCord]) | @(_currentYCord + 1)</MudButton>
 			</MudStack>
 		</MudItem>
+
 	</MudGrid> 
+
 </MudContainer>
-
-
