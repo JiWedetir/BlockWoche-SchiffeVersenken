@@ -1,4 +1,5 @@
-﻿table {
+﻿/* General styles for the game table, including size, border, and background properties */
+table {
     width: var(--field-size);
     height: var(--field-size);
     background-repeat: no-repeat;
@@ -8,12 +9,14 @@
     border: 2px solid black;
 }
 
+/* Styles for individual cells within the table */
 td.cell {
     width: var(--cell-size);
     height: var(--cell-size);
     border: 2px solid rgb(0,0,0,0.75);
 }
 
+/* Styles for border cells (used for row and column headers) */
 td.border {
     width: var(--cell-size);
     height: var(--cell-size);
@@ -24,30 +27,36 @@ td.border {
     font-size: medium;
 }
 
+/* Hover effect for enemy squares to indicate interactivity */
 .square-enemy:hover {
     background: lightgray;
     cursor: pointer;
 }
 
+/* Style for active enemy squares to show they have been interacted with */
 .square-enemy.active {
     pointer-events: none;
     background: red;
 }
 
+/* Styles for cells where ships are placed */
 .ship-placed {
     background-color: black;
 }
 
+/* Styles for cells where ships have been hit */
 .ship-hit {
     background-color: red;
     pointer-events: none;
 }
 
+/* Styles for cells where shots have missed */
 .ship-missed {
     background-color: blue;
     pointer-events: none;
 }
 
+/* Styles for cells where ships have been sunk */
 .ship-sunk {
     background-color: yellow;
     pointer-events: none;

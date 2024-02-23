@@ -10,29 +10,37 @@
         <!-- Left section for displaying high scores -->
         <MudItem xs="6" Style="height: 100%;">
             <!-- Simple table to display high scores with horizontal scrolling enabled -->
-            <MudSimpleTable Hover="true" Style="overflow-x: auto;" Class="mt-6">
-                <thead>
-                    <!-- Dynamically generate table headings -->
-                    <tr>
-                        @foreach (string head in tableHeadings)
-                        {
-                            <th><b>@head</b></th>
-                        }
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Dynamically generate table rows for each high score entry -->
-                    @foreach (var row in _highscores)
-                    {
+            @if (emptyHighScoreTable)
+            {
+                <MudText Align="Align.Center" Typo="Typo.h6" Color="Color.Error" Class="mt-8"><b>You need to Play more my friend ;)</b></MudText>
+                <MudText Align="Align.Center" Color="Color.Error">If you want a score ...</MudText>        
+            }
+            else
+            {
+                <MudSimpleTable Hover="true" Style="overflow-x: auto;" Class="mt-6">
+                    <thead>
+                        <!-- Dynamically generate table headings -->
                         <tr>
-                            @foreach (var x in row)
+                            @foreach (string head in tableHeadings)
                             {
-                                <td>@x</td>
+                                <th><b>@head</b></th>
                             }
-                        </tr> 
-                    }
-                </tbody>
-            </MudSimpleTable>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Dynamically generate table rows for each high score entry -->
+                        @foreach (var row in _highscores)
+                        {
+                            <tr>
+                                @foreach (var x in row)
+                                {
+                                    <td>@x</td>
+                                }
+                            </tr> 
+                        }
+                    </tbody>
+                </MudSimpleTable>
+            }
 	    </MudItem>
 
         <!-- Right section for game mode selection -->
