@@ -6,8 +6,12 @@
 
 <MudStack style="@($"height:100%; width: 100%; background-image: {bgUrl}; background-size: cover; background-position: center; background-repeat: no-repeat;")" Justify="Justify.SpaceEvenly" AlignItems="AlignItems.Center">
 
-    <!-- Title for the Ship Placement page -->
-    <MudText Align="Align.Center" Typo="Typo.h5"><b>Ship Placement</b></MudText>
+    <MudContainer Style="width:100%;">
+        <!-- Title for the Ship Placement page -->
+        <MudText Align="Align.Center" Typo="Typo.h5"><b>Ship Placement</b></MudText>
+        <!-- Info Icon Button for the Ship Placement page -->
+        <MudIconButton Icon="@Icons.Material.Filled.Info" @onclick="OpenDialogInfo" Style="position:absolute; right:0; top:0;" />
+    </MudContainer>
 
     <!-- Layout for ship placement and battlefield visualization -->
     <MudStack Row="true" Spacing="10">

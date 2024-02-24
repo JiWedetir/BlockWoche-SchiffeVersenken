@@ -122,7 +122,7 @@ namespace SchiffeVersenken.Components.Pages
 			if (!GameService.Game._Player.CheckShips(_shipsPlaced))
 			{
 				_shipsPlaced.Remove(_lastClickedShip);
-				OpenDialog("Ship can't be placed there");
+                OpenDialogPlacement("Ship can't be placed there");
 				return;
 			}
 
@@ -227,7 +227,7 @@ namespace SchiffeVersenken.Components.Pages
 		{
 			if (!GameService.Game._Player.SetShips(_shipsPlaced))
 			{
-				OpenDialog("Error in ship Placement");
+                OpenDialogPlacement("Error in ship Placement");
 				return;
 			}
 
@@ -238,11 +238,25 @@ namespace SchiffeVersenken.Components.Pages
 		/// Opens a PopUp with a specific message.
 		/// </summary>
 		/// <param name="message">The message to display in the PopUp.</param>
-		private void OpenDialog(string message)
+		private void OpenDialogPlacement(string message)
 		{
 			DialogParameters parameters = new DialogParameters { { "ContentText", message } };
 			DialogService.Show<ShipPlacementDialog>("", parameters);
 		}
+
+		/// <summary>
+		/// Opens a Info PopUp with the given text
+		/// </summary>
+		private void OpenDialogInfo()
+		{
+			string text =	$"<b>Ship Placement Instructions:</b>\n" +
+							$"&#8226; You can select a ship you want to place by simply clicking it, if a ship is selected it is red, and when placed gray.\n" +
+							$"&#8226; If a one or more ships are placed, you can reset one or all ships by clicking the accordingly named ships.\n" +
+							$"&#8226; A ship can be rotates by clicking the selected ship again or clicking the rotate button.\n" +
+							$"&#8226; When all ships are clicked, you can proceed to the game by the now clickable 'Start the Battle' Button.";
+            DialogParameters parameters = new DialogParameters { { "ContentText", text } };
+            DialogService.Show<InfoDialog>("", parameters);
+        }
 
 		/// <summary>
 		/// Generates a RenderFragment for displaying an SVG representation of a ship.

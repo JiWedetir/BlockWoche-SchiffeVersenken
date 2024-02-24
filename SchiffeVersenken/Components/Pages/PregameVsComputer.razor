@@ -1,16 +1,21 @@
 ﻿@page "/PregameVsComputer"
 @inject Microsoft.AspNetCore.Components.NavigationManager NavigationManager;
 @inherits LayoutComponentBase
+@inject IDialogService DialogService;
 
 <!-- Background setup for pre-game configuration against the computer -->
 <MudStack style="@($"height:100%; width: 100%; background-image: {_bgUrl}; background-size: cover; background-position: center; background-repeat: no-repeat;")" Justify="Justify.SpaceEvenly" AlignItems="AlignItems.Center">
 
-	<!-- Title indicating the page's purpose -->
-	<MudText Align="Align.Center" Typo="Typo.h5" ><b>Game-Settings Vs. Computer</b></MudText>
+	<MudContainer Style="width:100%;">
+		<!-- Title indicating the page's purpose -->
+		<MudText Align="Align.Center" Typo="Typo.h5"><b>Game-Settings Vs. Computer</b></MudText>
+		<!-- Info Icon Button for the Ship Placement page -->
+		<MudIconButton Icon="@Icons.Material.Filled.Info" @onclick="OpenDialogInfo" Style="position:absolute; right:0; top:0;" />
+	</MudContainer>
 	
 	<!-- Field size configuration section -->
 	<MudStack Style="width: 50%;">
-		<MudText Align="Align.Center" Typo="Typo.h6"><b>Feldgrösse:  @_FieldSize x @_FieldSize</b></MudText>
+		<MudText Align="Align.Center" Typo="Typo.h6"><b>Fieldsize: @_FieldSize x @_FieldSize</b></MudText>
 		<MudSlider Variant="Variant.Filled" TickMarks="true" TickMarkLabels="@labels" Step="1" Min="@minFieldSize" Max="@maxFieldSize" @bind-Value="@_FieldSize" Size="Size.Large" Style="align-self:center;" />
 	</MudStack>
 
