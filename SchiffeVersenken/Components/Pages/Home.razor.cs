@@ -19,7 +19,6 @@ namespace SchiffeVersenken.Components.Pages
 		private bool registrationLoading = false;
 
 		// Holds the list of users and usernames for login functionality
-		private List<User> _users = new List<User>();
 		private List<string> _usernames = new List<string>();
 		private string _username = string.Empty;
 		private string _password = string.Empty;
@@ -49,13 +48,8 @@ namespace SchiffeVersenken.Components.Pages
 		/// <returns>A task that represents the asynchronous operation.</returns>
 		private async Task GetUsernameFromDB()
 		{
-			_users = await UserManagement.GetUserNamesAsyync();
+			_usernames = await UserManagement.GetUserNamesAsyync();
 
-			_usernames.Clear();
-			foreach (User user in _users)
-			{
-				_usernames.Add(user.Name);
-			}
 			StateHasChanged();
 		}
 

@@ -39,23 +39,22 @@ namespace SchiffeVersenken.DatabaseEF.Database
         /// Retrieves a list of user names from the database.
         /// </summary>
         /// <returns>A task that represents the asynchronous operation. The task result contains the list of user names.</returns>
-        internal static async Task<List<User>> GetUserNamesAsync()
+        internal static async Task<List<string>> GetUserNamesAsync()
         {
             try
             {
-                 List<User> users = await _context.Users
+                 var users = await _context.Users
                     .Where(i => i.Name != "Player" && i.Name != "Dummer_Computer" && i.Name != "Kluger_Computer" && i.Name != "Genialer_Computer")
-                    .Select(i => new UserEF() { Name = i.Name })
-                    .ProjectTo<User>(_mapper.ConfigurationProvider)
+                    .Select(i => i.Name )
                     .ToListAsync();
 
-                return users;
+                return users!;
             }
             catch (Exception ex)
             {
                 Debug.WriteLine(ex.Message);
-                return new List<User>();
-            }
+                return new List<string>();
+			}
         }
 
         /// <summary>

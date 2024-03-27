@@ -15,6 +15,10 @@ namespace SchiffeVersenken.DatabaseEF.Database
         /// <returns></returns>
         public static async Task<bool> RegisterUser(string name, string password)
         {
+            if (await CheckUserNameExists(name))
+            {
+                return false;
+            }
             var salt = PasswordHasher.GenerateSalt();
             User user = new User()
             {
@@ -25,6 +29,17 @@ namespace SchiffeVersenken.DatabaseEF.Database
             bool changedRows = await DatabaseAccess.SaveUserAsync(user);
             _Player = user;
             return changedRows;
+        }
+
+        /// <summary>
+        /// Checks whether user name already exists
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns>true if exitsts, else false.</returns>
+        private static async Task<bool> CheckUserNameExists(string name)
+        {
+            List<string> usernames = await DatabaseAccess.GetUserNamesAsync();
+            return usernames.Contains(name);
         }
 
         /// <summary>
@@ -53,7 +68,7 @@ namespace SchiffeVersenken.DatabaseEF.Database
         /// Returns a list of all usernames in the database to choose from
         /// </summary>
         /// <returns>a list of all usernames in the database</returns>
-        public static async Task<List<User>> GetUserNamesAsyync()
+        public static async Task<List<string>> GetUserNamesAsyync()
         {
             return await DatabaseAccess.GetUserNamesAsync();
         }
