@@ -14,7 +14,7 @@ namespace SchiffeVersenken.Data.Model.StateMachine
         /// <param name="game">The game logic instance.</param>
         public void EnterState(GameLogic game)
         {
-            _ = HighScores.SaveHighScore(game._Winner, game._PlayerScore);
+            _ = HighScores.SaveHighScore(game._Winner, game._PlayerScore, game._TurnsPlayed, game._GameStart, DateTime.Now);
 		}
 
         public void ExitState(GameLogic game)

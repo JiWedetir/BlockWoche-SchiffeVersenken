@@ -19,7 +19,7 @@
         /// <param name="winner">string winner</param>
         /// <param name="score">int gamescore</param>
         /// <returns></returns>
-        public async static Task<bool> SaveHighScore(string winner, int score)
+        public async static Task<bool> SaveHighScore(string winner, int score, int turnsPlayed, DateTime start, DateTime end)
         {
             if (UserManagement._Player == null)
             {
@@ -30,7 +30,10 @@
                 User_Id = UserManagement._Player.Id,
                 Opponent = UserManagement._Opponent.Name,
                 Score = score,
-                Won = UserManagement._Player.Name == winner
+                Won = UserManagement._Player.Name == winner,
+                TurnsPlayed = turnsPlayed,
+                StartTime = start,
+                EndTime = end
             };
             bool changedRows = await DatabaseAccess.UpdateScoresAsync(highscore);
             return changedRows;

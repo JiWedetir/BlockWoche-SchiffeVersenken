@@ -27,6 +27,8 @@ namespace SchiffeVersenken.Data.Model
         public bool _OpponentShipsSet { get; set; } = false;
         public bool _GameOver { get; set; } = false;
         public int _PlayerScore { get; set; } = 0;
+        public int _TurnsPlayed { get; set; } = 0;
+        public DateTime _GameStart { get; set; } = DateTime.Now;
         public bool _LocalGame { get; private set; } = true;
 
         public GameLogic()
@@ -105,11 +107,13 @@ namespace SchiffeVersenken.Data.Model
         /// <param name="gameOver">true if all ship are hit</param>
         public void SelectPlayer(bool hit, bool gameOver)
         {
+            _TurnsPlayed++;
             IBattleShipsGameState nextState;
             if(_currentState is PreGameState)
             {
                 Random rnd = new Random();
                 bool first = rnd.Next(2) == 0;
+                _GameStart = DateTime.Now;
                 if(first)
                 {
                     nextState = _Player1TurnState ?? throw new ArgumentNullException(nameof(_Player1TurnState));
