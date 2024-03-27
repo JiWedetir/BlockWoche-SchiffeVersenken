@@ -24,12 +24,12 @@ namespace SchiffeVersenken.Components.Pages
         protected override async void OnInitialized()
 		{
 			_username = UserManagement._Player.Name;
-			List<UserScore>highscores = await HighScores.GetHighScores(_username);
+			List<UserScoreView>highscores = await HighScores.GetHighScores(_username);
 
             int ranking = 1;
 			if (highscores != null && highscores.Count() > 0)
 			{
-                foreach (UserScore score in highscores)
+                foreach (UserScoreView score in highscores)
 				{
                     emptyHighScoreTable = false;
                     string[] scorearray = { ranking++.ToString(), score.Name, score.Score.ToString(), score.Opponent, score.Won ? "Won" : "Lost" };

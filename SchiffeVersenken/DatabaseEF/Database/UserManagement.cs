@@ -15,14 +15,16 @@ namespace SchiffeVersenken.DatabaseEF.Database
         /// <returns></returns>
         public static async Task<bool> RegisterUser(string name, string password)
         {
-            DatabaseAccess db = new DatabaseAccess();
-            User user = new User();
-            user.Name = name;
-            user.Salt = PasswordHasher.GenerateSalt();
-            user.PasswordHash = PasswordHasher.HashPassword(password, user.Salt);
-            int changedRows = await db.SaveUserAsync(user);
+            var salt = PasswordHasher.GenerateSalt();
+            User user = new User()
+            {
+                Name = name,
+                Salt = salt,
+                PasswordHash = PasswordHasher.HashPassword(password, salt)
+            };  
+            bool changedRows = await DatabaseAccess.SaveUserAsync(user);
             _Player = user;
-            return changedRows > 0;
+            return changedRows;
         }
 
         /// <summary>
@@ -33,8 +35,7 @@ namespace SchiffeVersenken.DatabaseEF.Database
         /// <returns>true if password is valide</returns>
         public static async Task<bool> LoginUser(string name, string password)
         {
-            DatabaseAccess db = new DatabaseAccess();
-            User user = await db.GetUserAsync(name);
+            User user = await DatabaseAccess.GetUserAsync(name);
             if (user == null)
             {
                 return false;
@@ -54,8 +55,7 @@ namespace SchiffeVersenken.DatabaseEF.Database
         /// <returns>a list of all usernames in the database</returns>
         public static async Task<List<User>> GetUserNamesAsyync()
         {
-            DatabaseAccess db = new DatabaseAccess();
-            return await db.GetUserNamesAsync();
+            return await DatabaseAccess.GetUserNamesAsync();
         }
 
         /// <summary>
@@ -75,8 +75,7 @@ namespace SchiffeVersenken.DatabaseEF.Database
         /// <returns>A task representing the asynchronous operation.</returns>
         public static async Task SetDefaultPlayer()
         {
-            DatabaseAccess db = new DatabaseAccess();
-            _Player = await db.GetUserAsync("Player");
+            _Player = await DatabaseAccess.GetUserAsync("Player");
         }
 
         /// <summary>
@@ -88,15 +87,15 @@ namespace SchiffeVersenken.DatabaseEF.Database
         {
             if (opponent == ComputerDifficulty.Dumm)
             {
-                _Opponent = await new DatabaseAccess().GetUserAsync("Dummer_Computer");
+                _Opponent = await DatabaseAccess.GetUserAsync("Dummer_Computer");
             }
             else if (opponent == ComputerDifficulty.Klug)
             {
-                _Opponent = await new DatabaseAccess().GetUserAsync("Kluger_Computer");
+                _Opponent = await DatabaseAccess.GetUserAsync("Kluger_Computer");
             }
             else if (opponent == ComputerDifficulty.Genie)
             {
-                _Opponent = await new DatabaseAccess().GetUserAsync("Genialer_Computer");
+                _Opponent = await DatabaseAccess.GetUserAsync("Genialer_Computer");
             }
         }
     }

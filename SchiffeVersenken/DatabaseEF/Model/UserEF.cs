@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SchiffeVersenken.DatabaseEF.Models
 {
-	[Table("User")]
+	[Table("Users")]
 	public class UserEF
 	{
 		[Key]

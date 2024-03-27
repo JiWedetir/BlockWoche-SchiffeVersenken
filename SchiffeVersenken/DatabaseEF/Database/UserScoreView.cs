@@ -1,6 +1,6 @@
 ﻿namespace SchiffeVersenken.DatabaseEF.Database
 {
-    public class UserScore
+    public class UserScoreView
     {
         public string Name { get; set; } = string.Empty;
         public int Score { get; set; }

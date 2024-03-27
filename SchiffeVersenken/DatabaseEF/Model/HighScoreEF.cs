@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SchiffeVersenken.DatabaseEF.Models
 {
-	[Table("HighScore")]
+	[Table("HighScores")]
 	public class HighScoreEF
 	{
 		[Key]
