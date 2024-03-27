@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
-using SchiffeVersenken.Data.Database;
+using SchiffeVersenken.DatabaseEF.Database;
 
 namespace SchiffeVersenken.Components.Pages
 {

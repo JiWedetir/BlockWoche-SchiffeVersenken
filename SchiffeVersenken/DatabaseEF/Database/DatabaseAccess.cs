@@ -1,35 +1,13 @@
 ﻿using SQLite;
 using System.Diagnostics;
 
-namespace SchiffeVersenken.Data.Database
+namespace SchiffeVersenken.DatabaseEF.Database
 {
     internal class DatabaseAccess
     {
-        SQLiteAsyncConnection Database;
+        private readonly DatabaseContext _context;
 
-        /// <summary>
-        /// Initializes the database connection and creates necessary tables if they don't exist.
-        /// </summary>
-        async Task Init()
-        {
-            try
-            {
-                if (Database is not null)
-                    return;
 
-                Database = new SQLiteAsyncConnection(Constants.DatabasePath, Constants.Flags);
-                var result = await Database.CreateTableAsync<User>();
-                await Database.CreateTableAsync<Highscore>();
-                if (result == CreateTableResult.Created)
-                {
-                    await CreateDefaultUsers();
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex.Message);
-            }
-        }
 
         /// <summary>
         /// Creates the default users if they don't exist.
@@ -38,7 +16,15 @@ namespace SchiffeVersenken.Data.Database
         {
             try
             {
-                User player = new User() { Name = "Player", PasswordHash="1234", Salt="1234" };
+                using (var db = new DatabaseContext(options => options.UseSqlite("Name=schiffeversenken.db")))
+                {
+
+                }
+
+
+
+
+                User player = new User() { Name = "Player", PasswordHash = "1234", Salt = "1234" };
                 User dumm = new User() { Name = "Dummer_Computer", PasswordHash = "1234", Salt = "1234" };
                 User klug = new User() { Name = "Kluger_Computer", PasswordHash = "1234", Salt = "1234" };
                 User genial = new User() { Name = "Genialer_Computer", PasswordHash = "1234", Salt = "1234" };

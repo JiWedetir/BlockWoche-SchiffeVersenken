@@ -1,8 +1,8 @@
 ﻿using SchiffeVersenken.Data.ComputerPlayer;
 using SchiffeVersenken.Data.Controller;
-using SchiffeVersenken.Data.Database;
 using SchiffeVersenken.Data.Model.StateMachine;
 using SchiffeVersenken.Data.View;
+using SchiffeVersenken.DatabaseEF.Database;
 using System.Diagnostics;
 
 namespace SchiffeVersenken.Data.Model

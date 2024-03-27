@@ -1,7 +1,7 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
 
-namespace SchiffeVersenken.Data.Database
+namespace SchiffeVersenken.DatabaseEF.Database
 {
     internal static class PasswordHasher
     {

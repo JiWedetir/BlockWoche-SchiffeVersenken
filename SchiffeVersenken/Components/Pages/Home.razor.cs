@@ -1,9 +1,9 @@
 ﻿using MudBlazor;
-using SchiffeVersenken.Data.Database;
+using SchiffeVersenken.DatabaseEF.Database;
 
 namespace SchiffeVersenken.Components.Pages
 {
-	public partial class Home
+    public partial class Home
 	{
 		// Path to the background image
 		private string bgUrl = "url('../images/backgroundlogin.png')";

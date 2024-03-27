@@ -1,6 +1,6 @@
 ﻿using SchiffeVersenken.Data.Controller;
 
-namespace SchiffeVersenken.Data.Database
+namespace SchiffeVersenken.DatabaseEF.Database
 {
     public class UserManagement
     {
@@ -86,7 +86,7 @@ namespace SchiffeVersenken.Data.Database
         /// <returns>A task representing the asynchronous operation.</returns>
         public static async Task SetComputerOpponent(ComputerDifficulty opponent)
         {
-            if(opponent == ComputerDifficulty.Dumm)
+            if (opponent == ComputerDifficulty.Dumm)
             {
                 _Opponent = await new DatabaseAccess().GetUserAsync("Dummer_Computer");
             }

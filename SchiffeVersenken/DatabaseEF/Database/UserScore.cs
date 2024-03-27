@@ -1,4 +1,4 @@
-﻿namespace SchiffeVersenken.Data.Database
+﻿namespace SchiffeVersenken.DatabaseEF.Database
 {
     public class UserScore
     {

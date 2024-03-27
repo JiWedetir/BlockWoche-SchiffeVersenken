@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using MudBlazor.Services;
 using SchiffeVersenken.Data;
 
@@ -21,6 +22,8 @@ namespace SchiffeVersenken
             builder.Services.AddMauiBlazorWebView();
             builder.Services.AddMudServices();
 			builder.Services.AddSingleton<GameLogicService>();
+            builder.Services.AddDbContext<DatabaseContext>(options =>
+                options.UseSqlite("Data Source=schiffeversenken.db"));
 
 #if DEBUG
 			builder.Services.AddBlazorWebViewDeveloperTools();

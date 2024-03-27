@@ -1,4 +1,4 @@
-﻿using SchiffeVersenken.Data.Database;
+﻿using SchiffeVersenken.DatabaseEF.Database;
 
 namespace SchiffeVersenken.Data.Model.StateMachine
 {
