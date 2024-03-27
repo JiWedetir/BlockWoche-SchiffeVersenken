@@ -45,7 +45,7 @@ namespace SchiffeVersenken.DatabaseEF.Database
             {
                  List<User> users = await _context.Users
                     .Where(i => i.Name != "Player" && i.Name != "Dummer_Computer" && i.Name != "Kluger_Computer" && i.Name != "Genialer_Computer")
-                    .Select(i => new User() { Name = i.Name })
+                    .Select(i => new UserEF() { Name = i.Name })
                     .ProjectTo<User>(_mapper.ConfigurationProvider)
                     .ToListAsync();
 
